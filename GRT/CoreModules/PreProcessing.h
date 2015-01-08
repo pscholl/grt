@@ -171,6 +171,12 @@ public:
      This static function will dynamically create a new PreProcessing instance based on the type of this instance
     */
     PreProcessing* createNewInstance() const;
+
+
+    /**
+     This static fucntion will return a list of all available preprocessing modules
+     */
+    static vector< string > getRegisteredPreprocessors();
     
 protected:
     /**
