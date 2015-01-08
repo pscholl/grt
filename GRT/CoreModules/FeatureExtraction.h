@@ -160,6 +160,11 @@ public:
     @return FeatureExtraction*: a pointer to the new instance of the feature extraction
     */
     static FeatureExtraction* createInstanceFromString(string const &featureExtractionType);
+
+    /**
+      returns a list of available feature extractors.
+      */
+    static vector< string > getRegisteredFeatureExtractors();
     
     /**
      Creates a new feature extraction instance based on the current featureExtractionType string value.

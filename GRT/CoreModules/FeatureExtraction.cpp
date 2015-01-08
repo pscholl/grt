@@ -181,6 +181,19 @@ bool FeatureExtraction::getFeatureDataReady() const{
 VectorDouble FeatureExtraction::getFeatureVector() const{ 
     return featureVector; 
 }
+
+
+vector< string > FeatureExtraction::getRegisteredFeatureExtractors() { 
+	vector< string > registeredFeatureExtractors;
+	
+  StringFeatureExtractionMap::iterator iter = getMap()->begin();
+	while( iter != getMap()->end() ){
+		registeredFeatureExtractors.push_back( iter->first );
+		iter++;
+	}
+	return registeredFeatureExtractors;
+
+}
     
 
 } //End of namespace GRT
