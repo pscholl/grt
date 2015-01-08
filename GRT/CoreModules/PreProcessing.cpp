@@ -208,5 +208,16 @@ VectorDouble PreProcessing::getProcessedData() const{
     return processedData; 
 }
 
+vector< string > PreProcessing::getRegisteredPreprocessors(){
+	vector< string > registeredPreprocessors;
+	
+  StringPreProcessingMap::iterator iter = getMap()->begin();
+	while( iter != getMap()->end() ){
+		registeredPreprocessors.push_back( iter->first );
+		iter++;
+	}
+	return registeredPreprocessors;
+}
+
 } //End of namespace GRT
 
