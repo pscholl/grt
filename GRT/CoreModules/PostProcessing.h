@@ -189,6 +189,12 @@ public:
      @return a pointer to the new PostProcessing instance that was created
      */
     static PostProcessing* createInstanceFromString(string const &postProcessingType);
+
+
+    /**
+      returns all available post processors
+      */
+    static vector< string > getRegisteredPostProcessors();
     
     /**
      This static function will dynamically create a new PostProcessing instance based on the type of this instance
