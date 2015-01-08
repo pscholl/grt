@@ -213,5 +213,18 @@ vector< double > PostProcessing::getProcessedData() const{
     return processedData; 
 }
 
+vector< string > PostProcessing::getRegisteredPostProcessors() {
+	vector< string > registeredPostProcessors;
+	
+  StringPostProcessingMap::iterator iter = getMap()->begin();
+	while( iter != getMap()->end() ){
+		registeredPostProcessors.push_back( iter->first );
+		iter++;
+	}
+	return registeredPostProcessors;
+}
+    
+
+
 } //End of namespace GRT
 
