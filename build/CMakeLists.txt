@@ -47,7 +47,6 @@ endif()
 
 endif() #end of else(APPLE)
 
-#Set the main directory locations
 set(GRT_SRC_DIR
     ${PROJECT_SOURCE_DIR}/../GRT
 )
