@@ -943,7 +943,7 @@ ClassificationData ClassificationData::getTrainingFoldData(const UINT foldIndex)
 
     //Add the class labels to make sure they all exist
     for(UINT k=0; k<getNumSamples(); k++){
-        trainingData.addClass( classTracker[k].classLabel, classTracker[k].className );
+        trainingData.addClass( data[k].getClassLabel(), classTracker[getClassLabelIndexValue(data[k].getClassLabel())].className );
     }
 
     //Add the data to the training set, this will consist of all the data that is NOT in the foldIndex
@@ -976,7 +976,7 @@ ClassificationData ClassificationData::getTestFoldData(const UINT foldIndex) con
 
     //Add the class labels to make sure they all exist
     for(UINT k=0; k<getNumSamples(); k++){
-        testData.addClass( classTracker[k].classLabel, classTracker[k].className );
+        testData.addClass( data[k].getClassLabel(), classTracker[getClassLabelIndexValue(data[k].getClassLabel())].className );
     }
     
     testData.reserve( (UINT)crossValidationIndexs[ foldIndex ].size() );
