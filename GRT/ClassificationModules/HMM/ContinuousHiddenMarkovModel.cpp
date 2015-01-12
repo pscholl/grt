@@ -166,6 +166,11 @@ bool ContinuousHiddenMarkovModel::predict_( MatrixDouble &timeseries ){
                 obs[i][j] /= norm;
         }
     }
+
+    if ( T==0 ) {
+      errorLog << "downsamplefactor " << downsampleFactor << " too large for timeseries of length " << timeseriesLength << endl;
+      return false;
+    }
     
 	//Resize alpha, c, and the estimated states vector as needed
     if( alpha.getNumRows() != T || alpha.getNumCols() != numStates ) alpha.resize(T,numStates);
