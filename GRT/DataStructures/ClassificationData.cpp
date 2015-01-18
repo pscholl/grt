@@ -752,10 +752,16 @@ ClassificationData ClassificationData::partition(const UINT trainingSizePercenta
 
             //Add the data to the training and test sets
             for(UINT i=0; i<numTrainingExamples; i++){
-                trainingSet.addSample( data[ classData[k][i] ].getClassLabel(), data[ classData[k][i] ].getSample() );
+                UINT labelkey = data [ classData[k][i] ].getClassLabel();
+                std::string label = getClassNameForCorrespondingClassLabel( labelkey );
+                trainingSet.addSample( labelkey , data[ classData[k][i] ].getSample() );
+                trainingSet.setClassNameForCorrespondingClassLabel( label, labelkey );
             }
             for(UINT i=numTrainingExamples; i<classData[k].size(); i++){
-                testSet.addSample( data[ classData[k][i] ].getClassLabel(), data[ classData[k][i] ].getSample() );
+                UINT labelkey = data [ classData[k][i] ].getClassLabel();
+                std::string label = getClassNameForCorrespondingClassLabel( labelkey );
+                testSet.addSample( labelkey , data[ classData[k][i] ].getSample() );
+                testSet.setClassNameForCorrespondingClassLabel( label, labelkey );
             }
         }
     }else{
@@ -779,10 +785,16 @@ ClassificationData ClassificationData::partition(const UINT trainingSizePercenta
 
         //Add the data to the training and test sets
         for(UINT i=0; i<numTrainingExamples; i++){
-            trainingSet.addSample( data[ indexs[i] ].getClassLabel(), data[ indexs[i] ].getSample() );
+            UINT labelkey = data [indexs[i] ].getClassLabel();
+            std::string label = getClassNameForCorrespondingClassLabel( labelkey );
+            trainingSet.addSample( labelkey, data[ indexs[i] ].getSample() );
+            trainingSet.setClassNameForCorrespondingClassLabel( label, labelkey );
         }
         for(UINT i=numTrainingExamples; i<totalNumSamples; i++){
-            testSet.addSample( data[ indexs[i] ].getClassLabel(), data[ indexs[i] ].getSample() );
+            UINT labelkey = data [indexs[i] ].getClassLabel();
+            std::string label = getClassNameForCorrespondingClassLabel( labelkey );
+            testSet.addSample( labelkey , data[ indexs[i] ].getSample() );
+            testSet.setClassNameForCorrespondingClassLabel( label, labelkey );
         }
     }
 
