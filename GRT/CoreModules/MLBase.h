@@ -649,6 +649,12 @@ public:
      */
     vector< TrainingResult > getTrainingResults() const;
 
+    /**
+     *
+     * set the number of input deminesions
+     */
+    void setNumInputDimensions(UINT dim) { this->numInputDimensions = dim; };
+
 protected:
     
     /**
