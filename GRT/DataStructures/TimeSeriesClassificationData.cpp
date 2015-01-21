@@ -746,10 +746,16 @@ TimeSeriesClassificationData TimeSeriesClassificationData::partition(const UINT 
 
             //Add the data to the training and test sets
             for(UINT i=0; i<numTrainingExamples; i++){
-                trainingSet.addSample( data[ classData[k][i] ].getClassLabel(), data[ classData[k][i] ].getData() );
+                UINT labelkey = data [ classData[k][i] ].getClassLabel();
+                std::string label = getClassNameForCorrespondingClassLabel( labelkey );
+                trainingSet.addSample( labelkey, data[ classData[k][i] ].getData() );
+                trainingSet.setClassNameForCorrespondingClassLabel( label, labelkey );
             }
             for(UINT i=numTrainingExamples; i<classData[k].size(); i++){
-                testSet.addSample( data[ classData[k][i] ].getClassLabel(), data[ classData[k][i] ].getData() );
+                UINT labelkey = data [ classData[k][i] ].getClassLabel();
+                std::string label = getClassNameForCorrespondingClassLabel( labelkey );
+                testSet.addSample( labelkey, data[ classData[k][i] ].getData() );
+                testSet.setClassNameForCorrespondingClassLabel( label, labelkey );
             }
         }
 
@@ -772,10 +778,16 @@ TimeSeriesClassificationData TimeSeriesClassificationData::partition(const UINT 
 
         //Add the data to the training and test sets
         for(UINT i=0; i<numTrainingExamples; i++){
-            trainingSet.addSample( data[ indexs[i] ].getClassLabel(), data[ indexs[i] ].getData() );
+            UINT labelkey = data [indexs[i] ].getClassLabel();
+            std::string label = getClassNameForCorrespondingClassLabel( labelkey );
+            trainingSet.addSample( labelkey, data[ indexs[i] ].getData() );
+            trainingSet.setClassNameForCorrespondingClassLabel( label, labelkey );
         }
         for(UINT i=numTrainingExamples; i<totalNumSamples; i++){
-            testSet.addSample( data[ indexs[i] ].getClassLabel(), data[ indexs[i] ].getData() );
+            UINT labelkey = data [indexs[i] ].getClassLabel();
+            std::string label = getClassNameForCorrespondingClassLabel( labelkey );
+            testSet.addSample( labelkey, data[ indexs[i] ].getData() );
+            testSet.setClassNameForCorrespondingClassLabel( label, labelkey );
         }
 
         //Overwrite the training data in this instance with the training data of the trainingSet
