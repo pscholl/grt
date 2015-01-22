@@ -19,6 +19,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 #include "Classifier.h"
+#include <algorithm>
 namespace GRT{
     
 Classifier::StringClassifierMap* Classifier::stringClassifierMap = NULL;
@@ -110,6 +111,7 @@ bool Classifier::copyBaseVariables(const Classifier *classifier){
     this->bestDistance = classifier->bestDistance;
     this->phase = classifier->phase;
     this->classLabels = classifier->classLabels;
+    this->classNames = classifier->classNames;
     this->classLikelihoods = classifier->classLikelihoods;
     this->classDistances = classifier->classDistances;
     this->nullRejectionThresholds = classifier->nullRejectionThresholds;
@@ -151,6 +153,7 @@ bool Classifier::clear(){
     classDistances.clear();
     nullRejectionThresholds.clear();
     classLabels.clear();
+    classNames.clear();
     ranges.clear();
     
     return true;
@@ -196,6 +199,25 @@ UINT Classifier::getClassLabelIndexValue(UINT classLabel) const{
             return i;
     }
     return 0;
+}
+
+bool Classifier::setClassNameForLabel(UINT label, string name) {
+    UINT idx = getClassLabelIndexValue(label);
+
+    while (classNames.size() <= idx)
+      classNames.push_back( "" );
+
+    classNames[idx] = name;
+    return true;
+}
+
+string Classifier::getClassNameForLabel(UINT label) {
+    UINT idx = getClassLabelIndexValue(label);
+
+    if (classNames.size() <= idx)
+      return "";
+
+    return classNames[idx];
 }
 
 UINT Classifier::getPredictedClassLabel() const{ 
@@ -250,6 +272,7 @@ bool Classifier::setNullRejectionThresholds(VectorDouble newRejectionThresholds)
 const Classifier& Classifier::getBaseClassifier() const{
     return *this;
 }
+
     
 bool Classifier::saveBaseSettingsToFile(fstream &file) const{
     
@@ -286,6 +309,16 @@ bool Classifier::saveBaseSettingsToFile(fstream &file) const{
             file << " " << classLabels[i];
         }
         file << endl;
+
+        file << "ClassNames: ";
+        for(UINT i=0; i<classNames.size(); i++){
+          string name = classNames[i];
+          if (name.empty()) name = "_";
+          std::replace(name.begin(), name.end(), ' ', '_');
+          std::replace(name.begin(), name.end(), '\t', '_');
+          file << " " << name;
+        }
+        file << endl;
         
         if( useScaling ){
             file << "Ranges: " << endl;
@@ -297,6 +330,8 @@ bool Classifier::saveBaseSettingsToFile(fstream &file) const{
     
     return true;
 }
+
+
 
 bool Classifier::loadBaseSettingsFromFile(fstream &file){
     
@@ -374,7 +409,17 @@ bool Classifier::loadBaseSettingsFromFile(fstream &file){
         for(UINT i=0; i<classLabels.size(); i++){
             file >> classLabels[i];
         }
-        
+        //Load the class names
+        file >> word;
+        if ( word != "ClassNames:") {
+          errorLog << "loadBaseSettingsFromFile(fstream &file) - Failed to read ClassNames header!" << endl;
+          clear();
+          return false;
+        }
+        classNames.resize( numClasses );
+        for(UINT i=0; i<classNames.size(); i++)
+          file >> classNames[i];
+
         if( useScaling ){
             //Load if the Ranges
             file >> word;
