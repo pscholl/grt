@@ -291,6 +291,21 @@ public:
      @return vector< string >: a vector containing the names of the classifiers that have been registered with the base classifier
     */
 	static vector< string > getRegisteredClassifiers();
+
+    /**
+     set the string value for a class label
+
+     @return true, if the label could be set
+     */
+    bool setClassNameForLabel(UINT label, string name);
+
+    /**
+    get the string name for a calss label
+
+    @return label name or empty string
+    */
+    string getClassNameForLabel(UINT label);
+
     
 protected:
     /**
@@ -321,6 +336,7 @@ protected:
     VectorDouble classDistances;
     VectorDouble nullRejectionThresholds;
     vector< UINT > classLabels;
+    vector<string> classNames;
     vector<MinMax> ranges;
     
     static StringClassifierMap *getMap() {
