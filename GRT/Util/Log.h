@@ -45,9 +45,9 @@ public:
             if( *writeProceedingTextPtr ){
                 *writeProceedingTextPtr = false;
                 *lastMessagePtr = "";
-                std::cout << proceedingText.c_str();
+                std::cerr << proceedingText.c_str();
             }
-            std::cout << proceedingText.c_str() << val;
+            std::cerr << proceedingText.c_str() << val;
             *lastMessagePtr += Util::toString(val);
         }
         return *this;
@@ -58,9 +58,9 @@ public:
             if( *writeProceedingTextPtr ){
                 *writeProceedingTextPtr = false;
                 *lastMessagePtr = "";
-                std::cout << proceedingText.c_str();
+                std::cerr << proceedingText.c_str();
             }
-            std::cout << val;
+            std::cerr << val;
             *lastMessagePtr += Util::toString(val);
         }
         return *this;
@@ -71,9 +71,9 @@ public:
             if( *writeProceedingTextPtr ){
                 *writeProceedingTextPtr = false;
                 *lastMessagePtr = "";
-                std::cout << proceedingText.c_str();
+                std::cerr << proceedingText.c_str();
             }
-            std::cout << val;
+            std::cerr << val;
             *lastMessagePtr += Util::toString(val);
         }
         return *this;
@@ -84,9 +84,9 @@ public:
             if( *writeProceedingTextPtr ){
                 *writeProceedingTextPtr = false;
                 *lastMessagePtr = "";
-                std::cout << proceedingText.c_str();
+                std::cerr << proceedingText.c_str();
             }
-            std::cout << val;
+            std::cerr << val;
             *lastMessagePtr += Util::toString(val);
         }
         return *this;
@@ -97,9 +97,9 @@ public:
             if( *writeProceedingTextPtr ){
                 *writeProceedingTextPtr = false;
                 *lastMessagePtr = "";
-                std::cout << proceedingText.c_str();
+                std::cerr << proceedingText.c_str();
             }
-            std::cout << val;
+            std::cerr << val;
             *lastMessagePtr += Util::toString(val);
         }
         return *this;
@@ -110,9 +110,9 @@ public:
             if( *writeProceedingTextPtr ){
                 *writeProceedingTextPtr = false;
                 *lastMessagePtr = "";
-                std::cout << proceedingText.c_str();
+                std::cerr << proceedingText.c_str();
             }
-            std::cout << val;
+            std::cerr << val;
             *lastMessagePtr += Util::toString(val);
         }
         return *this;    }
@@ -122,9 +122,9 @@ public:
             if( *writeProceedingTextPtr ){
                 *writeProceedingTextPtr = false;
                 *lastMessagePtr = "";
-                std::cout << proceedingText.c_str();
+                std::cerr << proceedingText.c_str();
             }
-            std::cout << val;
+            std::cerr << val;
             *lastMessagePtr += Util::toString(val);
         }
         return *this;    
@@ -135,9 +135,9 @@ public:
             if( *writeProceedingTextPtr ){
                 *writeProceedingTextPtr = false;
                 *lastMessagePtr = "";
-                std::cout << proceedingText.c_str();
+                std::cerr << proceedingText.c_str();
             }
-            std::cout << val;
+            std::cerr << val;
             *lastMessagePtr += Util::toString(val);
         }
         return *this;    
@@ -148,9 +148,9 @@ public:
             if( *writeProceedingTextPtr ){
                 *writeProceedingTextPtr = false;
                 *lastMessagePtr = "";
-                std::cout << proceedingText.c_str();
+                std::cerr << proceedingText.c_str();
             }
-            std::cout << val;
+            std::cerr << val;
             *lastMessagePtr += Util::toString(val);
         }
         return *this;    }
@@ -160,9 +160,9 @@ public:
             if( *writeProceedingTextPtr ){
                 *writeProceedingTextPtr = false;
                 *lastMessagePtr = "";
-                std::cout << proceedingText.c_str();
+                std::cerr << proceedingText.c_str();
             }
-            std::cout << val;
+            std::cerr << val;
             *lastMessagePtr += Util::toString(val);
         }
         return *this;
@@ -173,9 +173,9 @@ public:
             if( *writeProceedingTextPtr ){
                 *writeProceedingTextPtr = false;
                 *lastMessagePtr = "";
-                std::cout << proceedingText.c_str();
+                std::cerr << proceedingText.c_str();
             }
-            std::cout << val;
+            std::cerr << val;
             *lastMessagePtr += Util::toString(val);
         }
         return *this;    }
@@ -185,9 +185,9 @@ public:
             if( *writeProceedingTextPtr ){
                 *writeProceedingTextPtr = false;
                 *lastMessagePtr = "";
-                std::cout << proceedingText.c_str();
+                std::cerr << proceedingText.c_str();
             }
-            std::cout << val;
+            std::cerr << val;
         }
         return *this;
     }
@@ -197,9 +197,9 @@ public:
             if( *writeProceedingTextPtr ){
                 *writeProceedingTextPtr = false;
                 *lastMessagePtr = "";
-                std::cout << proceedingText.c_str();
+                std::cerr << proceedingText.c_str();
             }
-            std::cout << val.c_str();
+            std::cerr << val.c_str();
             *lastMessagePtr += val;
         }
         return *this;
@@ -209,16 +209,16 @@ public:
         if( *loggingEnabledPtr && instanceLoggingEnabled ){
             if( *writeProceedingTextPtr ){
                 *writeProceedingTextPtr = false;
-                std::cout << proceedingText.c_str();
+                std::cerr << proceedingText.c_str();
                 *lastMessagePtr = "";
             }
-            std::cout << val;
+            std::cerr << val;
             *lastMessagePtr += val;
         }
         return *this;
     }
     
-    // this is the type of std::cout
+    // this is the type of std::cerr
     typedef std::basic_ostream<char, std::char_traits<char> > CoutType;
     
     // this is the function signature of std::endl
@@ -228,7 +228,7 @@ public:
     const Log& operator<<(const StandardEndLine manip) const{
         if( *loggingEnabledPtr && instanceLoggingEnabled ){
             // call the function, but we cannot return it's value
-            manip(std::cout);
+            manip(std::cerr);
             *writeProceedingTextPtr = true;
             
             //Trigger any logging callbacks
