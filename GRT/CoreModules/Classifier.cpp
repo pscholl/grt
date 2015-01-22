@@ -221,6 +221,25 @@ string Classifier::getClassNameForLabel(UINT label) {
     return classNames[idx];
 }
 
+bool Classifier::setClassNameForLabel(UINT label, string name) {
+    UINT idx = getClassLabelIndexValue(label);
+
+    while (classNames.size() <= idx)
+      classNames.push_back( "" );
+
+    classNames[idx] = name;
+    return true;
+}
+
+string Classifier::getClassNameForLabel(UINT label) {
+    UINT idx = getClassLabelIndexValue(label);
+
+    if (classNames.size() <= idx)
+      return "";
+
+    return classNames[idx];
+}
+
 UINT Classifier::getPredictedClassLabel() const{ 
     if( trained ) return predictedClassLabel; 
     return 0; 
@@ -321,7 +340,6 @@ bool Classifier::saveBaseSettingsToFile(fstream &file) const{
         }
         for(UINT i=0; i<(classLabels.size()-classNames.size()); i++)
           file << " _";
-
         file << endl;
         
         if( useScaling ){
