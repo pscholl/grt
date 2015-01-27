@@ -116,7 +116,7 @@ public:
 		if( resize(tempRows,tempCols) ){
 			for(unsigned int i=0; i<tempRows; i++){
 				for(unsigned int j=0; j<tempCols; j++){
-                	dataPtr[i][j] = data[i][j];
+                	dataPtr[i*cols+j] = data[i][j];
 				}
 			}
 		}
