@@ -26,15 +26,15 @@ namespace GRT {
 
 //Default constructor
 DiscreteHiddenMarkovModel::DiscreteHiddenMarkovModel(){
-	numStates = 0;
-	numSymbols = 0;
-	delta = 1;
-	numRandomTrainingIterations = 5;
-	maxNumEpochs = 100;
-	cThreshold = -1000;
-	modelType = HMM_LEFTRIGHT;
-	logLikelihood = 0.0;
-	minChange = 1.0e-5;
+    numStates = 0;
+    numSymbols = 0;
+    delta = 1;
+    numRandomTrainingIterations = 5;
+    maxNumEpochs = 100;
+    cThreshold = -1000;
+    modelType = HMM_LEFTRIGHT;
+    logLikelihood = 0.0;
+    minChange = 1.0e-5;
     
     debugLog.setProceedingText("[DEBUG DiscreteHiddenMarkovModel]");
     errorLog.setProceedingText("[ERROR DiscreteHiddenMarkovModel]");
@@ -46,19 +46,19 @@ DiscreteHiddenMarkovModel::DiscreteHiddenMarkovModel(){
 DiscreteHiddenMarkovModel::DiscreteHiddenMarkovModel(const UINT numStates,const UINT numSymbols,const UINT modelType,const UINT delta){
     this->numStates = numStates;
     this->numSymbols = numSymbols;
-	this->modelType = modelType;
-	this->delta = delta;
-	logLikelihood = 0.0;
-	numRandomTrainingIterations = 5;
-	cThreshold = -1000;
-	logLikelihood = 0.0;
+    this->modelType = modelType;
+    this->delta = delta;
+    logLikelihood = 0.0;
+    numRandomTrainingIterations = 5;
+    cThreshold = -1000;
+    logLikelihood = 0.0;
     
     debugLog.setProceedingText("[DEBUG DiscreteHiddenMarkovModel]");
     errorLog.setProceedingText("[ERROR DiscreteHiddenMarkovModel]");
     warningLog.setProceedingText("[WARNING DiscreteHiddenMarkovModel]");
     trainingLog.setProceedingText("[TRAINING DiscreteHiddenMarkovModel]");
     
-	randomizeMatrices(numStates,numSymbols);
+    randomizeMatrices(numStates,numSymbols);
 }
 
 //Init the model with a pre-trained a, b, and pi matrices
@@ -67,10 +67,10 @@ DiscreteHiddenMarkovModel::DiscreteHiddenMarkovModel(const MatrixDouble &a,const
     numStates = 0;
     numSymbols = 0;
     numRandomTrainingIterations = 5;
-	maxNumEpochs = 100;
-	cThreshold = -1000;
-	logLikelihood = 0.0;
-	minChange = 1.0e-5;
+    maxNumEpochs = 100;
+    cThreshold = -1000;
+    logLikelihood = 0.0;
+    minChange = 1.0e-5;
     
     debugLog.setProceedingText("[DEBUG DiscreteHiddenMarkovModel]");
     errorLog.setProceedingText("[ERROR DiscreteHiddenMarkovModel]");
@@ -93,15 +93,15 @@ DiscreteHiddenMarkovModel::DiscreteHiddenMarkovModel(const MatrixDouble &a,const
     
 DiscreteHiddenMarkovModel::DiscreteHiddenMarkovModel(const DiscreteHiddenMarkovModel &rhs){
     this->numStates = rhs.numStates;
-	this->numSymbols = rhs.numSymbols;
-	this->delta = rhs.delta;
-	this->numRandomTrainingIterations = rhs.numRandomTrainingIterations;
-	this->cThreshold = rhs.cThreshold;
-	this->modelType = rhs.modelType;
-	this->logLikelihood = rhs.logLikelihood;
-	this->a = rhs.a;
-	this->b = rhs.b;
-	this->pi = rhs.pi;
+    this->numSymbols = rhs.numSymbols;
+    this->delta = rhs.delta;
+    this->numRandomTrainingIterations = rhs.numRandomTrainingIterations;
+    this->cThreshold = rhs.cThreshold;
+    this->modelType = rhs.modelType;
+    this->logLikelihood = rhs.logLikelihood;
+    this->a = rhs.a;
+    this->b = rhs.b;
+    this->pi = rhs.pi;
     this->trainingLog = rhs.trainingLog;
 
     debugLog.setProceedingText("[DEBUG DiscreteHiddenMarkovModel]");
@@ -117,81 +117,81 @@ DiscreteHiddenMarkovModel::~DiscreteHiddenMarkovModel(){
 
 //This can be called at any time to reset the entire model
 bool DiscreteHiddenMarkovModel::resetModel(const UINT numStates,const UINT numSymbols,const UINT modelType,const UINT delta){
-	this->numStates = numStates;
+    this->numStates = numStates;
     this->numSymbols = numSymbols;
-	this->modelType = modelType;
-	this->delta = delta;
-	return randomizeMatrices(numStates,numSymbols);
+    this->modelType = modelType;
+    this->delta = delta;
+    return randomizeMatrices(numStates,numSymbols);
 }
 
 bool DiscreteHiddenMarkovModel::randomizeMatrices(const UINT numStates,const UINT numSymbols){
 
-	//Set the model as untrained as everything will now be reset
-	trained = false;
-	logLikelihood = 0.0;
+    //Set the model as untrained as everything will now be reset
+    trained = false;
+    logLikelihood = 0.0;
 
-	//Set the new state and symbol size
-	this->numStates = numStates;
-	this->numSymbols = numSymbols;
-	a.resize(numStates,numStates);
-	b.resize(numStates,numSymbols);
-	pi.resize(numStates);
+    //Set the new state and symbol size
+    this->numStates = numStates;
+    this->numSymbols = numSymbols;
+    a.resize(numStates,numStates);
+    b.resize(numStates,numSymbols);
+    pi.resize(numStates);
 
-	//Fill Transition and Symbol Matrices randomly
+    //Fill Transition and Symbol Matrices randomly
     //It's best to choose values in the range [0.9 1.1] rather than [0 1]
     //That way, no single value will get too large or too small a weight when the values are normalized
-	Random random;
-	for(UINT i=0; i<a.getNumRows(); i++)
-		for(UINT j=0; j<a.getNumCols(); j++)
-			a[i][j] = random.getRandomNumberUniform(0.9,1);
+    Random random;
+    for(UINT i=0; i<a.getNumRows(); i++)
+        for(UINT j=0; j<a.getNumCols(); j++)
+            a[i][j] = random.getRandomNumberUniform(0.9,1);
 
-	for(UINT i=0; i<b.getNumRows(); i++)
-		for(UINT j=0; j<b.getNumCols(); j++)
-			b[i][j] = random.getRandomNumberUniform(0.9,1);
+    for(UINT i=0; i<b.getNumRows(); i++)
+        for(UINT j=0; j<b.getNumCols(); j++)
+            b[i][j] = random.getRandomNumberUniform(0.9,1);
     
     //Randomise pi
-	for(UINT i=0; i<numStates; i++)
+    for(UINT i=0; i<numStates; i++)
         pi[i] = random.getRandomNumberUniform(0.9,1);
     
     //Set any constraints on the model
-	switch( modelType ){
-		case(HMM_ERGODIC):
-			//Don't need todo anything
-			break;
-		case(HMM_LEFTRIGHT):
-			//Set the state transitions constraints
-			for(UINT i=0; i<numStates; i++)
-				for(UINT j=0; j<numStates; j++)
-					if((j<i) || (j>i+delta)) a[i][j] = 0.0;
+    switch( modelType ){
+        case(HMM_ERGODIC):
+            //Don't need todo anything
+            break;
+        case(HMM_LEFTRIGHT):
+            //Set the state transitions constraints
+            for(UINT i=0; i<numStates; i++)
+                for(UINT j=0; j<numStates; j++)
+                    if((j<i) || (j>i+delta)) a[i][j] = 0.0;
             
-			//Set pi to start in state 0
-			for(UINT i=0; i<numStates; i++){
-				pi[i] = i==0 ? 1 : 0;
-			}
-			break;
-		default:
-			throw("HMM_ERROR: Unkown model type!");
-			return false;
-			break;
-	}	
+            //Set pi to start in state 0
+            for(UINT i=0; i<numStates; i++){
+                pi[i] = i==0 ? 1 : 0;
+            }
+            break;
+        default:
+            throw("HMM_ERROR: Unkown model type!");
+            return false;
+            break;
+    }   
 
-	//Normalize the matrices
-	double sum=0.0;
-	for (UINT i=0; i<numStates; i++) {
-		sum = 0.;
-		for (UINT j=0; j<numStates; j++) sum += a[i][j];
-		for (UINT j=0; j<numStates; j++) a[i][j] /= sum;
-	}
-	for (UINT i=0; i<numStates; i++) {
-		sum = 0.;
-		for (UINT k=0; k<numSymbols; k++) sum += b[i][k];
-		for (UINT k=0; k<numSymbols; k++) b[i][k] /= sum;
-	}
+    //Normalize the matrices
+    double sum=0.0;
+    for (UINT i=0; i<numStates; i++) {
+        sum = 0.;
+        for (UINT j=0; j<numStates; j++) sum += a[i][j];
+        for (UINT j=0; j<numStates; j++) a[i][j] /= sum;
+    }
+    for (UINT i=0; i<numStates; i++) {
+        sum = 0.;
+        for (UINT k=0; k<numSymbols; k++) sum += b[i][k];
+        for (UINT k=0; k<numSymbols; k++) b[i][k] /= sum;
+    }
     
-	//Normalise pi
-	sum = 0.0;
-	for (UINT i=0; i<numStates; i++) sum += pi[i];
-	for (UINT i=0; i<numStates; i++) pi[i] /= sum;
+    //Normalise pi
+    sum = 0.0;
+    for (UINT i=0; i<numStates; i++) sum += pi[i];
+    for (UINT i=0; i<numStates; i++) pi[i] /= sum;
     
     return true;
 }
@@ -214,45 +214,45 @@ double DiscreteHiddenMarkovModel::predict(const UINT newSample){
  */
 double DiscreteHiddenMarkovModel::predict(const vector<UINT> &obs){
     
-	const int N = (int)numStates;
+    const int N = (int)numStates;
     const int T = (int)obs.size();
-	int t,i,j = 0;
+    int t,i,j = 0;
     MatrixDouble alpha(T,numStates);
     VectorDouble c(T);
     
-	////////////////// Run the forward algorithm ////////////////////////
-	//Step 1: Init at t=0
-	t = 0;
-	c[t] = 0.0;
-	for(i=0; i<N; i++){
-		alpha[t][i] = pi[i]*b[i][ obs[t] ];
-		c[t] += alpha[t][i];
-	}
+    ////////////////// Run the forward algorithm ////////////////////////
+    //Step 1: Init at t=0
+    t = 0;
+    c[t] = 0.0;
+    for(i=0; i<N; i++){
+        alpha[t][i] = pi[i]*b[i][ obs[t] ];
+        c[t] += alpha[t][i];
+    }
     
-	//Set the inital scaling coeff
-	c[t] = 1.0/c[t];
+    //Set the inital scaling coeff
+    c[t] = 1.0/c[t];
     
-	//Scale alpha
+    //Scale alpha
     for(i=0; i<N; i++) alpha[t][i] *= c[t];
     
-	//Step 2: Induction
-	for(t=1; t<T; t++){
-		c[t] = 0.0;
-		for(j=0; j<N; j++){
-			alpha[t][j] = 0.0;
-			for(i=0; i<N; i++){
-				alpha[t][j] +=  alpha[t-1][i] * a[i][j];
-			}
+    //Step 2: Induction
+    for(t=1; t<T; t++){
+        c[t] = 0.0;
+        for(j=0; j<N; j++){
+            alpha[t][j] = 0.0;
+            for(i=0; i<N; i++){
+                alpha[t][j] +=  alpha[t-1][i] * a[i][j];
+            }
             alpha[t][j] *= b[j][obs[t]];
             c[t] += alpha[t][j];
-		}
+        }
         
-		//Set the scaling coeff
-		c[t] = 1.0/c[t];
+        //Set the scaling coeff
+        c[t] = 1.0/c[t];
         
-		//Scale Alpha
+        //Scale Alpha
         for(j=0; j<N; j++) alpha[t][j] *= c[t];
-	}
+    }
     
     if( int(estimatedStates.size()) != T ) estimatedStates.resize(T);
     for(t=0; t<T; t++){
@@ -265,8 +265,8 @@ double DiscreteHiddenMarkovModel::predict(const vector<UINT> &obs){
         }
     }
     
-	//Termination
-	double loglikelihood = 0.0;
+    //Termination
+    double loglikelihood = 0.0;
     for(t=0; t<T; t++) loglikelihood += log( c[t] );
     return -loglikelihood; //Return the negative log likelihood
 }
@@ -276,14 +276,14 @@ double DiscreteHiddenMarkovModel::predict(const vector<UINT> &obs){
 */
 double DiscreteHiddenMarkovModel::predictLogLikelihood(const vector<UINT> &obs){
 
-	const UINT T = (unsigned int)obs.size();
-	UINT t,i,j,minState = 0;
-	MatrixDouble alpha(T,numStates);
+    const UINT T = (unsigned int)obs.size();
+    UINT t,i,j,minState = 0;
+    MatrixDouble alpha(T,numStates);
     double minWeight = 0;
     double weight = 0;
 
     // Base
-	t = 0;
+    t = 0;
     for(i=0; i<numStates; i++){
         alpha[t][i] = (-1.0 * log(pi[i])) - log(b[i][ obs[t] ]);
     }
@@ -330,46 +330,46 @@ double DiscreteHiddenMarkovModel::predictLogLikelihood(const vector<UINT> &obs){
 */
 bool DiscreteHiddenMarkovModel::forwardBackward(HMMTrainingObject &hmm,const vector<UINT> &obs){
 
-	const int N = (int)numStates;
-	const int T = (int)obs.size();
-	int t,i,j = 0;
+    const int N = (int)numStates;
+    const int T = (int)obs.size();
+    int t,i,j = 0;
 
-	////////////////// Run the forward algorithm ////////////////////////
-	//Step 1: Init at t=0
-	t = 0;
-	hmm.c[t] = 0.0;
-	for(i=0; i<N; i++){
-		hmm.alpha[t][i] = pi[i]*b[i][ obs[t] ];
-		hmm.c[t] += hmm.alpha[t][i];
-	}
+    ////////////////// Run the forward algorithm ////////////////////////
+    //Step 1: Init at t=0
+    t = 0;
+    hmm.c[t] = 0.0;
+    for(i=0; i<N; i++){
+        hmm.alpha[t][i] = pi[i]*b[i][ obs[t] ];
+        hmm.c[t] += hmm.alpha[t][i];
+    }
 
-	//Set the inital scaling coeff
-	hmm.c[t] = 1.0/hmm.c[t];
+    //Set the inital scaling coeff
+    hmm.c[t] = 1.0/hmm.c[t];
 
-	//Scale alpha
+    //Scale alpha
     for(i=0; i<N; i++) hmm.alpha[t][i] *= hmm.c[t];
     
-	//Step 2: Induction
-	for(t=1; t<T; t++){
-		hmm.c[t] = 0.0;
-		for(j=0; j<N; j++){
-			hmm.alpha[t][j] = 0.0;
-			for(i=0; i<N; i++){
-				hmm.alpha[t][j] +=  hmm.alpha[t-1][i] * a[i][j];
-			}
+    //Step 2: Induction
+    for(t=1; t<T; t++){
+        hmm.c[t] = 0.0;
+        for(j=0; j<N; j++){
+            hmm.alpha[t][j] = 0.0;
+            for(i=0; i<N; i++){
+                hmm.alpha[t][j] +=  hmm.alpha[t-1][i] * a[i][j];
+            }
             hmm.alpha[t][j] *= b[j][obs[t]];
             hmm.c[t] += hmm.alpha[t][j];
-		}
+        }
 
-		//Set the scaling coeff
-		hmm.c[t] = 1.0/hmm.c[t];
+        //Set the scaling coeff
+        hmm.c[t] = 1.0/hmm.c[t];
 
-		//Scale Alpha
+        //Scale Alpha
         for(j=0; j<N; j++) hmm.alpha[t][j] *= hmm.c[t];
-	}
+    }
 
-	//Termination
-	hmm.pk = 0.0;
+    //Termination
+    hmm.pk = 0.0;
     for(t=0; t<T; t++) hmm.pk += log( hmm.c[t] );
     //hmm.pk = - hmm.pk; //We don't really need to minus here
     
@@ -377,26 +377,26 @@ bool DiscreteHiddenMarkovModel::forwardBackward(HMMTrainingObject &hmm,const vec
         return false;
     }
     
-	////////////////// Run the backward algorithm ////////////////////////
-	//Step 1: Init at time t=T (T-1 as everything is zero based)
-	t = T-1;
-	for(i=0; i<N; i++) hmm.beta[t][i] = 1.0;
+    ////////////////// Run the backward algorithm ////////////////////////
+    //Step 1: Init at time t=T (T-1 as everything is zero based)
+    t = T-1;
+    for(i=0; i<N; i++) hmm.beta[t][i] = 1.0;
     
-	//Scale beta, using the same coeff as A
+    //Scale beta, using the same coeff as A
     for(i=0; i<N; i++) hmm.beta[t][i] *= hmm.c[t];
 
-	//Step 2: Induction, from T-1 until 1 (T-2 until 0 as everything is zero based)
-	for(t=T-2; t>=0; t--){
-		for(i=0; i<N; i++){
-			//Calculate the backward step for t, using the scaled beta
-			hmm.beta[t][i]=0.0;
-			for(j=0; j<N; j++)
-				hmm.beta[t][i] += a[i][j] * b[j][ obs[t+1] ] * hmm.beta[t+1][j];
+    //Step 2: Induction, from T-1 until 1 (T-2 until 0 as everything is zero based)
+    for(t=T-2; t>=0; t--){
+        for(i=0; i<N; i++){
+            //Calculate the backward step for t, using the scaled beta
+            hmm.beta[t][i]=0.0;
+            for(j=0; j<N; j++)
+                hmm.beta[t][i] += a[i][j] * b[j][ obs[t+1] ] * hmm.beta[t+1][j];
 
             //Scale B using the same coeff as A
             hmm.beta[t][i] *= hmm.c[t];
-		}
-	}
+        }
+    }
     
     return true;
 }
@@ -412,8 +412,8 @@ bool DiscreteHiddenMarkovModel::train(const vector< vector<UINT> > &trainingData
     estimatedStates.clear();
     trainingIterationLog.clear();
     
-	UINT n,currentIter, bestIndex = 0;
-	double newLoglikelihood, bestLogValue = 0;
+    UINT n,currentIter, bestIndex = 0;
+    double newLoglikelihood, bestLogValue = 0;
     
     if( numRandomTrainingIterations > 1 ){
 
@@ -455,19 +455,19 @@ bool DiscreteHiddenMarkovModel::train(const vector< vector<UINT> > &trainingData
         randomizeMatrices(numStates,numSymbols);
     }
 
-	//Perform the actual training
+    //Perform the actual training
     if( !train_(trainingData,maxNumEpochs,currentIter,newLoglikelihood) ){
         return false;
     }
 
-	//Calculate the observationSequence buffer length
-	const UINT numObs = (unsigned int)trainingData.size();
-	UINT k = 0;
+    //Calculate the observationSequence buffer length
+    const UINT numObs = (unsigned int)trainingData.size();
+    UINT k = 0;
     UINT averageObsLength = 0;
-	for(k=0; k<numObs; k++){
-		const UINT T = (unsigned int)trainingData[k].size();
-		averageObsLength += T;
-	}
+    for(k=0; k<numObs; k++){
+        const UINT T = (unsigned int)trainingData[k].size();
+        averageObsLength += T;
+    }
     
     averageObsLength = (UINT)floor( averageObsLength/double(numObs) );
     observationSequence.resize( averageObsLength );
@@ -476,7 +476,7 @@ bool DiscreteHiddenMarkovModel::train(const vector< vector<UINT> > &trainingData
     //Finally, flag that the model was trained
     trained = true;
 
-	return true;
+    return true;
 }
 
 bool DiscreteHiddenMarkovModel::train_(const vector< vector<UINT> > &obs,const UINT maxIter, UINT &currentIter,double &newLoglikelihood){
@@ -836,24 +836,24 @@ bool DiscreteHiddenMarkovModel::loadModelFromFile(fstream &file){
 
 bool DiscreteHiddenMarkovModel::print() const{
 
-	trainingLog << "A: " << endl;
-	for(UINT i=0; i<a.getNumRows(); i++){
-		for(UINT j=0; j<a.getNumCols(); j++){
-			trainingLog << a[i][j] << "\t";
-		}
+    trainingLog << "A: " << endl;
+    for(UINT i=0; i<a.getNumRows(); i++){
+        for(UINT j=0; j<a.getNumCols(); j++){
+            trainingLog << a[i][j] << "\t";
+        }
         trainingLog << endl;
-	}
+    }
 
-	trainingLog << "B: " << endl;
-	for(UINT i=0; i<b.getNumRows(); i++){
-		for(UINT j=0; j<b.getNumCols(); j++){
-			trainingLog << b[i][j] << "\t";
-		}
+    trainingLog << "B: " << endl;
+    for(UINT i=0; i<b.getNumRows(); i++){
+        for(UINT j=0; j<b.getNumCols(); j++){
+            trainingLog << b[i][j] << "\t";
+        }
         trainingLog << endl;
-	}
+    }
     
     trainingLog << "Pi: ";
-	for(UINT i=0; i<pi.size(); i++){
+    for(UINT i=0; i<pi.size(); i++){
         trainingLog << pi[i] << "\t";
     }
     trainingLog<<endl;
