@@ -172,6 +172,11 @@ bool KMeans::train_(MatrixDouble &data){
         errorLog << "train_(MatrixDouble &data) - The number of rows or columns in the data is zero!" << endl;
 		return false;
 	}
+
+  if (data.getNumRows() < numClusters) {
+    errorLog << "train_(MatrixDouble &data) - The number of training samples (" << data.getNumRows() << ") is smaller than the number of clusters (" << numClusters <<")";
+    return false;
+  }
     
 	numTrainingSamples = data.getNumRows();
 	numInputDimensions = data.getNumCols();
