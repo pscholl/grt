@@ -224,7 +224,7 @@ bool ParticleClassifier::loadModelFromFile(fstream &file){
     
     
     //Flag that the model is trained
-    trained = true;
+    trained = false;
     
     //Resize the prediction results to make sure it is setup for realtime prediction
     maxLikelihood = DEFAULT_NULL_LIKELIHOOD_VALUE;
@@ -232,7 +232,7 @@ bool ParticleClassifier::loadModelFromFile(fstream &file){
     classLikelihoods.resize(numClasses,DEFAULT_NULL_LIKELIHOOD_VALUE);
     classDistances.resize(numClasses,DEFAULT_NULL_DISTANCE_VALUE);
     
-    return true;
+    return false;
 }
     
 const vector< ParticleClassifierGestureTemplate >& ParticleClassifier::getGestureTemplates() const{
