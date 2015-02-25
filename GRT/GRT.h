@@ -96,6 +96,7 @@
 #include "FeatureExtractionModules/ZeroCrossingCounter/ZeroCrossingCounter.h"
 #include "FeatureExtractionModules/FFT/FFT.h"
 #include "FeatureExtractionModules/FFT/FFTFeatures.h"
+#include "FeatureExtractionModules/FFT/FrequencyDomainFeatures.h"
 #include "FeatureExtractionModules/MovementTrajectoryFeatures/MovementTrajectoryFeatures.h"
 #include "FeatureExtractionModules/MovementIndex/MovementIndex.h"
 #include "FeatureExtractionModules/TimeDomainFeatures/TimeDomainFeatures.h"
