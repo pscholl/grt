@@ -84,7 +84,6 @@ bool FrequencyDomainFeatures::loadModelFromFile(fstream &file){
 }
 
 bool FrequencyDomainFeatures::computeFeatures(const VectorDouble &inputVector){
-  bool ok;
   if (!fft.computeFeatures(inputVector)) {
     errorLog << "computeFeatures(const VectorDouble &inputVector) - computing fft failed" << endl;
     return false;
