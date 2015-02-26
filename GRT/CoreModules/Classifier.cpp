@@ -194,11 +194,12 @@ UINT Classifier::getNumClasses() const{
 }
     
 UINT Classifier::getClassLabelIndexValue(UINT classLabel) const{
-    for(UINT i=0; i<classLabels.size(); i++){
+    UINT i=0;
+    for(i=0; i<classLabels.size(); i++){
         if( classLabel == classLabels[i] )
-            return i;
+           break;
     }
-    return 0;
+    return i;
 }
 
 bool Classifier::setClassNameForLabel(UINT label, string name) {
