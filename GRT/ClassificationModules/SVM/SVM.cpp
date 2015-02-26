@@ -208,7 +208,7 @@ bool SVM::init(UINT kernelType,UINT svmType,bool useScaling,bool useNullRejectio
     }
     
     if( !validateSVMType(svmType) ){
-        errorLog << "init(...) - Unknown kernelType!\n";
+        errorLog << "init(...) - Unknown svmType!\n";
         return false;
     }
     
