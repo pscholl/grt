@@ -32,6 +32,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     qRegisterMetaType< GRT::GestureRecognitionPipeline >("GRT::GestureRecognitionPipeline");
     qRegisterMetaType< GRT::MLBase >("GRT::MLBase");
     qRegisterMetaType< QTextBlock >("QTextBlock");
+    qRegisterMetaType< GRT::TimeSeriesClassificationSample >("GRT::TimeSeriesClassificationSample");
 
     //Setup the UI
     ui->setupUi(this);
@@ -206,6 +207,7 @@ bool MainWindow::initDataLabellingToolView(){
 
     ui->dataLabellingTool_classificationModeRecordButton->setChecked( false );
     ui->dataLabellingTool_regressionModeRecordButton->setChecked( false );
+    ui->dataLabellingTool_timeseriesClassificationModeRecordButton->setChecked( false );
     ui->dataLabellingTool_clusterModeRecordButton->setChecked( false );
 
     ui->dataLabellingTool_classificationMode_infoTextField->setText("");
@@ -2811,7 +2813,7 @@ void MainWindow::updateClassifierView(const int viewIndex){
             randomForests.enableNullRejection( ui->pipelineTool_enableNullRejection->isChecked() );
             randomForests.setNullRejectionCoeff( ui->pipelineTool_nullRejectionCoeff->value() );
             randomForests.setForestSize( ui->pipelineTool_randomForests_numTrees->value() );
-            randomForests.setNumRandomSpilts( ui->pipelineTool_randomForests_numSpiltingSteps->value() );
+            randomForests.setNumRandomSplits( ui->pipelineTool_randomForests_numSpiltingSteps->value() );
             randomForests.setMaxDepth( ui->pipelineTool_randomForests_maxDepth->value() );
             randomForests.setMinNumSamplesPerNode( ui->pipelineTool_randomForests_minSamplesPerNode->value() );
             core.setClassifier( randomForests );
