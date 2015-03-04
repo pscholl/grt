@@ -120,22 +120,26 @@ bool HMM::train(ClassificationData trainingData){
     errorLog << "train(ClassificationData trainingData) - The HMM classifier should be trained using the train(TimeSeriesClassificationData &trainingData) method" << endl;
     return false;
 }
-    
-    
+
 bool HMM::train_(TimeSeriesClassificationData &trainingData){
     
     switch( hmmType ){
-        case HMM_DISCRETE:
-            return train_discrete( trainingData );
-            break;
-        case HMM_CONTINUOUS:
-            return train_continuous( trainingData );
-            break;
+    case HMM_DISCRETE:
+      return train_discrete( trainingData );
+    case HMM_CONTINUOUS:
+      return train_continuous( trainingData );
     }
     
     errorLog << "train_(TimeSeriesClassificationData &trainingData) - Failed to train model, unknown HMM type!" << endl;
 
 	return false;
+}
+
+static bool hasNULLClass(TimeSeriesClassificationData &trainingData){
+  for(UINT k=0; k<trainingData.getNumClasses(); k++)
+    if ( trainingData.getClassTracker()[k].classLabel == 0)
+      return true;
+  return false;
 }
     
 bool HMM::train_discrete(TimeSeriesClassificationData &trainingData){
@@ -151,10 +155,10 @@ bool HMM::train_discrete(TimeSeriesClassificationData &trainingData){
         errorLog << "train_discrete(TimeSeriesClassificationData &trainingData) - The number of dimensions in the training data must be 1. If your training data is not 1 dimensional then you must quantize the training data using one of the GRT quantization algorithms" << endl;
         return false;
     }
-    
+
     //Reset the HMM
     numInputDimensions = trainingData.getNumDimensions();
-    numClasses = trainingData.getNumClasses();
+    numClasses = trainingData.getNumClasses() - hasNULLClass(trainingData);
     discreteModels.resize( numClasses );
     classLabels.resize( numClasses );
     
@@ -170,12 +174,20 @@ bool HMM::train_discrete(TimeSeriesClassificationData &trainingData){
         //Get the class ID of this gesture
         UINT classID = trainingData.getClassTracker()[k].classLabel;
         classLabels[k] = classID;
-        
+
         //Convert this classes training data into a list of observation sequences
         TimeSeriesClassificationData classData = trainingData.getClassData( classID );
         vector< vector< UINT > > observationSequences;
         if( !convertDataToObservationSequence( classData, observationSequences ) ){
             return false;
+        }
+
+        for (UINT i=0; i<observationSequences.size(); i++) {
+          vector< UINT > &obs = observationSequences[i];
+          if ( obs.size() < numStates ) {
+            errorLog << "sample to small (" << obs.size() << "). Must be at least " << numStates << " long" << endl;
+            return false;
+          }
         }
         
         //Train the model
