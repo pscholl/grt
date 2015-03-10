@@ -135,13 +135,6 @@ bool HMM::train_(TimeSeriesClassificationData &trainingData){
 	return false;
 }
 
-static bool hasNULLClass(TimeSeriesClassificationData &trainingData){
-  for(UINT k=0; k<trainingData.getNumClasses(); k++)
-    if ( trainingData.getClassTracker()[k].classLabel == 0)
-      return true;
-  return false;
-}
-    
 bool HMM::train_discrete(TimeSeriesClassificationData &trainingData){
     
     clear();
@@ -158,10 +151,10 @@ bool HMM::train_discrete(TimeSeriesClassificationData &trainingData){
 
     //Reset the HMM
     numInputDimensions = trainingData.getNumDimensions();
-    numClasses = trainingData.getNumClasses() - hasNULLClass(trainingData);
+    numClasses = trainingData.getNumClasses();
     discreteModels.resize( numClasses );
     classLabels.resize( numClasses );
-    
+
     //Init the models
     for(UINT k=0; k<numClasses; k++){
         discreteModels[k].resetModel(numStates,numSymbols,modelType,delta);
@@ -171,6 +164,9 @@ bool HMM::train_discrete(TimeSeriesClassificationData &trainingData){
     
     //Train each of the models
     for(UINT k=0; k<numClasses; k++){
+        if ( trainingData.getClassTracker()[k].classLabel == 0)
+          continue; // ignore the NULL class
+
         //Get the class ID of this gesture
         UINT classID = trainingData.getClassTracker()[k].classLabel;
         classLabels[k] = classID;
@@ -199,8 +195,35 @@ bool HMM::train_discrete(TimeSeriesClassificationData &trainingData){
     
     //Compute the rejection thresholds
     nullRejectionThresholds.resize(numClasses);
-    
+    trained = true;
+
+    if (!useNullRejection)
+      return true;
+
+    int NULLclassID=-1;
+    UINT NULLidx=0;
+    for (NULLidx=0; NULLidx<numClasses; NULLidx++)
+      if ( trainingData.getClassTracker()[NULLidx].classLabel == 0) {
+        NULLclassID = trainingData.getClassTracker()[NULLidx].classLabel;
+        break;
+      }
+
+    TimeSeriesClassificationData NULLdata;
+    vector< vector< UINT > > NULLsequences;
+    if (NULLclassID != -1) {
+        NULLdata = trainingData.getClassData( NULLclassID );
+        if( !convertDataToObservationSequence( NULLdata, NULLsequences ) )
+            return false;
+    }
+
+    // We do a two-pass null-rejection;
+    //  1. calculate the minimum probability for each class
+    //  2. calculate the maximum probability of NULL-labeled data for each class
+    // Set the null-rejection treshold to mean of those two.
     for(UINT k=0; k<numClasses; k++){
+        if ( trainingData.getClassTracker()[k].classLabel == 0)
+          continue; // ignore the NULL class
+
         //Get the class ID of this gesture
         UINT classID = trainingData.getClassTracker()[k].classLabel;
         classLabels[k] = classID;
@@ -214,19 +237,34 @@ bool HMM::train_discrete(TimeSeriesClassificationData &trainingData){
         
         //Test the model
         double loglikelihood = 0;
-        double avgLoglikelihood = 0;
+        double minLoglikelihood = 0;
         for(UINT i=0; i<observationSequences.size(); i++){
             loglikelihood = discreteModels[k].predict( observationSequences[i] );
-            avgLoglikelihood += fabs( loglikelihood );
+            loglikelihood /= observationSequences[i].size(); // normalize
+            if (minLoglikelihood > loglikelihood)
+              minLoglikelihood = loglikelihood;
         }
-        nullRejectionThresholds[k] = -( avgLoglikelihood / double( observationSequences.size() ) );
+
+        nullRejectionThresholds[k] = minLoglikelihood;
+
+        // if there is NULL data, we test those also 
+        for(UINT i=0; i<NULLsequences.size(); i++){
+            loglikelihood = discreteModels[k].predict( NULLsequences[i] );
+            loglikelihood /= NULLsequences[i].size(); // normalize
+            if (loglikelihood >= nullRejectionThresholds[k])
+                nullRejectionThresholds[k] = (nullRejectionThresholds[k] + loglikelihood) / 2.;
+        }
     }
-    
-    //Flag that the model has been trained
-    trained = true;
-    
+
+    // remove the NULL class from the training set
+    if (NULLclassID != -1) {
+      nullRejectionThresholds.erase(nullRejectionThresholds.begin() + NULLidx);
+      discreteModels.erase(discreteModels.begin() + NULLidx);
+      classLabels.erase(classLabels.begin() + NULLidx);
+      numClasses--;
+    }
+
     return true;
-    
 }
     
 bool HMM::train_continuous(TimeSeriesClassificationData &trainingData){
@@ -338,7 +376,7 @@ bool HMM::predict_discrete( VectorDouble &inputVector ){
 		classDistances[k] = discreteModels[k].predict( newObservation );
         
         //Set the class likelihood as the antilog of the class distances
-        classLikelihoods[k] = antilog( classDistances[k] );
+        classLikelihoods[k] = antilog( classDistances[k] ); 
         
         //The loglikelihood values are negative so we want the values closest to 0
 		if( classDistances[k] > bestDistance ){
@@ -347,12 +385,14 @@ bool HMM::predict_discrete( VectorDouble &inputVector ){
 		}
     }
     
-    // see HMM.cpp:222
-    maxLikelihood = classDistances[ bestIndex ];
+    // see HMM.cpp :222
+    maxLikelihood = classDistances[ bestIndex ] / inputVector.size();
     predictedClassLabel = classLabels[ bestIndex ];
     
     if( useNullRejection ){
-        if( maxLikelihood > nullRejectionThresholds[ bestIndex ] ){
+        // use approximate comparison since serialization of
+        // nullRejectionThresholds cuts off
+        if( maxLikelihood - nullRejectionThresholds[ bestIndex ] > -.1 ){
             predictedClassLabel = classLabels[ bestIndex ];
         }else predictedClassLabel = GRT_DEFAULT_NULL_CLASS_LABEL;
     }
@@ -517,11 +557,11 @@ bool HMM::predict_discrete(MatrixDouble &timeseries){
     }
     
     // see HMM.cpp: 222
-    maxLikelihood = classDistances[ bestIndex ];
+    maxLikelihood = classDistances[ bestIndex ] / M;
     predictedClassLabel = classLabels[ bestIndex ];
     
     if( useNullRejection ){
-        if( maxLikelihood > nullRejectionThresholds[ bestIndex ] ){
+        if( maxLikelihood - nullRejectionThresholds[ bestIndex ] > -.1 ){
             predictedClassLabel = classLabels[ bestIndex ];
         }else predictedClassLabel = GRT_DEFAULT_NULL_CLASS_LABEL;
     }
