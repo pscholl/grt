@@ -325,7 +325,6 @@ bool HMM::predict_discrete( VectorDouble &inputVector ){
     if( classLikelihoods.size() != numClasses ) classLikelihoods.resize(numClasses,0);
     if( classDistances.size() != numClasses ) classDistances.resize(numClasses,0);
     
-    double sum = 0;
     bestDistance = -99e+99;
     UINT bestIndex = 0;
     UINT newObservation = (UINT)inputVector[0];
@@ -346,16 +345,10 @@ bool HMM::predict_discrete( VectorDouble &inputVector ){
 			bestDistance = classDistances[k];
 			bestIndex = k;
 		}
-        
-        sum += classLikelihoods[k];
     }
     
-    //Turn the class distances into proper likelihoods
-    for(UINT k=0; k<numClasses; k++){
-		classLikelihoods[k] /= sum;
-    }
-    
-    maxLikelihood = classLikelihoods[ bestIndex ];
+    // see HMM.cpp:222
+    maxLikelihood = classDistances[ bestIndex ];
     predictedClassLabel = classLabels[ bestIndex ];
     
     if( useNullRejection ){
@@ -457,7 +450,7 @@ bool HMM::predict_continuous( VectorDouble &inputVector ){
     }else{
         //If the sum is not greater than 1, then no class is close to any model
         maxLikelihood = 0;
-        predictedClassLabel = 0;
+        predictedClassLabel = GRT_DEFAULT_NULL_CLASS_LABEL;
     }
     
     return true;
@@ -510,7 +503,6 @@ bool HMM::predict_discrete(MatrixDouble &timeseries){
     
     bestDistance = -99e+99;
     UINT bestIndex = 0;
-    double sum = 0;
 	for(UINT k=0; k<numClasses; k++){
 		classDistances[k] = discreteModels[k].predict( observationSequence );
         
@@ -522,16 +514,10 @@ bool HMM::predict_discrete(MatrixDouble &timeseries){
 			bestDistance = classDistances[k];
 			bestIndex = k;
 		}
-        
-        sum += classLikelihoods[k];
     }
     
-    //Turn the class distances into proper likelihoods
-    for(UINT k=0; k<numClasses; k++){
-		classLikelihoods[k] /= sum;
-    }
-    
-    maxLikelihood = classLikelihoods[ bestIndex ];
+    // see HMM.cpp: 222
+    maxLikelihood = classDistances[ bestIndex ];
     predictedClassLabel = classLabels[ bestIndex ];
     
     if( useNullRejection ){
