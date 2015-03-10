@@ -135,13 +135,6 @@ bool HMM::train_(TimeSeriesClassificationData &trainingData){
 	return false;
 }
 
-static bool hasNULLClass(TimeSeriesClassificationData &trainingData){
-  for(UINT k=0; k<trainingData.getNumClasses(); k++)
-    if ( trainingData.getClassTracker()[k].classLabel == 0)
-      return true;
-  return false;
-}
-    
 bool HMM::train_discrete(TimeSeriesClassificationData &trainingData){
     
     clear();
@@ -158,7 +151,7 @@ bool HMM::train_discrete(TimeSeriesClassificationData &trainingData){
 
     //Reset the HMM
     numInputDimensions = trainingData.getNumDimensions();
-    numClasses = trainingData.getNumClasses() - hasNULLClass(trainingData);
+    numClasses = trainingData.getNumClasses();
     discreteModels.resize( numClasses );
     classLabels.resize( numClasses );
 
