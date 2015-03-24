@@ -392,7 +392,7 @@ bool HMM::predict_discrete( VectorDouble &inputVector ){
     if( useNullRejection ){
         // use approximate comparison since serialization of
         // nullRejectionThresholds cuts off
-        if( maxLikelihood - nullRejectionThresholds[ bestIndex ] > -.1 ){
+        if( maxLikelihood - nullRejectionThresholds[ bestIndex ] > -.00001 ){
             predictedClassLabel = classLabels[ bestIndex ];
         }else predictedClassLabel = GRT_DEFAULT_NULL_CLASS_LABEL;
     }
@@ -561,7 +561,7 @@ bool HMM::predict_discrete(MatrixDouble &timeseries){
     predictedClassLabel = classLabels[ bestIndex ];
     
     if( useNullRejection ){
-        if( maxLikelihood - nullRejectionThresholds[ bestIndex ] > -.1 ){
+        if( maxLikelihood - nullRejectionThresholds[ bestIndex ] > -.0001 ){
             predictedClassLabel = classLabels[ bestIndex ];
         }else predictedClassLabel = GRT_DEFAULT_NULL_CLASS_LABEL;
     }
