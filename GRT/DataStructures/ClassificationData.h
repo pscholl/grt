@@ -160,6 +160,13 @@ public:
 	bool addSample(UINT classLabel,const VectorDouble &sample);
     
     /**
+     Removes the training sample at the specific index from the dataset.
+     
+     @return true if the index is valid and the sample was removed, false otherwise
+     */
+    bool removeSample( const UINT index );
+    
+    /**
      Removes the last training sample added to the dataset.
      
      @return true if the last sample was removed, false otherwise
@@ -175,14 +182,6 @@ public:
 	 @return true if the memory was reserved successfully, false otherwise
      */
     bool reserve(const UINT N);
-	
-	/**
-     Deletes from the dataset all the samples with a specific class label.
-
-     @param const UINT classLabel: the class label of the samples you wish to delete from the dataset
-     @return the number of samples deleted from the dataset
-    */
-	UINT eraseAllSamplesWithClassLabel(const UINT classLabel);
     
     /**
      This function adds the class with the classLabel to the class tracker.
@@ -193,6 +192,25 @@ public:
      @return returns true if the classLabel was added, false otherwise
      */
     bool addClass(const UINT classLabel,const std::string className = "NOT_SET");
+    
+    /**
+     Deletes from the dataset all the samples with a specific class label.
+     
+     @param const UINT classLabel: the class label of the samples you wish to delete from the dataset
+     @return the number of samples deleted from the dataset
+     */
+    UINT removeClass(const UINT classLabel);
+
+    /**
+     @deprecated
+     This function is now depreciated! You should use removeClass(const UINT classLabel) instead.
+     
+     Deletes from the dataset all the samples with a specific class label.
+     
+     @param const UINT classLabel: the class label of the samples you wish to delete from the dataset
+     @return the number of samples deleted from the dataset
+     */
+    UINT eraseAllSamplesWithClassLabel(const UINT classLabel);
     
     /**
      Relabels all the samples with the class label A with the new class label B.
@@ -570,6 +588,25 @@ public:
      @return a MatrixDouble containing the data from the current dataset.
     */
     MatrixDouble getDataAsMatrixDouble() const;
+    
+    /**
+     Generates a labeled dataset that can be used for basic training/testing/validation for ClassificationData.
+     
+     Samples in the dataset will be generated based on K randomly select models, with Gaussian noise.  K is set by the numClasses argument.
+     
+     The range of each dimension will be [-range range].  Sigma controls the amount of Gaussian noise added.
+     
+     The dataset will be saved to the file specified by filename.
+     
+     @param const std::string filename: the name of the file the dataset will be saved to
+     @param const UINT numSamples: the total number of samples in the dataset
+     @param const UINT numClasses: the number of classes in the dataset
+     @param const UINT numDimensions: the number of dimensions in the dataset
+     @param const double range: the range the data will be sampled from, range will be [-range range] for each dimension
+     @param const double sigma: the amount of Gaussian noise
+     @return returns true if the dataset was created successfully, false otherwise
+     */
+    static bool generateGaussDataset( const std::string filename, const UINT numSamples = 10000, const UINT numClasses = 10, const UINT numDimensions = 3, const double range = 10, const double sigma = 1 );
 
 private:
     

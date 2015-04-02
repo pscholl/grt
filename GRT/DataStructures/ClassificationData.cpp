@@ -20,7 +20,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "ClassificationData.h"
 
-namespace GRT{
+using namespace GRT;
 
 ClassificationData::ClassificationData(const UINT numDimensions,const string datasetName,const string infoText){
     this->datasetName = datasetName;
@@ -31,9 +31,10 @@ ClassificationData::ClassificationData(const UINT numDimensions,const string dat
     useExternalRanges = false;
     allowNullGestureClass = true;
     if( numDimensions > 0 ) setNumDimensions( numDimensions );
-    debugLog.setProceedingText("[DEBUG LCD]");
-    errorLog.setProceedingText("[ERROR LCD]");
-    warningLog.setProceedingText("[WARNING LCD]");
+    infoLog.setProceedingText("[ClassificationData]");
+    debugLog.setProceedingText("[DEBUG ClassificationData]");
+    errorLog.setProceedingText("[ERROR ClassificationData]");
+    warningLog.setProceedingText("[WARNING ClassificationData]");
 }
 
 ClassificationData::ClassificationData(const ClassificationData &rhs){
@@ -57,6 +58,7 @@ ClassificationData& ClassificationData::operator=(const ClassificationData &rhs)
         this->classTracker = rhs.classTracker;
         this->data = rhs.data;
         this->crossValidationIndexs = rhs.crossValidationIndexs;
+        this->infoLog = rhs.infoLog;
         this->debugLog = rhs.debugLog;
         this->errorLog = rhs.errorLog;
         this->warningLog = rhs.warningLog;
@@ -171,35 +173,50 @@ bool ClassificationData::addSample(const UINT classLabel,const VectorDouble &sam
 
 	return true;
 }
+    
+bool ClassificationData::removeSample( const UINT index ){
+    
+    if( totalNumSamples == 0 ){
+        warningLog << "removeSample( const UINT index ) - Failed to remove sample, the training dataset is empty!" << endl;
+        return false;
+    }
+    
+    if( index >= totalNumSamples ){
+        warningLog << "removeSample( const UINT index ) - Failed to remove sample, the index is out of bounds! Number of training samples: " << totalNumSamples << " index: " << index << endl;
+        return false;
+    }
+    
+    //The dataset has changed so flag that any previous cross validation setup will now not work
+    crossValidationSetup = false;
+    crossValidationIndexs.clear();
+    
+    //Find the corresponding class ID for the last training example
+    UINT classLabel = data[ index ].getClassLabel();
+    
+    //Remove the training example from the buffer
+    data.erase( data.begin()+index );
+    
+    totalNumSamples = (UINT)data.size();
+    
+    //Remove the value from the counter
+    for(size_t i=0; i<classTracker.size(); i++){
+        if( classTracker[i].classLabel == classLabel ){
+            classTracker[i].counter--;
+            break;
+        }
+    }
+    
+    return true;
+}
 
 bool ClassificationData::removeLastSample(){
+    
+    if( totalNumSamples == 0 ){
+        warningLog << "removeLastSample() - Failed to remove sample, the training dataset is empty!" << endl;
+        return false;
+    }
 
-    if( totalNumSamples > 0 ){
-
-        //The dataset has changed so flag that any previous cross validation setup will now not work
-        crossValidationSetup = false;
-        crossValidationIndexs.clear();
-
-        //Find the corresponding class ID for the last training example
-        UINT classLabel = data[ totalNumSamples-1 ].getClassLabel();
-
-        //Remove the training example from the buffer
-        data.erase(data.end()-1);
-
-        totalNumSamples = (UINT)data.size();
-
-        //Remove the value from the counter
-        for(UINT i=0; i<classTracker.size(); i++){
-            if( classTracker[i].classLabel == classLabel ){
-                classTracker[i].counter--;
-                break;
-            }
-        }
-
-        return true;
-
-    }else return false;
-
+    return removeSample( totalNumSamples-1 );
 }
 
 bool ClassificationData::reserve(const UINT N){
@@ -212,43 +229,15 @@ bool ClassificationData::reserve(const UINT N){
 }
     
 UINT ClassificationData::eraseAllSamplesWithClassLabel(const UINT classLabel){
-	UINT numExamplesRemoved = 0;
-	UINT numExamplesToRemove = 0;
-
-    //The dataset has changed so flag that any previous cross validation setup will now not work
-    crossValidationSetup = false;
-    crossValidationIndexs.clear();
-
-	//Find out how many training examples we need to remove
-	for(UINT i=0; i<classTracker.size(); i++){
-		if( classTracker[i].classLabel == classLabel ){
-			numExamplesToRemove = classTracker[i].counter;
-			classTracker.erase(classTracker.begin()+i);
-			break;
-		}
-	}
-
-	//Remove the samples with the matching class ID
-	if( numExamplesToRemove > 0 ){
-		UINT i=0;
-		while( numExamplesRemoved < numExamplesToRemove ){
-			if( data[i].getClassLabel() == classLabel ){
-				data.erase(data.begin()+i);
-				numExamplesRemoved++;
-			}else if( ++i == data.size() ) break;
-		}
-	}
-
-	totalNumSamples = (UINT)data.size();
-
-	return numExamplesRemoved;
+    return removeClass( classLabel );
 }
     
 bool ClassificationData::addClass(const UINT classLabel,const std::string className){
     
     //Check to make sure the class label does not exist
-    for(UINT i=0; i<classTracker.size(); i++){
+    for(size_t i=0; i<classTracker.size(); i++){
         if( classTracker[i].classLabel == classLabel ){
+            warningLog << "addClass(const UINT classLabel,const std::string className) - Failed to add class, it already exists! Class label: " << classLabel << endl;
             return false;
         }
     }
@@ -260,6 +249,40 @@ bool ClassificationData::addClass(const UINT classLabel,const std::string classN
     sortClassLabels();
     
     return true;
+}
+    
+UINT ClassificationData::removeClass(const UINT classLabel){
+    
+    UINT numExamplesRemoved = 0;
+    UINT numExamplesToRemove = 0;
+    
+    //The dataset has changed so flag that any previous cross validation setup will now not work
+    crossValidationSetup = false;
+    crossValidationIndexs.clear();
+    
+    //Find out how many training examples we need to remove
+    for(UINT i=0; i<classTracker.size(); i++){
+        if( classTracker[i].classLabel == classLabel ){
+            numExamplesToRemove = classTracker[i].counter;
+            classTracker.erase(classTracker.begin()+i);
+            break;
+        }
+    }
+    
+    //Remove the samples with the matching class ID
+    if( numExamplesToRemove > 0 ){
+        UINT i=0;
+        while( numExamplesRemoved < numExamplesToRemove ){
+            if( data[i].getClassLabel() == classLabel ){
+                data.erase(data.begin()+i);
+                numExamplesRemoved++;
+            }else if( ++i == data.size() ) break;
+        }
+    }
+    
+    totalNumSamples = (UINT)data.size();
+    
+    return numExamplesRemoved;
 }
 
 bool ClassificationData::relabelAllSamplesWithClassLabel(const UINT oldClassLabel,const UINT newClassLabel){
@@ -1413,4 +1436,41 @@ MatrixDouble ClassificationData::getDataAsMatrixDouble() const{
     return d;
 }
 
-}; //End of namespace GRT
+bool ClassificationData::generateGaussDataset( const std::string filename, const UINT numSamples, const UINT numClasses, const UINT numDimensions, const double range, const double sigma ){
+    
+    Random random;
+    
+    //Generate a simple model that will be used to generate the main dataset
+    MatrixDouble model(numClasses,numDimensions);
+    for(UINT k=0; k<numClasses; k++){
+        for(UINT j=0; j<numDimensions; j++){
+            model[k][j] = random.getRandomNumberUniform(-range,range);
+        }
+    }
+    
+    //Use the model above to generate the main dataset
+    ClassificationData data;
+    data.setNumDimensions( numDimensions );
+    
+    for(UINT i=0; i<numSamples; i++){
+        
+        //Randomly select which class this sample belongs to
+        UINT k = random.getRandomNumberInt( 0, numClasses );
+        
+        //Generate a sample using the model (+ some Gaussian noise)
+        vector< double > sample( numDimensions );
+        for(UINT j=0; j<numDimensions; j++){
+            sample[j] = model[k][j] + random.getRandomNumberGauss(0,sigma);
+        }
+        
+        //By default in the GRT, the class label should not be 0, so add 1
+        UINT classLabel = k + 1;
+        
+        //Add the labeled sample to the dataset
+        data.addSample( classLabel, sample );
+    }
+    
+    //Save the dataset to a CSV file
+    return data.save( filename );
+}
+
