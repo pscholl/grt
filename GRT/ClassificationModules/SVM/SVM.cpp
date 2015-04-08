@@ -25,6 +25,17 @@ namespace GRT{
 //Register the SVM module with the Classifier base class
 RegisterClassifierModule< SVM > SVM::registerModule("SVM");
 
+void print_to_training(const char *s) {
+  static TrainingLog c_trainlog("[TRAINING SVM]");
+  c_trainlog << s;
+}
+
+void print_to_debug(const char *s) {
+  static DebugLog c_log("[DEBUG SVM]");
+  c_log << s;
+}
+
+
 SVM::SVM(UINT kernelType,UINT svmType,bool useScaling,bool useNullRejection,bool useAutoGamma,double gamma,UINT degree,double coef0,double nu,double C,bool useCrossValidation,UINT kFoldValue){
     
     //Setup the default SVM parameters
@@ -66,6 +77,7 @@ SVM::SVM(UINT kernelType,UINT svmType,bool useScaling,bool useNullRejection,bool
     trainingLog.setProceedingText("[TRAINING SVM]");
     warningLog.setProceedingText("[WARNING SVM]");
     
+    svm_set_print_string_function(print_to_debug);
     init(kernelType,svmType,useScaling,useNullRejection,useAutoGamma,gamma,degree,coef0,nu,C,useCrossValidation,kFoldValue);
 }
     
@@ -350,9 +362,14 @@ bool SVM::trainSVM(){
         }
         delete[] target;
     }
-        
+
+    // set the print function prior to training
+    svm_set_print_string_function(print_to_training);
+
     //Train the SVM - if we are running cross validation then the CV will be run first followed by a full train
     model = svm_train(&prob,&param);
+
+    svm_set_print_string_function(print_to_debug);
 
     if( model == NULL ){
         errorLog << "trainSVM() - Failed to train SVM Model!" << endl;
