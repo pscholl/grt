@@ -314,11 +314,14 @@ bool Classifier::saveBaseSettingsToFile(fstream &file) const{
         file << "ClassNames: ";
         for(UINT i=0; i<classNames.size(); i++){
           string name = classNames[i];
-          if (name.empty()) name = "_";
+          if (name.find_first_not_of(" \t\n\v\f\r") == std::string::npos) name = "_";
           std::replace(name.begin(), name.end(), ' ', '_');
           std::replace(name.begin(), name.end(), '\t', '_');
           file << " " << name;
         }
+        for(UINT i=0; i<(classLabels.size()-classNames.size()); i++)
+          file << " _";
+
         file << endl;
         
         if( useScaling ){
