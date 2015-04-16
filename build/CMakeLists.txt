@@ -26,7 +26,7 @@ endif()
 if(MSVC)
     message(STATUS "Building " ${LIB_BUILD_TYPE_INFO} " library for Windows")
     add_definitions(-D_CRT_SECURE_NO_WARNINGS)
-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -std=c++")
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ")
 endif()
 
