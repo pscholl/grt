@@ -19,6 +19,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 #include "ClassificationData.h"
+#include <set>
 
 using namespace GRT;
 
@@ -67,9 +68,9 @@ ClassificationData& ClassificationData::operator=(const ClassificationData &rhs)
 }
 
 void ClassificationData::clear(){
-	totalNumSamples = 0;
-	data.clear();
-	classTracker.clear();
+    totalNumSamples = 0;
+    data.clear();
+    classTracker.clear();
     crossValidationSetup = false;
     crossValidationIndexs.clear();
 }
@@ -120,7 +121,7 @@ bool ClassificationData::setClassNameForCorrespondingClassLabel(const string cla
         }
     }
 
-	errorLog << "setClassNameForCorrespondingClassLabel(const string className,const UINT classLabel) - Failed to find class with label: " << classLabel << endl;
+    errorLog << "setClassNameForCorrespondingClassLabel(const string className,const UINT classLabel) - Failed to find class with label: " << classLabel << endl;
     return false;
 }
     
@@ -131,7 +132,7 @@ bool ClassificationData::setAllowNullGestureClass(const bool allowNullGestureCla
 
 bool ClassificationData::addSample(const UINT classLabel,const VectorDouble &sample){
     
-	if( sample.size() != numDimensions ){
+    if( sample.size() != numDimensions ){
         errorLog << "addSample(const UINT classLabel, VectorDouble &sample) - the size of the new sample (" << sample.size() << ") does not match the number of dimensions of the dataset (" << numDimensions << ")" << endl;
         return false;
     }
@@ -146,32 +147,32 @@ bool ClassificationData::addSample(const UINT classLabel,const VectorDouble &sam
     crossValidationSetup = false;
     crossValidationIndexs.clear();
 
-	ClassificationSample newSample(classLabel,sample);
-	data.push_back( newSample );
-	totalNumSamples++;
+    ClassificationSample newSample(classLabel,sample);
+    data.push_back( newSample );
+    totalNumSamples++;
 
-	if( classTracker.size() == 0 ){
-		ClassTracker tracker(classLabel,1);
-		classTracker.push_back(tracker);
-	}else{
-		bool labelFound = false;
-		for(UINT i=0; i<classTracker.size(); i++){
-			if( classLabel == classTracker[i].classLabel ){
-				classTracker[i].counter++;
-				labelFound = true;
-				break;
-			}
-		}
-		if( !labelFound ){
-			ClassTracker tracker(classLabel,1);
-			classTracker.push_back(tracker);
-		}
-	}
+    if( classTracker.size() == 0 ){
+        ClassTracker tracker(classLabel,1);
+        classTracker.push_back(tracker);
+    }else{
+        bool labelFound = false;
+        for(UINT i=0; i<classTracker.size(); i++){
+            if( classLabel == classTracker[i].classLabel ){
+                classTracker[i].counter++;
+                labelFound = true;
+                break;
+            }
+        }
+        if( !labelFound ){
+            ClassTracker tracker(classLabel,1);
+            classTracker.push_back(tracker);
+        }
+    }
 
     //Update the class labels
     sortClassLabels();
 
-	return true;
+    return true;
 }
     
 bool ClassificationData::removeSample( const UINT index ){
@@ -393,24 +394,24 @@ bool ClassificationData::load(const string &filename){
 
 bool ClassificationData::saveDatasetToFile(const string &filename) const{
 
-	std::fstream file;
-	file.open(filename.c_str(), std::ios::out);
+    std::fstream file;
+    file.open(filename.c_str(), std::ios::out);
 
-	if( !file.is_open() ){
-		return false;
-	}
+    if( !file.is_open() ){
+        return false;
+    }
 
-	file << "GRT_LABELLED_CLASSIFICATION_DATA_FILE_V1.0\n";
+    file << "GRT_LABELLED_CLASSIFICATION_DATA_FILE_V1.0\n";
     file << "DatasetName: " << datasetName << endl;
     file << "InfoText: " << infoText << endl;
-	file << "NumDimensions: " << numDimensions << endl;
-	file << "TotalNumExamples: " << totalNumSamples << endl;
-	file << "NumberOfClasses: " << classTracker.size() << endl;
-	file << "ClassIDsAndCounters: " << endl;
+    file << "NumDimensions: " << numDimensions << endl;
+    file << "TotalNumExamples: " << totalNumSamples << endl;
+    file << "NumberOfClasses: " << classTracker.size() << endl;
+    file << "ClassIDsAndCounters: " << endl;
 
-	for(UINT i=0; i<classTracker.size(); i++){
-		file << classTracker[i].classLabel << "\t" << classTracker[i].counter << "\t" << classTracker[i].className << endl;
-	}
+    for(UINT i=0; i<classTracker.size(); i++){
+        file << classTracker[i].classLabel << "\t" << classTracker[i].counter << "\t" << classTracker[i].className << endl;
+    }
 
     file << "UseExternalRanges: " << useExternalRanges << endl;
 
@@ -420,58 +421,58 @@ bool ClassificationData::saveDatasetToFile(const string &filename) const{
         }
     }
 
-	file << "Data:\n";
+    file << "Data:\n";
 
-	for(UINT i=0; i<totalNumSamples; i++){
-		file << data[i].getClassLabel();
-		for(UINT j=0; j<numDimensions; j++){
-			file << "\t" << data[i][j];
-		}
-		file << endl;
-	}
+    for(UINT i=0; i<totalNumSamples; i++){
+        file << data[i].getClassLabel();
+        for(UINT j=0; j<numDimensions; j++){
+            file << "\t" << data[i][j];
+        }
+        file << endl;
+    }
 
-	file.close();
-	return true;
+    file.close();
+    return true;
 }
 
 bool ClassificationData::loadDatasetFromFile(const string &filename){
 
-	std::fstream file;
-	file.open(filename.c_str(), std::ios::in);
-	UINT numClasses = 0;
-	clear();
+    std::fstream file;
+    file.open(filename.c_str(), std::ios::in);
+    UINT numClasses = 0;
+    clear();
 
-	if( !file.is_open() ){
+    if( !file.is_open() ){
         errorLog << "loadDatasetFromFile(const string &filename) - could not open file!" << endl;
-		return false;
-	}
+        return false;
+    }
 
-	string word;
+    string word;
 
-	//Check to make sure this is a file with the Training File Format
-	file >> word;
-	if(word != "GRT_LABELLED_CLASSIFICATION_DATA_FILE_V1.0"){
+    //Check to make sure this is a file with the Training File Format
+    file >> word;
+    if(word != "GRT_LABELLED_CLASSIFICATION_DATA_FILE_V1.0"){
         errorLog << "loadDatasetFromFile(const string &filename) - could not find file header!" << endl;
-		file.close();
-		return false;
-	}
+        file.close();
+        return false;
+    }
 
     //Get the name of the dataset
-	file >> word;
-	if(word != "DatasetName:"){
+    file >> word;
+    if(word != "DatasetName:"){
         errorLog << "loadDatasetFromFile(const string &filename) - failed to find DatasetName header!" << endl;
         errorLog << word << endl;
-		file.close();
-		return false;
-	}
-	file >> datasetName;
+        file.close();
+        return false;
+    }
+    file >> datasetName;
 
     file >> word;
-	if(word != "InfoText:"){
+    if(word != "InfoText:"){
         errorLog << "loadDatasetFromFile(const string &filename) - failed to find InfoText header!" << endl;
-		file.close();
-		return false;
-	}
+        file.close();
+        return false;
+    }
 
     //Load the info text
     file >> word;
@@ -481,56 +482,56 @@ bool ClassificationData::loadDatasetFromFile(const string &filename){
         file >> word;
     }
 
-	//Get the number of dimensions in the training data
-	if( word != "NumDimensions:" ){
+    //Get the number of dimensions in the training data
+    if( word != "NumDimensions:" ){
         errorLog << "loadDatasetFromFile(const string &filename) - failed to find NumDimensions header!" << endl;
-		file.close();
-		return false;
-	}
-	file >> numDimensions;
+        file.close();
+        return false;
+    }
+    file >> numDimensions;
 
-	//Get the total number of training examples in the training data
-	file >> word;
-	if( word != "TotalNumTrainingExamples:" && word != "TotalNumExamples:" ){
+    //Get the total number of training examples in the training data
+    file >> word;
+    if( word != "TotalNumTrainingExamples:" && word != "TotalNumExamples:" ){
         errorLog << "loadDatasetFromFile(const string &filename) - failed to find TotalNumTrainingExamples header!" << endl;
-		file.close();
-		return false;
-	}
-	file >> totalNumSamples;
+        file.close();
+        return false;
+    }
+    file >> totalNumSamples;
 
-	//Get the total number of classes in the training data
-	file >> word;
-	if(word != "NumberOfClasses:"){
+    //Get the total number of classes in the training data
+    file >> word;
+    if(word != "NumberOfClasses:"){
         errorLog << "loadDatasetFromFile(string filename) - failed to find NumberOfClasses header!" << endl;
-		file.close();
-		return false;
-	}
-	file >> numClasses;
+        file.close();
+        return false;
+    }
+    file >> numClasses;
 
-	//Resize the class counter buffer and load the counters
-	classTracker.resize(numClasses);
+    //Resize the class counter buffer and load the counters
+    classTracker.resize(numClasses);
 
-	//Get the total number of classes in the training data
-	file >> word;
-	if(word != "ClassIDsAndCounters:"){
+    //Get the total number of classes in the training data
+    file >> word;
+    if(word != "ClassIDsAndCounters:"){
         errorLog << "loadDatasetFromFile(const string &filename) - failed to find ClassIDsAndCounters header!" << endl;
-		file.close();
-		return false;
-	}
+        file.close();
+        return false;
+    }
 
-	for(UINT i=0; i<classTracker.size(); i++){
-		file >> classTracker[i].classLabel;
-		file >> classTracker[i].counter;
+    for(UINT i=0; i<classTracker.size(); i++){
+        file >> classTracker[i].classLabel;
+        file >> classTracker[i].counter;
         file >> classTracker[i].className;
-	}
+    }
 
     //Check if the dataset should be scaled using external ranges
-	file >> word;
-	if(word != "UseExternalRanges:"){
+    file >> word;
+    if(word != "UseExternalRanges:"){
         errorLog << "loadDatasetFromFile(const string &filename) - failed to find UseExternalRanges header!" << endl;
-		file.close();
-		return false;
-	}
+        file.close();
+        return false;
+    }
     file >> useExternalRanges;
 
     //If we are using external ranges then load them
@@ -542,54 +543,54 @@ bool ClassificationData::loadDatasetFromFile(const string &filename){
         }
     }
 
-	//Get the main training data
-	file >> word;
-	if( word != "LabelledTrainingData:" && word != "Data:"){
+    //Get the main training data
+    file >> word;
+    if( word != "LabelledTrainingData:" && word != "Data:"){
         errorLog << "loadDatasetFromFile(const string &filename) - failed to find LabelledTrainingData header!" << endl;
-		file.close();
-		return false;
-	}
+        file.close();
+        return false;
+    }
 
-	ClassificationSample tempSample( numDimensions );
-	data.resize( totalNumSamples, tempSample );
+    ClassificationSample tempSample( numDimensions );
+    data.resize( totalNumSamples, tempSample );
 
-	for(UINT i=0; i<totalNumSamples; i++){
+    for(UINT i=0; i<totalNumSamples; i++){
         UINT classLabel = 0;
         VectorDouble sample(numDimensions,0);
-		file >> classLabel;
-		for(UINT j=0; j<numDimensions; j++){
-			file >> sample[j];
-		}
+        file >> classLabel;
+        for(UINT j=0; j<numDimensions; j++){
+            file >> sample[j];
+        }
         data[i].set(classLabel, sample);
-	}
+    }
 
-	file.close();
-	
+    file.close();
+    
     //Sort the class labels
     sortClassLabels();
-	
-	return true;
+    
+    return true;
 }
 
 bool ClassificationData::saveDatasetToCSVFile(const string &filename) const{
 
     std::fstream file;
-	file.open(filename.c_str(), std::ios::out );
+    file.open(filename.c_str(), std::ios::out );
 
-	if( !file.is_open() ){
-		return false;
-	}
+    if( !file.is_open() ){
+        return false;
+    }
 
     //Write the data to the CSV file
     for(UINT i=0; i<totalNumSamples; i++){
-		file << data[i].getClassLabel();
-		for(UINT j=0; j<numDimensions; j++){
-			file << "," << data[i][j];
-		}
-		file << endl;
-	}
+        file << data[i].getClassLabel();
+        for(UINT j=0; j<numDimensions; j++){
+            file << "," << data[i][j];
+        }
+        file << endl;
+    }
 
-	file.close();
+    file.close();
 
     return true;
 }
@@ -684,18 +685,18 @@ bool ClassificationData::printStats() const{
 }
 
 bool ClassificationData::sortClassLabels(){
-	
-	sort(classTracker.begin(),classTracker.end(),ClassTracker::sortByClassLabelAscending);
+    
+    sort(classTracker.begin(),classTracker.end(),ClassTracker::sortByClassLabelAscending);
 
-	return true;
+    return true;
 }
 
 ClassificationData ClassificationData::partition(const UINT trainingSizePercentage,const bool useStratifiedSampling){
 
     //Partitions the dataset into a training dataset (which is kept by this instance of the ClassificationData) and
-	//a testing/validation dataset (which is return as a new instance of the ClassificationData).  The trainingSizePercentage
-	//therefore sets the size of the data which remains in this instance and the remaining percentage of data is then added to
-	//the testing/validation dataset
+    //a testing/validation dataset (which is return as a new instance of the ClassificationData).  The trainingSizePercentage
+    //therefore sets the size of the data which remains in this instance and the remaining percentage of data is then added to
+    //the testing/validation dataset
 
     //The dataset has changed so flag that any previous cross validation setup will now not work
     crossValidationSetup = false;
@@ -707,13 +708,14 @@ ClassificationData ClassificationData::partition(const UINT trainingSizePercenta
     testSet.setAllowNullGestureClass( allowNullGestureClass );
     vector< UINT > indexs( totalNumSamples );
 
-	//Create the random partion indexs
-	Random random;
+    //Create the random partion indexs
+    Random random;
     UINT randomIndex = 0;
 
     if( useStratifiedSampling ){
         //Break the data into seperate classes
         vector< vector< UINT > > classData( getNumClasses() );
+        set< UINT > training_idx;
 
         //Add the indexs to their respective classes
         for(UINT i=0; i<totalNumSamples; i++){
@@ -731,38 +733,26 @@ ClassificationData ClassificationData::partition(const UINT trainingSizePercenta
                 SWAP(classData[k][ x ], classData[k][ randomIndex ]);
             }
         }
-        
-        //Reserve the memory
-        UINT numTrainingSamples = 0;
-        UINT numTestSamples = 0;
-        
-        for(UINT k=0; k<getNumClasses(); k++){
-            UINT numTrainingExamples = (UINT) floor( double(classData[k].size()) / 100.0 * double(trainingSizePercentage) );
-            UINT numTestExamples = ((UINT)classData[k].size())-numTrainingExamples;
-            numTrainingSamples += numTrainingExamples;
-            numTestSamples += numTestExamples;
+
+        // get the indices of the trainingset in a linear set
+        for(UINT k=0; k<getNumClasses(); k++) {
+            UINT numTrainingSamples = (UINT) floor( double(classData[k].size()) / 100.0 * double(trainingSizePercentage) );
+
+            for(UINT i=0; i<numTrainingSamples; i++)
+              training_idx.insert( classData[k][i] );
         }
-        
-        trainingSet.reserve( numTrainingSamples );
-        testSet.reserve( numTestSamples );
 
-        //Loop over each class and add the data to the trainingSet and testSet
-        for(UINT k=0; k<getNumClasses(); k++){
-            UINT numTrainingExamples = (UINT) floor( double(classData[k].size()) / 100.0 * double(trainingSizePercentage) );
-
-            //Add the data to the training and test sets
-            for(UINT i=0; i<numTrainingExamples; i++){
-                UINT labelkey = data [ classData[k][i] ].getClassLabel();
-                std::string label = getClassNameForCorrespondingClassLabel( labelkey );
-                trainingSet.addSample( labelkey , data[ classData[k][i] ].getSample() );
-                trainingSet.setClassNameForCorrespondingClassLabel( label, labelkey );
-            }
-            for(UINT i=numTrainingExamples; i<classData[k].size(); i++){
-                UINT labelkey = data [ classData[k][i] ].getClassLabel();
-                std::string label = getClassNameForCorrespondingClassLabel( labelkey );
-                testSet.addSample( labelkey , data[ classData[k][i] ].getSample() );
-                testSet.setClassNameForCorrespondingClassLabel( label, labelkey );
-            }
+        // retain order of the original set by only removing training samples
+        for(UINT i=0; i<data.size(); i++) {
+          UINT labelkey = data [ i ].getClassLabel();
+          std::string label = getClassNameForCorrespondingClassLabel( labelkey );
+          if(training_idx.count( i )) {
+            trainingSet.addSample( labelkey , data[i].getSample() );
+            trainingSet.setClassNameForCorrespondingClassLabel( label, labelkey );
+          } else {
+            testSet.addSample( labelkey , data[i].getSample() );
+            testSet.setClassNameForCorrespondingClassLabel( label, labelkey );
+          }
         }
     }else{
 
@@ -801,7 +791,7 @@ ClassificationData ClassificationData::partition(const UINT trainingSizePercenta
     //Sort the class labels of the test dataset
     testSet.sortClassLabels();
 
-	return testSet;
+    return testSet;
 }
 
 bool ClassificationData::merge(const ClassificationData &labelledData){
@@ -872,8 +862,8 @@ bool ClassificationData::spiltDataIntoKFolds(const UINT K,const bool useStratifi
     //Add the random indexs to each fold
     crossValidationIndexs.resize(K);
 
-	//Create the random partion indexs
-	Random random;
+    //Create the random partion indexs
+    Random random;
     UINT randomIndex = 0;
 
     if( useStratifiedSampling ){
@@ -995,14 +985,14 @@ ClassificationData ClassificationData::getTestFoldData(const UINT foldIndex) con
 
     //Add the data to the test fold
     UINT index = 0;
-	for(UINT i=0; i<crossValidationIndexs[ foldIndex ].size(); i++){
+    for(UINT i=0; i<crossValidationIndexs[ foldIndex ].size(); i++){
 
         index = crossValidationIndexs[ foldIndex ][i];
-		testData.addSample( data[ index ].getClassLabel(), data[ index ].getSample() );
-	}
-	
+        testData.addSample( data[ index ].getClassLabel(), data[ index ].getSample() );
+    }
+    
     //Sort the class labels
-	testData.sortClassLabels();
+    testData.sortClassLabels();
 
     return testData;
 }
@@ -1216,7 +1206,7 @@ vector<MinMax> ClassificationData::getRanges() const{
     //If the dataset should be scaled using the external ranges then return the external ranges
     if( useExternalRanges ) return externalRanges;
 
-	vector< MinMax > ranges(numDimensions);
+    vector< MinMax > ranges(numDimensions);
 
     //Otherwise return the min and max values for each column in the dataset
     if( totalNumSamples > 0 ){
@@ -1224,8 +1214,8 @@ vector<MinMax> ClassificationData::getRanges() const{
             ranges[j].minValue = data[0][j];
             ranges[j].maxValue = data[0][j];
             for(UINT i=0; i<totalNumSamples; i++){
-                if( data[i][j] < ranges[j].minValue ){ ranges[j].minValue = data[i][j]; }		//Search for the min value
-                else if( data[i][j] > ranges[j].maxValue ){ ranges[j].maxValue = data[i][j]; }	//Search for the max value
+                if( data[i][j] < ranges[j].minValue ){ ranges[j].minValue = data[i][j]; }       //Search for the min value
+                else if( data[i][j] > ranges[j].maxValue ){ ranges[j].maxValue = data[i][j]; }  //Search for the max value
             }
         }
     }
@@ -1257,32 +1247,32 @@ vector< UINT > ClassificationData::getNumSamplesPerClass() const{
 }
 
 VectorDouble ClassificationData::getMean() const{
-	
-	VectorDouble mean(numDimensions,0);
-	
-	for(UINT j=0; j<numDimensions; j++){
-		for(UINT i=0; i<totalNumSamples; i++){
-			mean[j] += data[i][j];
-		}
-		mean[j] /= double(totalNumSamples);
-	}
-	
-	return mean;
+    
+    VectorDouble mean(numDimensions,0);
+    
+    for(UINT j=0; j<numDimensions; j++){
+        for(UINT i=0; i<totalNumSamples; i++){
+            mean[j] += data[i][j];
+        }
+        mean[j] /= double(totalNumSamples);
+    }
+    
+    return mean;
 }
 
 VectorDouble ClassificationData::getStdDev() const{
-	
-	VectorDouble mean = getMean();
-	VectorDouble stdDev(numDimensions,0);
-	
-	for(UINT j=0; j<numDimensions; j++){
-		for(UINT i=0; i<totalNumSamples; i++){
-			stdDev[j] += SQR(data[i][j]-mean[j]);
-		}
-		stdDev[j] = sqrt( stdDev[j] / double(totalNumSamples-1) );
-	}
-	
-	return stdDev;
+    
+    VectorDouble mean = getMean();
+    VectorDouble stdDev(numDimensions,0);
+    
+    for(UINT j=0; j<numDimensions; j++){
+        for(UINT i=0; i<totalNumSamples; i++){
+            stdDev[j] += SQR(data[i][j]-mean[j]);
+        }
+        stdDev[j] = sqrt( stdDev[j] / double(totalNumSamples-1) );
+    }
+    
+    return stdDev;
 }
 
 MatrixDouble ClassificationData::getClassHistogramData(UINT classLabel,UINT numBins) const{
@@ -1332,69 +1322,69 @@ MatrixDouble ClassificationData::getClassHistogramData(UINT classLabel,UINT numB
 }
 
 MatrixDouble ClassificationData::getClassMean() const{
-	
-	MatrixDouble mean(getNumClasses(),numDimensions);
-	VectorDouble counter(getNumClasses(),0);
-	
-	mean.setAllValues( 0 );
-	
-	for(UINT i=0; i<totalNumSamples; i++){
-		UINT classIndex = getClassLabelIndexValue( data[i].getClassLabel() );
-		for(UINT j=0; j<numDimensions; j++){
-			mean[classIndex][j] += data[i][j];
-		}
-		counter[ classIndex ]++;
-	}
-	
-	for(UINT k=0; k<getNumClasses(); k++){
-		for(UINT j=0; j<numDimensions; j++){
-			mean[k][j] = counter[j] > 0 ? mean[k][j]/counter[j] : 0;
-		}
-	}
-	
-	return mean;
+    
+    MatrixDouble mean(getNumClasses(),numDimensions);
+    VectorDouble counter(getNumClasses(),0);
+    
+    mean.setAllValues( 0 );
+    
+    for(UINT i=0; i<totalNumSamples; i++){
+        UINT classIndex = getClassLabelIndexValue( data[i].getClassLabel() );
+        for(UINT j=0; j<numDimensions; j++){
+            mean[classIndex][j] += data[i][j];
+        }
+        counter[ classIndex ]++;
+    }
+    
+    for(UINT k=0; k<getNumClasses(); k++){
+        for(UINT j=0; j<numDimensions; j++){
+            mean[k][j] = counter[j] > 0 ? mean[k][j]/counter[j] : 0;
+        }
+    }
+    
+    return mean;
 }
 
 MatrixDouble ClassificationData::getClassStdDev() const{
 
-	MatrixDouble mean = getClassMean();
-	MatrixDouble stdDev(getNumClasses(),numDimensions);
-	VectorDouble counter(getNumClasses(),0);
-	
-	stdDev.setAllValues( 0 );
-	
-	for(UINT i=0; i<totalNumSamples; i++){
-		UINT classIndex = getClassLabelIndexValue( data[i].getClassLabel() );
-		for(UINT j=0; j<numDimensions; j++){
-			stdDev[classIndex][j] += SQR(data[i][j]-mean[classIndex][j]);
-		}
-		counter[ classIndex  ]++;
-	}
-	
-	for(UINT k=0; k<getNumClasses(); k++){
-		for(UINT j=0; j<numDimensions; j++){
-			stdDev[k][j] = sqrt( stdDev[k][j] / double(counter[k]-1) );
-		}
-	}
-	
-	return stdDev;
+    MatrixDouble mean = getClassMean();
+    MatrixDouble stdDev(getNumClasses(),numDimensions);
+    VectorDouble counter(getNumClasses(),0);
+    
+    stdDev.setAllValues( 0 );
+    
+    for(UINT i=0; i<totalNumSamples; i++){
+        UINT classIndex = getClassLabelIndexValue( data[i].getClassLabel() );
+        for(UINT j=0; j<numDimensions; j++){
+            stdDev[classIndex][j] += SQR(data[i][j]-mean[classIndex][j]);
+        }
+        counter[ classIndex  ]++;
+    }
+    
+    for(UINT k=0; k<getNumClasses(); k++){
+        for(UINT j=0; j<numDimensions; j++){
+            stdDev[k][j] = sqrt( stdDev[k][j] / double(counter[k]-1) );
+        }
+    }
+    
+    return stdDev;
 }
 
 MatrixDouble ClassificationData::getCovarianceMatrix() const{
-	
-	VectorDouble mean = getMean();
-	MatrixDouble covariance(numDimensions,numDimensions);
-	
-	for(UINT j=0; j<numDimensions; j++){
-		for(UINT k=0; k<numDimensions; k++){
-			for(UINT i=0; i<totalNumSamples; i++){
-				covariance[j][k] += (data[i][j]-mean[j]) * (data[i][k]-mean[k]) ;
-			}
-			covariance[j][k] /= double(totalNumSamples-1);
-		}
-	}
-	
-	return covariance;
+    
+    VectorDouble mean = getMean();
+    MatrixDouble covariance(numDimensions,numDimensions);
+    
+    for(UINT j=0; j<numDimensions; j++){
+        for(UINT k=0; k<numDimensions; k++){
+            for(UINT i=0; i<totalNumSamples; i++){
+                covariance[j][k] += (data[i][j]-mean[j]) * (data[i][k]-mean[k]) ;
+            }
+            covariance[j][k] /= double(totalNumSamples-1);
+        }
+    }
+    
+    return covariance;
 }
 
 vector< MatrixDouble > ClassificationData::getHistogramData(UINT numBins) const{

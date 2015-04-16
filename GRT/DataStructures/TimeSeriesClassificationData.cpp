@@ -19,6 +19,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 #include "TimeSeriesClassificationData.h"
+#include <set>
 
 namespace GRT{
 
@@ -722,6 +723,7 @@ TimeSeriesClassificationData TimeSeriesClassificationData::partition(const UINT 
     if( useStratifiedSampling ){
         //Break the data into seperate classes
         vector< vector< UINT > > classData( getNumClasses() );
+        set< UINT > training_idx;
 
         //Add the indexs to their respective classes
         for(UINT i=0; i<totalNumSamples; i++){
@@ -740,23 +742,25 @@ TimeSeriesClassificationData TimeSeriesClassificationData::partition(const UINT 
             }
         }
 
-        //Loop over each class and add the data to the trainingSet and testSet
-        for(UINT k=0; k<getNumClasses(); k++){
-            UINT numTrainingExamples = (UINT) floor( double(classData[k].size()) / 100.0 * double(trainingSizePercentage) );
+        // collect training indices in set for fast lookup
+        for(UINT k=0; k<getNumClasses(); k++) {
+            UINT numTrainingSamples = (UINT) floor( double(classData[k].size()) / 100.0 * double(trainingSizePercentage) );
 
-            //Add the data to the training and test sets
-            for(UINT i=0; i<numTrainingExamples; i++){
-                UINT labelkey = data [ classData[k][i] ].getClassLabel();
-                std::string label = getClassNameForCorrespondingClassLabel( labelkey );
-                trainingSet.addSample( labelkey, data[ classData[k][i] ].getData() );
-                trainingSet.setClassNameForCorrespondingClassLabel( label, labelkey );
-            }
-            for(UINT i=numTrainingExamples; i<classData[k].size(); i++){
-                UINT labelkey = data [ classData[k][i] ].getClassLabel();
-                std::string label = getClassNameForCorrespondingClassLabel( labelkey );
-                testSet.addSample( labelkey, data[ classData[k][i] ].getData() );
-                testSet.setClassNameForCorrespondingClassLabel( label, labelkey );
-            }
+            for(UINT i=0; i<numTrainingSamples; i++)
+              training_idx.insert( classData[k][i] );
+        }
+
+        // remove training data, keeping the order in the test set
+        for(UINT i=0; i<data.size(); i++) {
+          UINT labelkey = data [ i ].getClassLabel();
+          std::string label = getClassNameForCorrespondingClassLabel( labelkey );
+          if(training_idx.count( i )) {
+            trainingSet.addSample( labelkey , data[i].getData() );
+            trainingSet.setClassNameForCorrespondingClassLabel( label, labelkey );
+          } else {
+            testSet.addSample( labelkey , data[i].getData() );
+            testSet.setClassNameForCorrespondingClassLabel( label, labelkey );
+          }
         }
 
         //Overwrite the training data in this instance with the training data of the trainingSet
