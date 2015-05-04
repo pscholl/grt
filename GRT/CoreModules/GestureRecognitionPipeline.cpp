@@ -20,7 +20,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "GestureRecognitionPipeline.h"
 
-namespace GRT{
+using namespace GRT;
 
 GestureRecognitionPipeline::GestureRecognitionPipeline(void)
 {
@@ -975,6 +975,7 @@ bool GestureRecognitionPipeline::test(const ClassificationData &testData){
             errorLog << "test(const ClassificationData &testData) - Failed to update test metrics at test sample index: " << i << endl;
             return false;
         }
+        cout << "i: " << i << " class label: " << classLabel << " predictedClassLabel: " << predictedClassLabel << endl;
         
         //Keep track of the classification results encase the user needs them later
         testResults[i].setClassificationResult(i, classLabel, predictedClassLabel, getUnProcessedPredictedClassLabel(),getClassLikelihoods(), getClassDistances());
@@ -3307,29 +3308,25 @@ bool GestureRecognitionPipeline::updateTestMetrics(const UINT classLabel,const U
     //Find the index of the classLabel
     UINT predictedClassLabelIndex =0;
     bool predictedClassLabelIndexFound = false;
-    if( predictedClassLabel != 0 ){
-        for(UINT k=0; k<getNumClassesInModel(); k++){
-            if( predictedClassLabel == classifier->getClassLabels()[k] ){
-                predictedClassLabelIndex = k;
-                predictedClassLabelIndexFound = true;
-                break;
-            }
+    for(UINT k=0; k<getNumClassesInModel(); k++){
+        if( predictedClassLabel == classifier->getClassLabels()[k] ){
+            predictedClassLabelIndex = k;
+            predictedClassLabelIndexFound = true;
+            break;
         }
+    }
         
-        if( !predictedClassLabelIndexFound ){
-            errorLog << "Failed to find class label index for label: " << predictedClassLabel << endl;
-            return false;
-        }
+    if( !predictedClassLabelIndexFound ){
+        errorLog << "Failed to find class label index for label: " << predictedClassLabel << endl;
+        return false;
     }
 
     //Find the index of the class label
     UINT actualClassLabelIndex = 0;
-    if( classLabel != 0 ){
-        for(UINT k=0; k<getNumClassesInModel(); k++){
-            if( classLabel == classifier->getClassLabels()[k] ){
-                actualClassLabelIndex = k;
-                break;
-            }
+    for(UINT k=0; k<getNumClassesInModel(); k++){
+        if( classLabel == classifier->getClassLabels()[k] ){
+             actualClassLabelIndex = k;
+             break;
         }
     }
 
@@ -3338,47 +3335,71 @@ bool GestureRecognitionPipeline::updateTestMetrics(const UINT classLabel,const U
         testAccuracy++;
     }
 
-    //Update the precision
-    if( predictedClassLabel != 0 ){
+    const bool nullRejectionEnabled = classifier->getNullRejectionEnabled();
+
+    if( nullRejectionEnabled == false ){
+
+        //Update the precision
         if( classLabel == predictedClassLabel ){
             //Update the precision value
             testPrecision[ predictedClassLabelIndex ]++;
         }
         //Update the precision counter
         precisionCounter[ predictedClassLabelIndex ]++;
-    }
 
-    //Update the recall
-    if( classLabel != 0 ){
+        //Update the recall
         if( classLabel == predictedClassLabel ){
             //Update the recall value
             testRecall[ predictedClassLabelIndex ]++;
         }
         //Update the recall counter
         recallCounter[ actualClassLabelIndex ]++;
-    }
 
-    //Update the rejection precision
-    if( predictedClassLabel == 0 ){
-        if( classLabel == 0 ) testRejectionPrecision++;
-        rejectionPrecisionCounter++;
-    }
+        //Update the confusion matrix
+        testConfusionMatrix[ actualClassLabelIndex  ][ predictedClassLabelIndex ]++;
+        confusionMatrixCounter[ actualClassLabelIndex ]++;
 
-    //Update the rejection recall
-    if( classLabel == 0 ){
-        if( predictedClassLabel == 0 ) testRejectionRecall++;
-        rejectionRecallCounter++;
-    }
+    }else{ //Null rejection is enabled
+        //Update the precision
+        if( predictedClassLabel != GRT_DEFAULT_NULL_CLASS_LABEL ){
+            if( classLabel == predictedClassLabel ){
+                //Update the precision value
+                testPrecision[ predictedClassLabelIndex ]++;
+            }
+            //Update the precision counter
+            precisionCounter[ predictedClassLabelIndex ]++;
+        }
 
-    //Update the confusion matrix
-    if( classifier->getNullRejectionEnabled() ){
-        if( classLabel == 0 ) actualClassLabelIndex = 0;
+        //Update the recall
+        if( classLabel != GRT_DEFAULT_NULL_CLASS_LABEL ){
+            if( classLabel == predictedClassLabel ){
+                //Update the recall value
+                testRecall[ predictedClassLabelIndex ]++;
+            }
+            //Update the recall counter
+            recallCounter[ actualClassLabelIndex ]++;
+        }
+
+        //Update the rejection precision
+        if( predictedClassLabel == GRT_DEFAULT_NULL_CLASS_LABEL ){
+            if( classLabel == GRT_DEFAULT_NULL_CLASS_LABEL ) testRejectionPrecision++;
+            rejectionPrecisionCounter++;
+        }
+
+        //Update the rejection recall
+        if( classLabel == GRT_DEFAULT_NULL_CLASS_LABEL ){
+            if( predictedClassLabel == GRT_DEFAULT_NULL_CLASS_LABEL ) testRejectionRecall++;
+            rejectionRecallCounter++;
+        }
+
+        //Update the confusion matrix
+        if( classLabel == GRT_DEFAULT_NULL_CLASS_LABEL ) actualClassLabelIndex = 0;
         else actualClassLabelIndex++;
-        if( predictedClassLabel == 0 ) predictedClassLabelIndex = 0;
+        if( predictedClassLabel == GRT_DEFAULT_NULL_CLASS_LABEL ) predictedClassLabelIndex = 0;
         else predictedClassLabelIndex++;
+        testConfusionMatrix[ actualClassLabelIndex  ][ predictedClassLabelIndex ]++;
+        confusionMatrixCounter[ actualClassLabelIndex ]++;
     }
-    testConfusionMatrix[ actualClassLabelIndex  ][ predictedClassLabelIndex ]++;
-    confusionMatrixCounter[ actualClassLabelIndex ]++;
     
     return true;
 }
@@ -3474,5 +3495,4 @@ UINT GestureRecognitionPipeline::getPipelineModeFromString(string pipelineModeAs
 	return PIPELINE_MODE_NOT_SET;
 }
 
-} //End of namespace GRT
 

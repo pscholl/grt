@@ -20,7 +20,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "GRTBase.h"
 
-namespace GRT{
+using namespace GRT;
     
 GRTBase::GRTBase(void):classType(""),debugLog("[DEBUG]"),errorLog("[ERROR]"),trainingLog("[TRAINING]"),testingLog("[TESTING]"),warningLog("[WARNING]"){
 
@@ -81,5 +81,18 @@ const GRTBase* GRTBase::getGRTBasePointer() const{
     return this;
 }
 
-} //End of namespace GRT
+bool GRTBase::setInfoLoggingEnabled(const bool loggingEnabled){
+    infoLog.setEnableInstanceLogging( loggingEnabled );
+    return true;
+}
+    
+bool GRTBase::setWarningLoggingEnabled(const bool loggingEnabled){
+    warningLog.setEnableInstanceLogging( loggingEnabled );
+    return true;
+}
+    
+bool GRTBase::setErrorLoggingEnabled(const bool loggingEnabled){
+    errorLog.setEnableInstanceLogging( loggingEnabled );
+    return true;
+}
 
