@@ -713,7 +713,7 @@ bool HMM::print() const{
             cout << "DiscreteModels: " << endl;
             for(size_t i=0; i<discreteModels.size(); i++){
                 if( !discreteModels[i].print() ){
-                    errorLog <<"saveModelToFile(fstream &file) - Failed to print discrete model " << i << " to file!" << endl;
+                    errorLog <<"saveModelToFile(ostream &file) - Failed to print discrete model " << i << " to file!" << endl;
                     return false;
                 }
             }
@@ -727,7 +727,7 @@ bool HMM::print() const{
             cout << "ContinuousModels: " << endl;
             for(size_t i=0; i<continuousModels.size(); i++){
                 if( !continuousModels[i].print() ){
-                    errorLog <<"saveModelToFile(fstream &file) - Failed to print continuous model " << i << " to file!" << endl;
+                    errorLog <<"saveModelToFile(ostream &file) - Failed to print continuous model " << i << " to file!" << endl;
                     return false;
                 }
             }
@@ -737,20 +737,14 @@ bool HMM::print() const{
     return true;
 }
 
-bool HMM::saveModelToFile( fstream &file ) const{
+bool HMM::saveModelToFile( ostream &file ) const{
 	
-	if(!file.is_open())
-	{
-		errorLog << "saveModelToFile( fstream &file ) - File is not open!" << endl;
-		return false;
-	}
-
 	//Write the header info
 	file << "HMM_MODEL_FILE_V2.0\n";
     
     //Write the classifier settings to the file
     if( !Classifier::saveBaseSettingsToFile(file) ){
-        errorLog <<"saveModelToFile(fstream &file) - Failed to save classifier base settings to file!" << endl;
+        errorLog <<"saveModelToFile(ostream &file) - Failed to save classifier base settings to file!" << endl;
 		return false;
     }
     
@@ -769,7 +763,7 @@ bool HMM::saveModelToFile( fstream &file ) const{
             file << "DiscreteModels: " << endl;
             for(size_t i=0; i<discreteModels.size(); i++){
                 if( !discreteModels[i].saveModelToFile( file ) ){
-                    errorLog <<"saveModelToFile(fstream &file) - Failed to save discrete model " << i << " to file!" << endl;
+                    errorLog <<"saveModelToFile(ostream &file) - Failed to save discrete model " << i << " to file!" << endl;
                     return false;
                 }
             }
@@ -782,7 +776,7 @@ bool HMM::saveModelToFile( fstream &file ) const{
             file << "ContinuousModels: " << endl;
             for(size_t i=0; i<continuousModels.size(); i++){
                 if( !continuousModels[i].saveModelToFile( file ) ){
-                    errorLog <<"saveModelToFile(fstream &file) - Failed to save continuous model " << i << " to file!" << endl;
+                    errorLog <<"saveModelToFile(ostream &file) - Failed to save continuous model " << i << " to file!" << endl;
                     return false;
                 }
             }
@@ -792,16 +786,10 @@ bool HMM::saveModelToFile( fstream &file ) const{
 	return true;
 }
 
-bool HMM::loadModelFromFile( fstream &file ){
+bool HMM::loadModelFromFile( istream &file ){
 
     clear();
 	
-	if(!file.is_open())
-	{
-		errorLog << "loadModelFromFile( fstream &file ) - File is not open!" << endl;
-		return false;
-	}
-
 	std::string word;
     UINT numModels = 0;
     
@@ -883,7 +871,7 @@ bool HMM::loadModelFromFile( fstream &file ){
                 discreteModels.resize(numModels);
                 for(size_t i=0; i<discreteModels.size(); i++){
                     if( !discreteModels[i].loadModelFromFile( file ) ){
-                        errorLog <<"loadModelFromFile(fstream &file) - Failed to load discrete model " << i << " from file!" << endl;
+                        errorLog <<"loadModelFromFile(istream &file) - Failed to load discrete model " << i << " from file!" << endl;
                         return false;
                     }
                 }
@@ -929,7 +917,7 @@ bool HMM::loadModelFromFile( fstream &file ){
                 continuousModels.resize(numModels);
                 for(size_t i=0; i<continuousModels.size(); i++){
                     if( !continuousModels[i].loadModelFromFile( file ) ){
-                        errorLog <<"loadModelFromFile(fstream &file) - Failed to load continuous model " << i << " from file!" << endl;
+                        errorLog <<"loadModelFromFile(istream &file) - Failed to load continuous model " << i << " from file!" << endl;
                         return false;
                     }
                 }

@@ -140,12 +140,7 @@ bool RBMQuantizer::loadModelFromFile(string filename){
     return true;
 }
 
-bool RBMQuantizer::saveModelToFile(fstream &file) const{
-    
-    if( !file.is_open() ){
-        errorLog << "saveModelToFile(fstream &file) - The file is not open!" << endl;
-        return false;
-    }
+bool RBMQuantizer::saveModelToFile(ostream &file) const{
     
     //Write the header
     file << "RBM_QUANTIZER_FILE_V1.0" << endl;
@@ -161,7 +156,7 @@ bool RBMQuantizer::saveModelToFile(fstream &file) const{
     
     if( trained ){
         if( !rbm.saveModelToFile( file ) ){
-            errorLog << "saveModelToFile(fstream &file) - Failed to save RBM settings to file!" << endl;
+            errorLog << "saveModelToFile(ostream &file) - Failed to save RBM settings to file!" << endl;
             return false;
         }
     }
@@ -169,22 +164,17 @@ bool RBMQuantizer::saveModelToFile(fstream &file) const{
     return true;
 }
 
-bool RBMQuantizer::loadModelFromFile(fstream &file){
+bool RBMQuantizer::loadModelFromFile(istream &file){
     
     //Clear any previous model
     clear();
-    
-    if( !file.is_open() ){
-        errorLog << "loadModelFromFile(fstream &file) - The file is not open!" << endl;
-        return false;
-    }
     
     string word;
     
     //First, you should read and validate the header
     file >> word;
     if( word != "RBM_QUANTIZER_FILE_V1.0" ){
-        errorLog << "loadModelFromFile(fstream &file) - Invalid file format!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Invalid file format!" << endl;
         return false;
     }
     
@@ -196,21 +186,21 @@ bool RBMQuantizer::loadModelFromFile(fstream &file){
     
     file >> word;
     if( word != "QuantizerTrained:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to load QuantizerTrained!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to load QuantizerTrained!" << endl;
         return false;
     }
     file >> trained;
     
     file >> word;
     if( word != "NumClusters:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to load NumClusters!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to load NumClusters!" << endl;
         return false;
     }
     file >> numClusters;
     
     if( trained ){
         if( !rbm.loadModelFromFile( file ) ){
-            errorLog << "loadModelFromFile(fstream &file) - Failed to load SelfOrganizingMap settings from file!" << endl;
+            errorLog << "loadModelFromFile(istream &file) - Failed to load SelfOrganizingMap settings from file!" << endl;
             return false;
         }
         initialized = true;

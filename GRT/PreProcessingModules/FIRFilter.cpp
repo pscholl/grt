@@ -171,12 +171,7 @@ bool FIRFilter::saveModelToFile(string filename) const{
     return true;
 }
 
-bool FIRFilter::saveModelToFile(fstream &file) const{
-    
-    if( !file.is_open() ){
-        errorLog << "saveSettingsToFile(fstream &file) - The file is not open!" << endl;
-        return false;
-    }
+bool FIRFilter::saveModelToFile(ostream &file) const{
     
     //Save the file header
     file << "GRT_FIR_FILTER_FILE_V1.0" << endl;
@@ -225,15 +220,10 @@ bool FIRFilter::loadModelFromFile(string filename){
     return true;
 }
 
-bool FIRFilter::loadModelFromFile(fstream &file){
+bool FIRFilter::loadModelFromFile(istream &file){
     
     //Clear the filter
     clear();
-    
-    if( !file.is_open() ){
-        errorLog << "loadModelFromFile(fstream &file) - The file is not open!" << endl;
-        return false;
-    }
     
     string word;
     
@@ -241,13 +231,13 @@ bool FIRFilter::loadModelFromFile(fstream &file){
     file >> word;
     
     if( word != "GRT_FIR_FILTER_FILE_V1.0" ){
-        errorLog << "loadModelFromFile(fstream &file) - Invalid file format!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Invalid file format!" << endl;
         clear();
         return false;     
     }
     
     if( !loadPreProcessingSettingsFromFile( file ) ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to load preprocessing base settings from file!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to load preprocessing base settings from file!" << endl;
         clear();
         return false;
     }
@@ -255,7 +245,7 @@ bool FIRFilter::loadModelFromFile(fstream &file){
     //Load if the filter type
     file >> word;
     if( word != "FilterType:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read FilterType header!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read FilterType header!" << endl;
         clear();
         return false;
     }
@@ -264,7 +254,7 @@ bool FIRFilter::loadModelFromFile(fstream &file){
     //Load if the number of taps
     file >> word;
     if( word != "NumTaps:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read NumTaps header!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read NumTaps header!" << endl;
         clear();
         return false;
     }
@@ -273,7 +263,7 @@ bool FIRFilter::loadModelFromFile(fstream &file){
     //Load if the sample rate
     file >> word;
     if( word != "SampleRate:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read SampleRate header!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read SampleRate header!" << endl;
         clear();
         return false;
     }
@@ -282,7 +272,7 @@ bool FIRFilter::loadModelFromFile(fstream &file){
     //Load if the cutoffFrequency
     file >> word;
     if( word != "CutoffFrequency:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read CutoffFrequency header!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read CutoffFrequency header!" << endl;
         clear();
         return false;
     }
@@ -291,7 +281,7 @@ bool FIRFilter::loadModelFromFile(fstream &file){
     //Load if the CutoffFrequencyLower
     file >> word;
     if( word != "CutoffFrequencyLower:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read CutoffFrequencyLower header!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read CutoffFrequencyLower header!" << endl;
         clear();
         return false;
     }
@@ -300,7 +290,7 @@ bool FIRFilter::loadModelFromFile(fstream &file){
     //Load if the CutoffFrequencyUpper
     file >> word;
     if( word != "CutoffFrequencyUpper:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read CutoffFrequencyUpper header!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read CutoffFrequencyUpper header!" << endl;
         clear();
         return false;
     }
@@ -309,7 +299,7 @@ bool FIRFilter::loadModelFromFile(fstream &file){
     //Load if the Gain
     file >> word;
     if( word != "Gain:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read Gain header!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read Gain header!" << endl;
         clear();
         return false;
     }
@@ -324,7 +314,7 @@ bool FIRFilter::loadModelFromFile(fstream &file){
         //Load z
         file >> word;
         if( word != "FilterCoeff:" ){
-            errorLog << "loadModelFromFile(fstream &file) - Failed to read FilterCoeff header!" << endl;
+            errorLog << "loadModelFromFile(istream &file) - Failed to read FilterCoeff header!" << endl;
             clear();
             return false;
         }

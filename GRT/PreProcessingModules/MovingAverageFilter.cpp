@@ -136,12 +136,7 @@ bool MovingAverageFilter::saveModelToFile(string filename) const{
     return true;
 }
 
-bool MovingAverageFilter::saveModelToFile(fstream &file) const{
-    
-    if( !file.is_open() ){
-        errorLog << "saveModelToFile(fstream &file) - The file is not open!" << endl;
-        return false;
-    }
+bool MovingAverageFilter::saveModelToFile(ostream &file) const{
     
     file << "GRT_MOVING_AVERAGE_FILTER_FILE_V1.0" << endl;
     
@@ -168,12 +163,7 @@ bool MovingAverageFilter::loadModelFromFile(string filename){
     return true;
 }
 
-bool MovingAverageFilter::loadModelFromFile(fstream &file){
-    
-    if( !file.is_open() ){
-        errorLog << "loadModelFromFile(fstream &file) - The file is not open!" << endl;
-        return false;
-    }
+bool MovingAverageFilter::loadModelFromFile(istream &file){
     
     string word;
     
@@ -181,14 +171,14 @@ bool MovingAverageFilter::loadModelFromFile(fstream &file){
     file >> word;
     
     if( word != "GRT_MOVING_AVERAGE_FILTER_FILE_V1.0" ){
-        errorLog << "loadModelFromFile(fstream &file) - Invalid file format!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Invalid file format!" << endl;
         return false;     
     }
     
     //Load the number of input dimensions
     file >> word;
     if( word != "NumInputDimensions:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read NumInputDimensions header!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read NumInputDimensions header!" << endl;
         return false;     
     }
     file >> numInputDimensions;
@@ -196,7 +186,7 @@ bool MovingAverageFilter::loadModelFromFile(fstream &file){
     //Load the number of output dimensions
     file >> word;
     if( word != "NumOutputDimensions:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read NumOutputDimensions header!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read NumOutputDimensions header!" << endl;
         return false;     
     }
     file >> numOutputDimensions;
@@ -204,7 +194,7 @@ bool MovingAverageFilter::loadModelFromFile(fstream &file){
     //Load the filter factor
     file >> word;
     if( word != "FilterSize:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read FilterSize header!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read FilterSize header!" << endl;
         return false;     
     }
     file >> filterSize;

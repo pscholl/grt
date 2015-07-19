@@ -231,20 +231,14 @@ bool LogisticRegression::predict_(VectorDouble &inputVector){
     return true;
 }
     
-bool LogisticRegression::saveModelToFile(fstream &file) const{
-    
-    if(!file.is_open())
-	{
-        errorLog << "loadModelFromFile(fstream &file) - The file is not open!" << endl;
-		return false;
-	}
+bool LogisticRegression::saveModelToFile(ostream &file) const{
     
 	//Write the header info
 	file<<"GRT_LOGISTIC_REGRESSION_MODEL_FILE_V2.0\n";
     
     //Write the regressifier settings to the file
     if( !Regressifier::saveBaseSettingsToFile(file) ){
-        errorLog <<"saveModelToFile(fstream &file) - Failed to save Regressifier base settings to file!" << endl;
+        errorLog <<"saveModelToFile(ostream &file) - Failed to save Regressifier base settings to file!" << endl;
 		return false;
     }
     
@@ -260,18 +254,12 @@ bool LogisticRegression::saveModelToFile(fstream &file) const{
     return true;
 }
     
-bool LogisticRegression::loadModelFromFile(fstream &file){
+bool LogisticRegression::loadModelFromFile(istream &file){
     
     trained = false;
     numInputDimensions = 0;
     w0 = 0;
     w.clear();
-    
-    if(!file.is_open())
-    {
-        errorLog << "loadModelFromFile(string filename) - Could not open file to load model" << endl;
-        return false;
-    }
     
     std::string word;
     
@@ -328,7 +316,7 @@ double LogisticRegression::sigmoid(const double x) const{
 	return 1.0 / (1 + exp(-x));
 }
     
-bool LogisticRegression::loadLegacyModelFromFile( fstream &file ){
+bool LogisticRegression::loadLegacyModelFromFile( istream &file ){
     
     string word;
     
@@ -362,7 +350,6 @@ bool LogisticRegression::loadLegacyModelFromFile( fstream &file ){
         //Load the ranges
         file >> word;
         if(word != "InputVectorRanges:"){
-            file.close();
             errorLog << "loadLegacyModelFromFile( fstream &file ) - Failed to find InputVectorRanges!" << endl;
             return false;
         }
@@ -373,7 +360,6 @@ bool LogisticRegression::loadLegacyModelFromFile( fstream &file ){
         
         file >> word;
         if(word != "OutputVectorRanges:"){
-            file.close();
             errorLog << "loadLegacyModelFromFile( fstream &file ) - Failed to find OutputVectorRanges!" << endl;
             return false;
         }

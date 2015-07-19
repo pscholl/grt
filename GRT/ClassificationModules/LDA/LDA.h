@@ -133,7 +133,7 @@ public:
      @param fstream &file: a reference to the file the LDA model will be saved to
      @return returns true if the model was saved successfully, false otherwise
      */
-    virtual bool saveModelToFile(fstream &file) const;
+    virtual bool saveModelToFile(ostream &file) const;
     
     /**
      This loads a trained LDA model from a file.
@@ -142,7 +142,7 @@ public:
      @param fstream &file: a reference to the file the LDA model will be loaded from
      @return returns true if the model was loaded successfully, false otherwise
      */
-    virtual bool loadModelFromFile(fstream &file);
+    virtual bool loadModelFromFile(istream &file);
     
     //Getters
     vector< LDAClassModel > getModels(){ if( trained ){ return models; } return vector< LDAClassModel >(); }

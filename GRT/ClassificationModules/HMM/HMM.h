@@ -148,7 +148,7 @@ public:
      @param fstream &file: a reference to the file the HMM model will be saved to
      @return returns true if the model was saved successfully, false otherwise
      */
-    virtual bool saveModelToFile(fstream &file) const;
+    virtual bool saveModelToFile(ostream &file) const;
     
     /**
      This loads a trained HMM model from a file.
@@ -157,7 +157,7 @@ public:
      @param fstream &file: a reference to the file the HMM model will be loaded from
      @return returns true if the model was loaded successfully, false otherwise
      */
-    virtual bool loadModelFromFile(fstream &file);
+    virtual bool loadModelFromFile(istream &file);
     
     /**
      This function gets the HMM type.  This will be either HMM_DISCRETE or HMM_CONTINUOUS.

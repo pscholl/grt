@@ -224,20 +224,14 @@ bool ClusterTree::print() const{
     return false;
 }
     
-bool ClusterTree::saveModelToFile(fstream &file) const{
-    
-        if( !file.is_open() )
-        {
-            Clusterer::errorLog <<"saveModelToFile(fstream &file) - The file is not open!" << endl;
-            return false;
-        }
+bool ClusterTree::saveModelToFile(ostream &file) const{
     
         //Write the header info
         file << "GRT_CLUSTER_TREE_MODEL_FILE_V1.0" << endl;
     
         //Write the clusterer settings to the file
     	if( !saveClustererSettingsToFile(file) ){
-        	Clusterer::errorLog <<"saveModelToFile(fstream &file) - Failed to save clusterer settings to file!" << endl;
+        	Clusterer::errorLog <<"saveModelToFile(ostream &file) - Failed to save clusterer settings to file!" << endl;
             return false;
     	}
     
@@ -252,7 +246,7 @@ bool ClusterTree::saveModelToFile(fstream &file) const{
     	if( tree != NULL ){
         	file << "Tree:\n";
         	if( !tree->saveToFile( file ) ){
-            	Clusterer::errorLog << "saveModelToFile(fstream &file) - Failed to save tree to file!" << endl;
+            	Clusterer::errorLog << "saveModelToFile(ostream &file) - Failed to save tree to file!" << endl;
             	return false;
         	}
     	}
@@ -260,15 +254,9 @@ bool ClusterTree::saveModelToFile(fstream &file) const{
     	return true;
 }
     
-bool ClusterTree::loadModelFromFile(fstream &file){
+bool ClusterTree::loadModelFromFile(istream &file){
     
     	clear();
-    
-    	if(!file.is_open())
-    	{
-        	Clusterer::errorLog << "loadModelFromFile(string filename) - Could not open file to load model" << endl;
-        	return false;
-    	}
     
     	std::string word;
     
@@ -346,14 +334,14 @@ bool ClusterTree::loadModelFromFile(fstream &file){
         
         	if( tree == NULL ){
                 clear();
-                Clusterer::errorLog << "loadModelFromFile(fstream &file) - Failed to create new RegressionTreeNode!" << endl;
+                Clusterer::errorLog << "loadModelFromFile(istream &file) - Failed to create new RegressionTreeNode!" << endl;
                 return false;
         	}
         
         	tree->setParent( NULL );
         	if( !tree->loadFromFile( file ) ){
                 clear();
-                Clusterer::errorLog << "loadModelFromFile(fstream &file) - Failed to load tree from file!" << endl;
+                Clusterer::errorLog << "loadModelFromFile(istream &file) - Failed to load tree from file!" << endl;
                 return false;
         	}
             

@@ -513,17 +513,13 @@ bool SVM::convertClassificationDataToLIBSVMFormat(ClassificationData &trainingDa
     return true;
 }
 
-bool SVM::saveModelToFile(fstream &file) const{
-    
-    if( !file.is_open() ){
-        return false;
-    }
+bool SVM::saveModelToFile(ostream &file) const{
     
     file << "SVM_MODEL_FILE_V2.0\n";
     
     //Write the classifier settings to the file
     if( !Classifier::saveBaseSettingsToFile(file) ){
-        errorLog <<"saveModelToFile(fstream &file) - Failed to save classifier base settings to file!" << endl;
+        errorLog <<"saveModelToFile(ostream &file) - Failed to save classifier base settings to file!" << endl;
 		return false;
     }
     
@@ -547,7 +543,7 @@ bool SVM::saveModelToFile(fstream &file) const{
             file << "NU_SVR";
             break;
         default:
-            errorLog << "saveModelToFile(fstream &file) - Invalid model type: " << param.svm_type << endl;
+            errorLog << "saveModelToFile(ostream &file) - Invalid model type: " << param.svm_type << endl;
             return false;
             break;
     }
@@ -571,7 +567,7 @@ bool SVM::saveModelToFile(fstream &file) const{
             file << "PRECOMPUTED";
             break;
         default:
-            errorLog << "saveModelToFile(fstream &file) - Invalid kernel type: " << param.kernel_type << endl;
+            errorLog << "saveModelToFile(ostream &file) - Invalid kernel type: " << param.kernel_type << endl;
             return false;
             break;
     }
@@ -641,7 +637,7 @@ bool SVM::saveModelToFile(fstream &file) const{
     return true;
 }
     
-bool SVM::loadModelFromFile(fstream &file){
+bool SVM::loadModelFromFile(istream &file){
     
     string word;
     UINT numSV = 0;
@@ -649,11 +645,6 @@ bool SVM::loadModelFromFile(fstream &file){
     
     //Clear any previous models, parameters or problems
     clear();
-    
-    if( !file.is_open() ){
-        errorLog << "loadModelFromFile(fstream &file) - The file is not open!" << endl;
-        return false;
-    }
     
     //Read the file header
     file >> word;
@@ -665,7 +656,7 @@ bool SVM::loadModelFromFile(fstream &file){
     
     //Check to make sure this is a file with the correct File Format
     if( word != "SVM_MODEL_FILE_V2.0" ){
-        errorLog << "loadModelFromFile(fstream &file) - Invalid file format!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Invalid file format!" << endl;
         clear();
         return false;
     }
@@ -711,7 +702,7 @@ bool SVM::loadModelFromFile(fstream &file){
     //Load the model type
     file >> word;
     if(word != "ModelType:"){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to find ModelType header!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to find ModelType header!" << endl;
         clear();
         return false;
     }
@@ -731,7 +722,7 @@ bool SVM::loadModelFromFile(fstream &file){
                     if( word == "NU_SVR" ){
                         model->param.svm_type = NU_SVR;
                     }else{
-                        errorLog << "loadModelFromFile(fstream &file) - Failed to find SVM type!" << endl;
+                        errorLog << "loadModelFromFile(istream &file) - Failed to find SVM type!" << endl;
                         clear();
                         return false;
                     }
@@ -743,7 +734,7 @@ bool SVM::loadModelFromFile(fstream &file){
     //Load the model type
     file >> word;
     if(word != "KernelType:"){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to find kernel type!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to find kernel type!" << endl;
         clear();
         return false;
     }
@@ -763,7 +754,7 @@ bool SVM::loadModelFromFile(fstream &file){
                     if( word == "PRECOMPUTED" ){
                         model->param.kernel_type = PRECOMPUTED;
                     }else{
-                        errorLog << "loadModelFromFile(fstream &file) - Failed to find kernel type!" << endl;
+                        errorLog << "loadModelFromFile(istream &file) - Failed to find kernel type!" << endl;
                         clear();
                         return false;
                     }
@@ -775,7 +766,7 @@ bool SVM::loadModelFromFile(fstream &file){
     //Load the degree
     file >> word;
     if(word != "Degree:"){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to find Degree header!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to find Degree header!" << endl;
         clear();
         return false;
     }
@@ -784,7 +775,7 @@ bool SVM::loadModelFromFile(fstream &file){
     //Load the gamma
     file >> word;
     if(word != "Gamma:"){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to find Gamma header!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to find Gamma header!" << endl;
         clear();
         return false;
     }
@@ -793,7 +784,7 @@ bool SVM::loadModelFromFile(fstream &file){
     //Load the Coef0
     file >> word;
     if(word != "Coef0:"){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to find Coef0 header!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to find Coef0 header!" << endl;
         clear();
         return false;
     }
@@ -802,7 +793,7 @@ bool SVM::loadModelFromFile(fstream &file){
     //Load the NumberOfFeatures
     file >> word;
     if(word != "NumberOfFeatures:"){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to find NumberOfFeatures header!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to find NumberOfFeatures header!" << endl;
         clear();
         return false;
     }
@@ -811,7 +802,7 @@ bool SVM::loadModelFromFile(fstream &file){
     //Load the UseShrinking
     file >> word;
     if(word != "UseShrinking:"){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to find UseShrinking header!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to find UseShrinking header!" << endl;
         clear();
         return false;
     }
@@ -820,7 +811,7 @@ bool SVM::loadModelFromFile(fstream &file){
     //Load the UseProbability
     file >> word;
     if(word != "UseProbability:"){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to find UseProbability header!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to find UseProbability header!" << endl;
         clear();
         return false;
     }
@@ -830,7 +821,7 @@ bool SVM::loadModelFromFile(fstream &file){
         //Load the NumberOfSupportVectors
         file >> word;
         if(word != "NumberOfSupportVectors:"){
-            errorLog << "loadModelFromFile(fstream &file) - Failed to find NumberOfSupportVectors header!" << endl;
+            errorLog << "loadModelFromFile(istream &file) - Failed to find NumberOfSupportVectors header!" << endl;
             clear();
             return false;
         }
@@ -844,7 +835,7 @@ bool SVM::loadModelFromFile(fstream &file){
         //Load the RHO
         file >> word;
         if(word != "RHO:"){
-            errorLog << "loadModelFromFile(fstream &file) - Failed to find RHO header!" << endl;
+            errorLog << "loadModelFromFile(istream &file) - Failed to find RHO header!" << endl;
             clear();
             return false;
         }
@@ -898,7 +889,7 @@ bool SVM::loadModelFromFile(fstream &file){
         //Load the SupportVectors
         //We don't need to read another line here
         if(word != "SupportVectors:"){
-            errorLog << "loadModelFromFile(fstream &file) - Failed to find SupportVectors header!" << endl;
+            errorLog << "loadModelFromFile(istream &file) - Failed to find SupportVectors header!" << endl;
             clear();
             return false;
         }
@@ -1352,7 +1343,7 @@ bool SVM::deepCopyParam( const svm_parameter &source_param, svm_parameter &targe
     return true;
 }
     
-bool SVM::loadLegacyModelFromFile( fstream &file ){
+bool SVM::loadLegacyModelFromFile( istream &file ){
     
     string word;
     

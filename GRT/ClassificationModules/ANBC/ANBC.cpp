@@ -299,20 +299,14 @@ bool ANBC::clear(){
     return true;
 }
     
-bool ANBC::saveModelToFile(fstream &file) const{
-    
-    if(!file.is_open())
-	{
-		errorLog <<"saveModelToFile(fstream &file) - The file is not open!" << endl;
-		return false;
-	}
+bool ANBC::saveModelToFile(ostream &file) const{
     
 	//Write the header info
 	file<<"GRT_ANBC_MODEL_FILE_V2.0\n";
     
     //Write the classifier settings to the file
     if( !Classifier::saveBaseSettingsToFile(file) ){
-        errorLog <<"saveModelToFile(fstream &file) - Failed to save classifier base settings to file!" << endl;
+        errorLog <<"saveModelToFile(ostream &file) - Failed to save classifier base settings to file!" << endl;
 		return false;
     }
     
@@ -348,19 +342,13 @@ bool ANBC::saveModelToFile(fstream &file) const{
     return true;
 }
     
-bool ANBC::loadModelFromFile(fstream &file){
+bool ANBC::loadModelFromFile(istream &file){
     
     trained = false;
     numInputDimensions = 0;
     numClasses = 0;
     models.clear();
     classLabels.clear();
-    
-    if(!file.is_open())
-    {
-        errorLog << "loadModelFromFile(string filename) - Could not open file to load model" << endl;
-        return false;
-    }
     
     std::string word;
     file >> word;
@@ -535,7 +523,7 @@ bool ANBC::setWeights(const ClassificationData &weightsData){
     return false;
 }
     
-bool ANBC::loadLegacyModelFromFile( fstream &file ){
+bool ANBC::loadLegacyModelFromFile( istream &file ){
     
     string word;
     

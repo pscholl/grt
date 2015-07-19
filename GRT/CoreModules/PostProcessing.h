@@ -105,7 +105,7 @@ public:
      @param fstream &file: a reference to the file to save the settings to
      @return returns true if the settings were saved successfully, false otherwise (the base class always returns false)
      */
-    virtual bool saveModelToFile(fstream &file) const{ return false; }
+    virtual bool saveModelToFile(ostream &file) const{ return false; }
     
     /**
      This loads the post processing settings from a file.
@@ -114,7 +114,7 @@ public:
      @param fstream &file: a reference to the file to load the settings from
      @return returns true if the settings were loaded successfully, false otherwise (the base class always returns false)
      */
-    virtual bool loadModelFromFile(fstream &file){ return false; }
+    virtual bool loadModelFromFile(istream &file){ return false; }
 	
     /**
      @return returns the post processing type as a string, e.g. ClassLabelTimeoutFilter

@@ -196,13 +196,7 @@ double RadialBasisFunction::rbf(const VectorDouble &a,const VectorDouble &b){
     return exp( gamma * r );
 }
     
-bool RadialBasisFunction::saveModelToFile(fstream &file) const{
-    
-    if(!file.is_open())
-	{
-		errorLog <<"saveModelToFile(fstream &file) - The file is not open!" << endl;
-		return false;
-	}
+bool RadialBasisFunction::saveModelToFile(ostream &file) const{
     
 	//Write the WeakClassifierType data
     file << "WeakClassifierType: " << weakClassifierType << endl;
@@ -227,38 +221,32 @@ bool RadialBasisFunction::saveModelToFile(fstream &file) const{
     return true;
 }
 
-bool RadialBasisFunction::loadModelFromFile(fstream &file){
-    
-    if(!file.is_open())
-	{
-		errorLog <<"loadModelFromFile(fstream &file) - The file is not open!" << endl;
-		return false;
-	}
+bool RadialBasisFunction::loadModelFromFile(istream &file){
     
     string word;
     
     file >> word;
     if( word != "WeakClassifierType:" ){
-        errorLog <<"loadModelFromFile(fstream &file) - Failed to read WeakClassifierType header!" << endl;
+        errorLog <<"loadModelFromFile(istream &file) - Failed to read WeakClassifierType header!" << endl;
 		return false;
     }
     file >> word;
     
     if( word != weakClassifierType ){
-        errorLog <<"loadModelFromFile(fstream &file) - The weakClassifierType:" << word << " does not match: " << weakClassifierType << endl;
+        errorLog <<"loadModelFromFile(istream &file) - The weakClassifierType:" << word << " does not match: " << weakClassifierType << endl;
 		return false;
     }
     
     file >> word;
     if( word != "Trained:" ){
-        errorLog <<"loadModelFromFile(fstream &file) - Failed to read Trained header!" << endl;
+        errorLog <<"loadModelFromFile(istream &file) - Failed to read Trained header!" << endl;
 		return false;
     }
     file >> trained;
     
     file >> word;
     if( word != "NumInputDimensions:" ){
-        errorLog <<"loadModelFromFile(fstream &file) - Failed to read NumInputDimensions header!" << endl;
+        errorLog <<"loadModelFromFile(istream &file) - Failed to read NumInputDimensions header!" << endl;
 		return false;
     }
     file >> numInputDimensions;
@@ -266,42 +254,42 @@ bool RadialBasisFunction::loadModelFromFile(fstream &file){
     
     file >> word;
     if( word != "NumSteps:" ){
-        errorLog <<"loadModelFromFile(fstream &file) - Failed to read NumSteps header!" << endl;
+        errorLog <<"loadModelFromFile(istream &file) - Failed to read NumSteps header!" << endl;
 		return false;
     }
     file >> numSteps;
     
     file >> word;
     if( word != "PositiveClassificationThreshold:" ){
-        errorLog <<"loadModelFromFile(fstream &file) - Failed to read PositiveClassificationThreshold header!" << endl;
+        errorLog <<"loadModelFromFile(istream &file) - Failed to read PositiveClassificationThreshold header!" << endl;
 		return false;
     }
     file >> positiveClassificationThreshold;
     
     file >> word;
     if( word != "Alpha:" ){
-        errorLog <<"loadModelFromFile(fstream &file) - Failed to read Alpha header!" << endl;
+        errorLog <<"loadModelFromFile(istream &file) - Failed to read Alpha header!" << endl;
 		return false;
     }
     file >> alpha;
     
     file >> word;
     if( word != "MinAlphaSearchRange:" ){
-        errorLog <<"loadModelFromFile(fstream &file) - Failed to read MinAlphaSearchRange header!" << endl;
+        errorLog <<"loadModelFromFile(istream &file) - Failed to read MinAlphaSearchRange header!" << endl;
 		return false;
     }
     file >> minAlphaSearchRange;
     
     file >> word;
     if( word != "MaxAlphaSearchRange:" ){
-        errorLog <<"loadModelFromFile(fstream &file) - Failed to read MaxAlphaSearchRange header!" << endl;
+        errorLog <<"loadModelFromFile(istream &file) - Failed to read MaxAlphaSearchRange header!" << endl;
 		return false;
     }
     file >> maxAlphaSearchRange;
     
     file >> word;
     if( word != "RBF:" ){
-        errorLog <<"loadModelFromFile(fstream &file) - Failed to read RBF header!" << endl;
+        errorLog <<"loadModelFromFile(istream &file) - Failed to read RBF header!" << endl;
 		return false;
     }
     rbfCentre.resize(numInputDimensions);

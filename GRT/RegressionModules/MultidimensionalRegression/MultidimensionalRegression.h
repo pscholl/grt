@@ -101,7 +101,7 @@ public:
      @param fstream &file: a reference to the file the Multidimensional Regression model will be saved to
      @return returns true if the model was saved successfully, false otherwise
      */
-    virtual bool saveModelToFile(fstream &file) const;
+    virtual bool saveModelToFile(ostream &file) const;
     
     /**
      This loads a trained Multidimensional Regression model from a file.
@@ -110,7 +110,7 @@ public:
      @param fstream &file: a reference to the file the Logistic Regression model will be loaded from
      @return returns true if the model was loaded successfully, false otherwise
      */
-    virtual bool loadModelFromFile(fstream &file);
+    virtual bool loadModelFromFile(istream &file);
     
     /**
      This returns true if the regression module has been set. The regression module is the regression algorithm
@@ -146,7 +146,7 @@ protected:
     bool deepCopyRegressionModules( vector< Regressifier* > &newModules ) const;
     bool deleteAll();
 	bool deleteRegressionModules();
-    bool loadLegacyModelFromFile( fstream &file );
+    bool loadLegacyModelFromFile( istream &file );
 	
     Regressifier *regressifier;
 	vector< Regressifier* > regressionModules;

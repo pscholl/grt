@@ -154,89 +154,75 @@ double DecisionStump::predict(const VectorDouble &x){
     return -1;
 }
     
-bool DecisionStump::saveModelToFile(fstream &file) const{
-    
-    if(!file.is_open())
-    {
-	errorLog <<"saveModelToFile(fstream &file) - The file is not open!" << endl;
-	return false;
-    }
-    
-	//Write the WeakClassifierType data
+bool DecisionStump::saveModelToFile(ostream &file) const{
+    //Write the WeakClassifierType data
     file << "WeakClassifierType: " << weakClassifierType << endl;
     file << "Trained: "<< trained << endl;
     file << "NumInputDimensions: " << numInputDimensions << endl;
-    
+
     //Write the DecisionStump data
     file << "DecisionFeatureIndex: " << decisionFeatureIndex << endl;
     file << "Direction: "<< direction << endl;
     file << "NumRandomSplits: " << numRandomSplits << endl;
     file << "DecisionValue: " << decisionValue << endl;
-    
+
     //We don't need to close the file as the function that called this function should handle that
     return true;
 }
 
-bool DecisionStump::loadModelFromFile(fstream &file){
-    
-    if(!file.is_open())
-    {
-	errorLog <<"loadModelFromFile(fstream &file) - The file is not open!" << endl;
-	return false;
-    }
-    
+bool DecisionStump::loadModelFromFile(istream &file){
     string word;
     
     file >> word;
     if( word != "WeakClassifierType:" ){
-        errorLog <<"loadModelFromFile(fstream &file) - Failed to read WeakClassifierType header!" << endl;
+        errorLog <<"loadModelFromFile(istream &file) - Failed to read WeakClassifierType header!" << endl;
 	return false;
     }
     file >> word;
     
     if( word != weakClassifierType ){
-        errorLog <<"loadModelFromFile(fstream &file) - The weakClassifierType:" << word << " does not match: " << weakClassifierType << endl;
+        errorLog <<"loadModelFromFile(istream &file) - The weakClassifierType:" << word << " does not match: " << weakClassifierType << endl;
 	return false;
     }
     
     file >> word;
     if( word != "Trained:" ){
-        errorLog <<"loadModelFromFile(fstream &file) - Failed to read Trained header!" << endl;
+        errorLog <<"loadModelFromFile(istream &file) - Failed to read Trained header!" << endl;
 	return false;
     }
     file >> trained;
     
     file >> word;
     if( word != "NumInputDimensions:" ){
-        errorLog <<"loadModelFromFile(fstream &file) - Failed to read NumInputDimensions header!" << endl;
+        errorLog <<"loadModelFromFile(istream &file) - Failed to read NumInputDimensions header!" << endl;
 	return false;
     }
     file >> numInputDimensions;
     
     file >> word;
     if( word != "DecisionFeatureIndex:" ){
-        errorLog <<"loadModelFromFile(fstream &file) - Failed to read DecisionFeatureIndex header!" << endl;
+        errorLog <<"loadModelFromFile(istream &file) - Failed to read DecisionFeatureIndex header!" << endl;
 	return false;
     }
     file >> decisionFeatureIndex;
     
     file >> word;
     if( word != "Direction:" ){
-        errorLog <<"loadModelFromFile(fstream &file) - Failed to read Direction header!" << endl;
+        errorLog <<"loadModelFromFile(istream &file) - Failed to read Direction header!" << endl;
 	return false;
     }
     file >> direction;
     
     file >> word;
     if( word != "NumRandomSplits:" ){
-        errorLog <<"loadModelFromFile(fstream &file) - Failed to read NumRandomSplits header!" << endl;
+        errorLog <<"loadModelFromFile(istream &file) - Failed to read NumRandomSplits header!" << endl;
 	return false;
     }
     file >> numRandomSplits;
     
     file >> word;
     if( word != "DecisionValue:" ){
-        errorLog <<"loadModelFromFile(fstream &file) - Failed to read DecisionValue header!" << endl;
+        errorLog <<"loadModelFromFile(istream &file) - Failed to read DecisionValue header!" << endl;
 	return false;
     }
     file >> decisionValue;

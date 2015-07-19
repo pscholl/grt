@@ -418,17 +418,12 @@ double KMeans::calculateTheta(const MatrixDouble &data){
 
 }
 
-bool KMeans::saveModelToFile(fstream &file) const{
-
-    if( !file.is_open() ){
-        errorLog << "saveModelToFile(fstream &file) - Failed to save model, file is not open!" << endl;
-        return false;
-    }
+bool KMeans::saveModelToFile(ostream &file) const{
 
     file << "GRT_KMEANS_MODEL_FILE_V1.0\n";
     
     if( !saveClustererSettingsToFile( file ) ){
-        errorLog << "saveModelToFile(fstream &file) - Failed to save clusterer settings to file!" << endl;
+        errorLog << "saveModelToFile(ostream &file) - Failed to save clusterer settings to file!" << endl;
         return false;
     }
     
@@ -446,16 +441,11 @@ bool KMeans::saveModelToFile(fstream &file) const{
 
 }
 
-bool KMeans::loadModelFromFile(fstream &file){
+bool KMeans::loadModelFromFile(istream &file){
 
     //Clear any previous model
     clear();
     
-    if(!file.is_open()){
-        errorLog << "loadModelFromFile(string filename) - Failed to open file!" << endl;
-        return false;
-    }
-
     string word;
     file >> word;
     if( word != "GRT_KMEANS_MODEL_FILE_V1.0" ){

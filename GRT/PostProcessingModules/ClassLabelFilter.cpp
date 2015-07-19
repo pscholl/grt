@@ -225,12 +225,7 @@ bool ClassLabelFilter::saveModelToFile(string filename) const{
     return true;
 }
 
-bool ClassLabelFilter::saveModelToFile(fstream &file) const{
-    
-    if( !file.is_open() ){
-        errorLog << "saveModelToFile(fstream &file) - The file is not open!" << endl;
-        return false;
-    }
+bool ClassLabelFilter::saveModelToFile(ostream &file) const{
     
     file << "GRT_CLASS_LABEL_FILTER_FILE_V1.0" << endl;
     file << "NumInputDimensions: " << numInputDimensions << endl;
@@ -257,12 +252,7 @@ bool ClassLabelFilter::loadModelFromFile(string filename){
     return true;
 }
 
-bool ClassLabelFilter::loadModelFromFile(fstream &file){
-    
-    if( !file.is_open() ){
-        errorLog << "loadModelFromFile(fstream &file) - The file is not open!" << endl;
-        return false;
-    }
+bool ClassLabelFilter::loadModelFromFile(istream &file){
     
     string word;
     
@@ -270,13 +260,13 @@ bool ClassLabelFilter::loadModelFromFile(fstream &file){
     file >> word;
     
     if( word != "GRT_CLASS_LABEL_FILTER_FILE_V1.0" ){
-        errorLog << "loadModelFromFile(fstream &file) - Invalid file format!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Invalid file format!" << endl;
         return false;     
     }
     
     file >> word;
     if( word != "NumInputDimensions:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read NumInputDimensions header!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read NumInputDimensions header!" << endl;
         return false;     
     }
     file >> numInputDimensions;
@@ -284,7 +274,7 @@ bool ClassLabelFilter::loadModelFromFile(fstream &file){
     //Load the number of output dimensions
     file >> word;
     if( word != "NumOutputDimensions:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read NumOutputDimensions header!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read NumOutputDimensions header!" << endl;
         return false;     
     }
     file >> numOutputDimensions;
@@ -292,14 +282,14 @@ bool ClassLabelFilter::loadModelFromFile(fstream &file){
     //Load the minimumCount
     file >> word;
     if( word != "MinimumCount:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read MinimumCount header!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read MinimumCount header!" << endl;
         return false;     
     }
     file >> minimumCount;
     
     file >> word;
     if( word != "BufferSize:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read BufferSize header!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read BufferSize header!" << endl;
         return false;     
     }
     file >> bufferSize;

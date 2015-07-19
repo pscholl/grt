@@ -139,12 +139,7 @@ bool MovementTrajectoryFeatures::loadModelFromFile(string filename){
     return true;
 }
 
-bool MovementTrajectoryFeatures::saveModelToFile(fstream &file) const{
-    
-    if( !file.is_open() ){
-        errorLog << "saveModelToFile(fstream &file) - The file is not open!" << endl;
-        return false;
-    }
+bool MovementTrajectoryFeatures::saveModelToFile(ostream &file) const{
     
     //Write the file header
     file << "GRT_MOVEMENT_TRAJECTORY_FEATURES_FILE_V1.0" << endl;	
@@ -166,12 +161,7 @@ bool MovementTrajectoryFeatures::saveModelToFile(fstream &file) const{
     return true;
 }
 
-bool MovementTrajectoryFeatures::loadModelFromFile(fstream &file){
-    
-    if( !file.is_open() ){
-        errorLog << "loadModelFromFile(fstream &file) - The file is not open!" << endl;
-        return false;
-    }
+bool MovementTrajectoryFeatures::loadModelFromFile(istream &file){
     
     string word;
     
@@ -179,7 +169,7 @@ bool MovementTrajectoryFeatures::loadModelFromFile(fstream &file){
     file >> word;
     
     if( word != "GRT_MOVEMENT_TRAJECTORY_FEATURES_FILE_V1.0" ){
-        errorLog << "loadModelFromFile(fstream &file) - Invalid file format!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Invalid file format!" << endl;
         return false;     
     }
     
@@ -191,7 +181,7 @@ bool MovementTrajectoryFeatures::loadModelFromFile(fstream &file){
     //Load the TrajectoryLength
     file >> word;
     if( word != "TrajectoryLength:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read TrajectoryLength header!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read TrajectoryLength header!" << endl;
         return false;     
     }
     file >> trajectoryLength;
@@ -199,7 +189,7 @@ bool MovementTrajectoryFeatures::loadModelFromFile(fstream &file){
     //Load the NumCentroids
     file >> word;
     if( word != "NumCentroids:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read NumCentroids header!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read NumCentroids header!" << endl;
         return false;     
     }
     file >> numCentroids;
@@ -207,7 +197,7 @@ bool MovementTrajectoryFeatures::loadModelFromFile(fstream &file){
     //Load the FeatureMode
     file >> word;
     if( word != "FeatureMode:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read FeatureMode header!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read FeatureMode header!" << endl;
         return false;     
     }
     file >> featureMode;
@@ -215,7 +205,7 @@ bool MovementTrajectoryFeatures::loadModelFromFile(fstream &file){
     //Load the NumHistogramBins
     file >> word;
     if( word != "NumHistogramBins:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read NumHistogramBins header!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read NumHistogramBins header!" << endl;
         return false;     
     }
     file >> numHistogramBins;
@@ -223,7 +213,7 @@ bool MovementTrajectoryFeatures::loadModelFromFile(fstream &file){
     //Load the UseTrajStartAndEndValues
     file >> word;
     if( word != "UseTrajStartAndEndValues:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read UseTrajStartAndEndValues header!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read UseTrajStartAndEndValues header!" << endl;
         return false;     
     }
     file >> useTrajStartAndEndValues;
@@ -231,7 +221,7 @@ bool MovementTrajectoryFeatures::loadModelFromFile(fstream &file){
     //Load the UseWeightedMagnitudeValues
     file >> word;
     if( word != "UseWeightedMagnitudeValues:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read UseWeightedMagnitudeValues header!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read UseWeightedMagnitudeValues header!" << endl;
         return false;     
     }
     file >> useWeightedMagnitudeValues;

@@ -130,7 +130,7 @@ public:
      @param fstream &file: a reference to the file the DecisionTree model will be saved to
      @return returns true if the model was saved successfully, false otherwise
      */
-    virtual bool saveModelToFile(fstream &file) const;
+    virtual bool saveModelToFile(ostream &file) const;
     
     /**
      This loads a trained DecisionTree model from a file.
@@ -139,7 +139,7 @@ public:
      @param fstream &file: a reference to the file the DecisionTree model will be loaded from
      @return returns true if the model was loaded successfully, false otherwise
      */
-    virtual bool loadModelFromFile(fstream &file);
+    virtual bool loadModelFromFile(istream &file);
     
     /**
      This function adds the current model to the formatted stream.
@@ -188,9 +188,9 @@ public:
     using MLBase::print;
     
 protected:
-    bool loadLegacyModelFromFile_v1( fstream &file );
-    bool loadLegacyModelFromFile_v2( fstream &file );
-    bool loadLegacyModelFromFile_v3( fstream &file );
+    bool loadLegacyModelFromFile_v1( istream &file );
+    bool loadLegacyModelFromFile_v2( istream &file );
+    bool loadLegacyModelFromFile_v3( istream &file );
     
     DecisionTreeNode* buildTree(ClassificationData &trainingData, DecisionTreeNode *parent, vector< UINT > features, const vector< UINT > &classLabels, UINT nodeID );
     double getNodeDistance( const VectorDouble &x, const UINT nodeID );

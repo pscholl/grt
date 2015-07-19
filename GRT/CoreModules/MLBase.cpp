@@ -148,7 +148,7 @@ bool MLBase::saveModelToFile(string filename) const{
     return true;
 }
 
-bool MLBase::saveModelToFile(fstream &file) const { return false; }
+bool MLBase::saveModelToFile(ostream &file) const { return false; }
 
 bool MLBase::load(const string filename){
     return loadModelFromFile(filename);
@@ -169,7 +169,7 @@ bool MLBase::loadModelFromFile(string filename){
     return true;
 }
 
-bool MLBase::loadModelFromFile(fstream &file){ return false; }
+bool MLBase::loadModelFromFile(istream &file){ return false; }
     
 bool MLBase::getModel(ostream &stream) const { return true; }
     
@@ -336,12 +336,7 @@ vector< TrainingResult > MLBase::getTrainingResults() const{
     return trainingResults;
 }
 
-bool MLBase::saveBaseSettingsToFile(fstream &file) const{
-    
-    if( !file.is_open() ){
-        errorLog << "saveBaseSettingsToFile(fstream &file) - The file is not open!" << endl;
-        return false;
-    }
+bool MLBase::saveBaseSettingsToFile(ostream &file) const{
     
     file << "Trained: " << trained << endl;
     file << "UseScaling: " << useScaling << endl;
@@ -359,22 +354,17 @@ bool MLBase::saveBaseSettingsToFile(fstream &file) const{
     return true;
 }
 
-bool MLBase::loadBaseSettingsFromFile(fstream &file){
+bool MLBase::loadBaseSettingsFromFile(istream &file){
     
     //Clear any previous setup
     clear();
-    
-    if( !file.is_open() ){
-        errorLog << "loadBaseSettingsFromFile(fstream &file) - The file is not open!" << endl;
-        return false;
-    }
     
     string word;
     
     //Load the trained state
     file >> word;
     if( word != "Trained:" ){
-        errorLog << "loadBaseSettingsFromFile(fstream &file) - Failed to read Trained header!" << endl;
+        errorLog << "loadBaseSettingsFromFile(istream &file) - Failed to read Trained header!" << endl;
         return false;
     }
     file >> trained;
@@ -382,7 +372,7 @@ bool MLBase::loadBaseSettingsFromFile(fstream &file){
     //Load the scaling state
     file >> word;
     if( word != "UseScaling:" ){
-        errorLog << "loadBaseSettingsFromFile(fstream &file) - Failed to read UseScaling header!" << endl;
+        errorLog << "loadBaseSettingsFromFile(istream &file) - Failed to read UseScaling header!" << endl;
         return false;
     }
     file >> useScaling;
@@ -390,7 +380,7 @@ bool MLBase::loadBaseSettingsFromFile(fstream &file){
     //Load the NumInputDimensions
     file >> word;
     if( word != "NumInputDimensions:" ){
-        errorLog << "loadBaseSettingsFromFile(fstream &file) - Failed to read NumInputDimensions header!" << endl;
+        errorLog << "loadBaseSettingsFromFile(istream &file) - Failed to read NumInputDimensions header!" << endl;
         return false;
     }
     file >> numInputDimensions;
@@ -398,7 +388,7 @@ bool MLBase::loadBaseSettingsFromFile(fstream &file){
     //Load the NumOutputDimensions
     file >> word;
     if( word != "NumOutputDimensions:" ){
-        errorLog << "loadBaseSettingsFromFile(fstream &file) - Failed to read NumOutputDimensions header!" << endl;
+        errorLog << "loadBaseSettingsFromFile(istream &file) - Failed to read NumOutputDimensions header!" << endl;
         return false;
     }
     file >> numOutputDimensions;
@@ -406,7 +396,7 @@ bool MLBase::loadBaseSettingsFromFile(fstream &file){
     //Load the numTrainingIterationsToConverge
     file >> word;
     if( word != "NumTrainingIterationsToConverge:" ){
-        errorLog << "loadBaseSettingsFromFile(fstream &file) - Failed to read NumTrainingIterationsToConverge header!" << endl;
+        errorLog << "loadBaseSettingsFromFile(istream &file) - Failed to read NumTrainingIterationsToConverge header!" << endl;
         return false;
     }
     file >> numTrainingIterationsToConverge;
@@ -414,7 +404,7 @@ bool MLBase::loadBaseSettingsFromFile(fstream &file){
     //Load the MinNumEpochs
     file >> word;
     if( word != "MinNumEpochs:" ){
-        errorLog << "loadBaseSettingsFromFile(fstream &file) - Failed to read MinNumEpochs header!" << endl;
+        errorLog << "loadBaseSettingsFromFile(istream &file) - Failed to read MinNumEpochs header!" << endl;
         return false;
     }
     file >> minNumEpochs;
@@ -422,7 +412,7 @@ bool MLBase::loadBaseSettingsFromFile(fstream &file){
     //Load the maxNumEpochs
     file >> word;
     if( word != "MaxNumEpochs:" ){
-        errorLog << "loadBaseSettingsFromFile(fstream &file) - Failed to read MaxNumEpochs header!" << endl;
+        errorLog << "loadBaseSettingsFromFile(istream &file) - Failed to read MaxNumEpochs header!" << endl;
         return false;
     }
     file >> maxNumEpochs;
@@ -430,7 +420,7 @@ bool MLBase::loadBaseSettingsFromFile(fstream &file){
     //Load the ValidationSetSize
     file >> word;
     if( word != "ValidationSetSize:" ){
-        errorLog << "loadBaseSettingsFromFile(fstream &file) - Failed to read ValidationSetSize header!" << endl;
+        errorLog << "loadBaseSettingsFromFile(istream &file) - Failed to read ValidationSetSize header!" << endl;
         return false;
     }
     file >> validationSetSize;
@@ -438,7 +428,7 @@ bool MLBase::loadBaseSettingsFromFile(fstream &file){
     //Load the LearningRate
     file >> word;
     if( word != "LearningRate:" ){
-        errorLog << "loadBaseSettingsFromFile(fstream &file) - Failed to read LearningRate header!" << endl;
+        errorLog << "loadBaseSettingsFromFile(istream &file) - Failed to read LearningRate header!" << endl;
         return false;
     }
     file >> learningRate;
@@ -446,7 +436,7 @@ bool MLBase::loadBaseSettingsFromFile(fstream &file){
     //Load the MinChange
     file >> word;
     if( word != "MinChange:" ){
-        errorLog << "loadBaseSettingsFromFile(fstream &file) - Failed to read MinChange header!" << endl;
+        errorLog << "loadBaseSettingsFromFile(istream &file) - Failed to read MinChange header!" << endl;
         return false;
     }
     file >> minChange;
@@ -454,7 +444,7 @@ bool MLBase::loadBaseSettingsFromFile(fstream &file){
     //Load the UseValidationSet
     file >> word;
     if( word != "UseValidationSet:" ){
-        errorLog << "loadBaseSettingsFromFile(fstream &file) - Failed to read UseValidationSet header!" << endl;
+        errorLog << "loadBaseSettingsFromFile(istream &file) - Failed to read UseValidationSet header!" << endl;
         return false;
     }
     file >> useValidationSet;
@@ -462,7 +452,7 @@ bool MLBase::loadBaseSettingsFromFile(fstream &file){
     //Load the RandomiseTrainingOrder
     file >> word;
     if( word != "RandomiseTrainingOrder:" ){
-        errorLog << "loadBaseSettingsFromFile(fstream &file) - Failed to read RandomiseTrainingOrder header!" << endl;
+        errorLog << "loadBaseSettingsFromFile(istream &file) - Failed to read RandomiseTrainingOrder header!" << endl;
         return false;
     }
     file >> randomiseTrainingOrder;

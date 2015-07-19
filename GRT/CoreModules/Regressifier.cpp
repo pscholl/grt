@@ -132,12 +132,7 @@ const Regressifier& Regressifier::getBaseRegressifier() const{
 }
     
     
-bool Regressifier::saveBaseSettingsToFile(fstream &file) const{
-    
-    if( !file.is_open() ){
-        errorLog << "saveBaseSettingsToFile(fstream &file) - The file is not open!" << endl;
-        return false;
-    }
+bool Regressifier::saveBaseSettingsToFile(ostream &file) const{
     
     if( !MLBase::saveBaseSettingsToFile( file ) ) return false;
     
@@ -158,12 +153,7 @@ bool Regressifier::saveBaseSettingsToFile(fstream &file) const{
 }
 
 
-bool Regressifier::loadBaseSettingsFromFile(fstream &file){
-    
-    if( !file.is_open() ){
-        errorLog << "loadBaseSettingsFromFile(fstream &file) - The file is not open!" << endl;
-        return false;
-    }
+bool Regressifier::loadBaseSettingsFromFile(istream &file){
     
     //Try and load the base settings from the file
     if( !MLBase::loadBaseSettingsFromFile( file ) ){
@@ -176,7 +166,7 @@ bool Regressifier::loadBaseSettingsFromFile(fstream &file){
         //Load the ranges
         file >> word;
         if( word != "InputVectorRanges:" ){
-            errorLog << "loadBaseSettingsFromFile(fstream &file) - Failed to read InputVectorRanges header!" << endl;
+            errorLog << "loadBaseSettingsFromFile(istream &file) - Failed to read InputVectorRanges header!" << endl;
             return false;
         }
         inputVectorRanges.resize(numInputDimensions);
@@ -187,7 +177,7 @@ bool Regressifier::loadBaseSettingsFromFile(fstream &file){
         
         file >> word;
         if( word != "OutputVectorRanges:" ){
-            errorLog << "loadBaseSettingsFromFile(fstream &file) - Failed to read OutputVectorRanges header!" << endl;
+            errorLog << "loadBaseSettingsFromFile(istream &file) - Failed to read OutputVectorRanges header!" << endl;
             return false;
         }
         targetVectorRanges.resize(numOutputDimensions);

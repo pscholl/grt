@@ -258,20 +258,14 @@ vector< MinDistModel > MinDist::getModels() const {
     return models;
 }
     
-bool MinDist::saveModelToFile(fstream &file) const{
-    
-    if(!file.is_open())
-	{
-		errorLog <<"saveModelToFile(fstream &file) - The file is not open!" << endl;
-		return false;
-	}
+bool MinDist::saveModelToFile(ostream &file) const{
     
 	//Write the header info
 	file<<"GRT_MINDIST_MODEL_FILE_V2.0\n";
     
     //Write the classifier settings to the file
     if( !Classifier::saveBaseSettingsToFile(file) ){
-        errorLog <<"saveModelToFile(fstream &file) - Failed to save classifier base settings to file!" << endl;
+        errorLog <<"saveModelToFile(ostream &file) - Failed to save classifier base settings to file!" << endl;
 		return false;
     }
     
@@ -300,15 +294,9 @@ bool MinDist::saveModelToFile(fstream &file) const{
     return true;
 }
     
-bool MinDist::loadModelFromFile(fstream &file){
+bool MinDist::loadModelFromFile(istream &file){
     
     clear();
-    
-    if(!file.is_open())
-    {
-        errorLog << "loadModelFromFile(string filename) - Could not open file to load model" << endl;
-        return false;
-    }
     
     std::string word;
     
@@ -430,7 +418,7 @@ bool MinDist::setNumClusters(UINT numClusters){
     return true;
 }
     
-bool MinDist::loadLegacyModelFromFile( fstream &file ){
+bool MinDist::loadLegacyModelFromFile( istream &file ){
     
     string word;
     

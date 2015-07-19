@@ -160,12 +160,7 @@ public:
         return weights;
     }
     
-    bool saveModelToFile(fstream &file) const{
-        
-        if(!file.is_open())
-        {
-            return false;
-        }
+    bool saveModelToFile(ostream &file) const{
         
         UINT N = getNumWeakClassifiers();
         
@@ -193,37 +188,31 @@ public:
        return true;
     }
     
-    bool loadModelFromFile(fstream &file){
+    bool loadModelFromFile(istream &file){
         
         //Clear any previous models
         clear();
-        
-        if(!file.is_open())
-        {
-            errorLog <<"loadModelFromFile(fstream &file) - The file is not open!" << endl;
-            return false;
-        }
         
         string word;
         UINT numWeakClassifiers = 0;
         
         file >> word;
         if( word != "ClassLabel:" ){
-            errorLog <<"loadModelFromFile(fstream &file) - Failed to read ClassLabel header!" << endl;
+            errorLog <<"loadModelFromFile(istream &file) - Failed to read ClassLabel header!" << endl;
             return false;
         }
         file >> classLabel;
 
         file >> word;
         if( word != "NumWeakClassifiers:" ){
-            errorLog <<"loadModelFromFile(fstream &file) - Failed to read NumWeakClassifiers header!" << endl;
+            errorLog <<"loadModelFromFile(istream &file) - Failed to read NumWeakClassifiers header!" << endl;
             return false;
         }
         file >> numWeakClassifiers;
         
         file >> word;
         if( word != "WeakClassifierTypes:" ){
-            errorLog <<"loadModelFromFile(fstream &file) - Failed to read WeakClassifierTypes header!" << endl;
+            errorLog <<"loadModelFromFile(istream &file) - Failed to read WeakClassifierTypes header!" << endl;
             return false;
         }
         
@@ -236,7 +225,7 @@ public:
                 file >> word;
                 weakClassifiers[i] = WeakClassifier::createInstanceFromString(word);
                 if( weakClassifiers[i] == NULL ){
-                    errorLog <<"loadModelFromFile(fstream &file) - WeakClassifier " << i << " is NULL!" << endl;
+                    errorLog <<"loadModelFromFile(istream &file) - WeakClassifier " << i << " is NULL!" << endl;
                     return false;
                 }
             }
@@ -245,7 +234,7 @@ public:
         //Load the Weights
         file >> word;
         if( word != "Weights:" ){
-            errorLog <<"loadModelFromFile(fstream &file) - Failed to read Weights header!" << endl;
+            errorLog <<"loadModelFromFile(istream &file) - Failed to read Weights header!" << endl;
             return false;
         }
         for(UINT i=0; i<numWeakClassifiers; i++){
@@ -255,13 +244,13 @@ public:
         //Load the WeakClassifiers
         file >> word;
         if( word != "WeakClassifiers:" ){
-            errorLog <<"loadModelFromFile(fstream &file) - Failed to read WeakClassifiers header!" << endl;
+            errorLog <<"loadModelFromFile(istream &file) - Failed to read WeakClassifiers header!" << endl;
             errorLog << word << endl;
             return false;
         }
         for(UINT i=0; i<numWeakClassifiers; i++){
             if( !weakClassifiers[i]->loadModelFromFile( file ) ){
-                errorLog <<"loadModelFromFile(fstream &file) - Failed to load weakClassifer: " << i << endl;
+                errorLog <<"loadModelFromFile(istream &file) - Failed to load weakClassifer: " << i << endl;
                 return false;
             }
         }

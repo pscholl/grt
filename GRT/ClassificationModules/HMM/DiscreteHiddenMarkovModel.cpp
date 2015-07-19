@@ -671,20 +671,14 @@ bool DiscreteHiddenMarkovModel::reset(){
     return true;
 }
     
-bool DiscreteHiddenMarkovModel::saveModelToFile(fstream &file) const{
-    
-    if(!file.is_open())
-    {
-        errorLog << "saveModelToFile( fstream &file ) - File is not open!" << endl;
-        return false;
-    }
+bool DiscreteHiddenMarkovModel::saveModelToFile(ostream &file) const{
     
     //Write the header info
     file << "DISCRETE_HMM_MODEL_FILE_V1.0\n";
     
     //Write the base settings to the file
     if( !MLBase::saveBaseSettingsToFile(file) ){
-        errorLog <<"saveModelToFile(fstream &file) - Failed to save classifier base settings to file!" << endl;
+        errorLog <<"saveModelToFile(ostream &file) - Failed to save classifier base settings to file!" << endl;
         return false;
     }
     
@@ -721,15 +715,9 @@ bool DiscreteHiddenMarkovModel::saveModelToFile(fstream &file) const{
     return true;
 }
 
-bool DiscreteHiddenMarkovModel::loadModelFromFile(fstream &file){
+bool DiscreteHiddenMarkovModel::loadModelFromFile(istream &file){
     
     clear();
-    
-    if(!file.is_open())
-    {
-        errorLog << "loadModelFromFile( fstream &file ) - File is not open!" << endl;
-        return false;
-    }
     
     std::string word;
     

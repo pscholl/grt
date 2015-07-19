@@ -387,20 +387,14 @@ bool FiniteStateMachine::print() const {
     return true;
 }
     
-bool FiniteStateMachine::saveModelToFile(fstream &file) const{
-    
-    if(!file.is_open())
-	{
-		errorLog <<"saveModelToFile(fstream &file) - The file is not open!" << endl;
-		return false;
-	}
+bool FiniteStateMachine::saveModelToFile(ostream &file) const{
     
 	//Write the header info
     file << "GRT_FSM_MODEL_FILE_V1.0\n";
     
     //Write the classifier settings to the file
     if( !Classifier::saveBaseSettingsToFile(file) ){
-        errorLog << "saveModelToFile(fstream &file) - Failed to save classifier base settings to file!" << endl;
+        errorLog << "saveModelToFile(ostream &file) - Failed to save classifier base settings to file!" << endl;
 		return false;
     }
     
@@ -438,16 +432,10 @@ bool FiniteStateMachine::saveModelToFile(fstream &file) const{
     return true;
 }
     
-bool FiniteStateMachine::loadModelFromFile(fstream &file){
+bool FiniteStateMachine::loadModelFromFile(istream &file){
     
     //Clear any previous model
     clear();
-    
-    if(!file.is_open())
-    {
-        errorLog << "loadModelFromFile(string filename) - Could not open file to load model" << endl;
-        return false;
-    }
     
     std::string word;
     

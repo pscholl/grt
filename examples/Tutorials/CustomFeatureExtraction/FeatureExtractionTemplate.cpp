@@ -179,7 +179,7 @@ bool FeatureExtractionTemplate::loadSettingsFromFile(fstream &file){
     
     //Second, you should load the base feature extraction settings to the file
     if( !loadBaseSettingsFromFile( file ) ){
-        errorLog << "loadBaseSettingsFromFile(fstream &file) - Failed to load base feature extraction settings from file!" << endl;
+        errorLog << "loadBaseSettingsFromFile(istream &file) - Failed to load base feature extraction settings from file!" << endl;
         return false;
     }
     

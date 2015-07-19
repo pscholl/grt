@@ -198,30 +198,13 @@ bool ParticleClassifier::reset(){
     return true;
 }
     
-bool ParticleClassifier::saveModelToFile(fstream &file) const{
-    
-    if(!file.is_open())
-    {
-        errorLog <<"saveModelToFile(fstream &file) - The file is not open!" << endl;
-        return false;
-    }
-    
-    
-    
-    return true;
+bool ParticleClassifier::saveModelToFile(ostream &file) const{
+    return false;
 }
     
-bool ParticleClassifier::loadModelFromFile(fstream &file){
+bool ParticleClassifier::loadModelFromFile(istream &file){
     
     clear();
-    
-    if(!file.is_open())
-    {
-        errorLog << "loadModelFromFile(string filename) - Could not open file to load model" << endl;
-        return false;
-    }
-    
-    
     
     //Flag that the model is trained
     trained = false;

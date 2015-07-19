@@ -127,7 +127,7 @@ public:
      @param fstream &file: a reference to the file the SVM model will be saved to
      @return returns true if the model was saved successfully, false otherwise
      */
-    virtual bool saveModelToFile(fstream &file) const;
+    virtual bool saveModelToFile(ostream &file) const;
     
     /**
      This loads a trained SVM model from a file.
@@ -136,7 +136,7 @@ public:
      @param fstream &file: a reference to the file the SVM model will be loaded from
      @return returns true if the model was loaded successfully, false otherwise
      */
-    virtual bool loadModelFromFile(fstream &file);
+    virtual bool loadModelFromFile(istream &file);
     
     /**
      This initializes the SVM settings and parameters.  Any previous model, settings, or problems will be cleared.
@@ -353,7 +353,7 @@ protected:
     
     bool predictSVM(VectorDouble &inputVector);
 	bool predictSVM(VectorDouble &inputVector,double &maxProbability, VectorDouble &probabilites);
-    bool loadLegacyModelFromFile( fstream &file );
+    bool loadLegacyModelFromFile( istream &file );
     
     struct svm_model *deepCopyModel() const;
     bool deepCopyProblem( const struct svm_problem &source_problem, struct svm_problem &target_problem, const unsigned int numInputDimensions ) const;

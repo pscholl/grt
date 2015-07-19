@@ -283,7 +283,7 @@ public:
     virtual bool load(const string filename);
     
     /**
-     This saves the trained model to a file, it calls the saveModelToFile(fstream &file) function unless it is overwritten by the derived class.
+     This saves the trained model to a file, it calls the saveModelToFile(ostream &file) function unless it is overwritten by the derived class.
      
      @param string filename: the name of the file to save the model to
      @return returns true if the model was saved successfully, false otherwise
@@ -297,10 +297,10 @@ public:
      @param fstream &file: a reference to the file the model will be saved to
      @return returns true if the model was saved successfully, false otherwise
      */
-    virtual bool saveModelToFile(fstream &file) const;
+    virtual bool saveModelToFile(ostream &file) const;
     
     /**
-     This loads a trained model from a file, it calls the loadModelFromFile(fstream &file) function unless it is overwritten by the derived class.
+     This loads a trained model from a file, it calls the loadModelFromFile(istream &file) function unless it is overwritten by the derived class.
      
      @param string filename: the name of the file to load the model from
      @return returns true if the model was loaded successfully, false otherwise
@@ -314,7 +314,7 @@ public:
      @param fstream &file: a reference to the file the model will be loaded from
      @return returns true if the model was loaded successfully, false otherwise
      */
-    virtual bool loadModelFromFile(fstream &file);
+    virtual bool loadModelFromFile(istream &file);
     
     /**
      This function adds the current model to the formatted stream.
@@ -670,14 +670,14 @@ protected:
      
      @return returns true if the base settings were saved, false otherwise
      */
-    bool saveBaseSettingsToFile(fstream &file) const;
+    bool saveBaseSettingsToFile(ostream &file) const;
     
     /**
      Loads the core base settings from a file.
      
      @return returns true if the base settings were loaded, false otherwise
      */
-    bool loadBaseSettingsFromFile(fstream &file);
+    bool loadBaseSettingsFromFile(istream &file);
     
     bool trained;
     bool useScaling;

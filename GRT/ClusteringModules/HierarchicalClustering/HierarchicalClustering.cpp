@@ -386,17 +386,12 @@ double HierarchicalClustering::computeClusterVariance( const ClusterInfo &cluste
     return variance/N;
 }
 
-bool HierarchicalClustering::saveModelToFile(fstream &file) const{
-    
-    if( !file.is_open() ){
-        errorLog << "saveModelToFile(string filename) - Failed to open file!" << endl;
-        return false;
-    }
+bool HierarchicalClustering::saveModelToFile(ostream &file) const{
     
     file << "GRT_HIERARCHICAL_CLUSTERING_FILE_V1.0\n";
     
     if( !saveClustererSettingsToFile( file ) ){
-        errorLog << "saveModelToFile(fstream &file) - Failed to save cluster settings to file!" << endl;
+        errorLog << "saveModelToFile(ostream &file) - Failed to save cluster settings to file!" << endl;
         return false;
     }
     
@@ -415,7 +410,7 @@ bool HierarchicalClustering::saveModelToFile(fstream &file) const{
     
 }
 
-bool HierarchicalClustering::loadModelFromFile(fstream &file){
+bool HierarchicalClustering::loadModelFromFile(istream &file){
     
     string word;
     
@@ -428,7 +423,7 @@ bool HierarchicalClustering::loadModelFromFile(fstream &file){
     }
     
     if( !loadClustererSettingsFromFile( file ) ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to load cluster settings from file!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to load cluster settings from file!" << endl;
         return false;
     }
         
