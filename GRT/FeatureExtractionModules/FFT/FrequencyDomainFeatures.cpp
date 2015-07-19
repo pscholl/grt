@@ -75,11 +75,11 @@ bool FrequencyDomainFeatures::deepCopyFrom(const FeatureExtraction *featureExtra
     return false;
 }
 
-bool FrequencyDomainFeatures::saveModelToFile(fstream &file) const{
+bool FrequencyDomainFeatures::saveModelToFile(ostream &file) const{
   return false;
 }
 
-bool FrequencyDomainFeatures::loadModelFromFile(fstream &file){
+bool FrequencyDomainFeatures::loadModelFromFile(istream &file){
   return false;
 }
 

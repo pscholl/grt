@@ -516,20 +516,14 @@ double ContinuousHiddenMarkovModel::gauss( const MatrixDouble &x, const MatrixDo
     return z;
 }
     
-bool ContinuousHiddenMarkovModel::saveModelToFile(fstream &file) const{
-    
-    if(!file.is_open())
-    {
-        errorLog << "saveModelToFile( fstream &file ) - File is not open!" << endl;
-        return false;
-    }
+bool ContinuousHiddenMarkovModel::saveModelToFile(ostream &file) const{
     
     //Write the header info
     file << "CONTINUOUS_HMM_MODEL_FILE_V1.0\n";
     
     //Write the base settings to the file
     if( !MLBase::saveBaseSettingsToFile(file) ){
-        errorLog <<"saveModelToFile(fstream &file) - Failed to save classifier base settings to file!" << endl;
+        errorLog <<"saveModelToFile(ostream &file) - Failed to save classifier base settings to file!" << endl;
         return false;
     }
     
@@ -581,15 +575,9 @@ bool ContinuousHiddenMarkovModel::saveModelToFile(fstream &file) const{
     return true;
 }
 
-bool ContinuousHiddenMarkovModel::loadModelFromFile(fstream &file){
+bool ContinuousHiddenMarkovModel::loadModelFromFile(istream &file){
     
     clear();
-    
-    if(!file.is_open())
-    {
-        errorLog << "loadModelFromFile( fstream &file ) - File is not open!" << endl;
-        return false;
-    }
     
     std::string word;
     

@@ -251,13 +251,7 @@ bool LDA::predict(VectorDouble inputVector){
     return true;
 }
     
-bool LDA::saveModelToFile(fstream &file) const{
-    
-    if(!file.is_open())
-    {
-        errorLog <<"saveModelToFile(fstream &file) - Could not open file to save model" << endl;
-        return false;
-    }
+bool LDA::saveModelToFile(ostream &file) const{
     
     //Write the header info
     file<<"GRT_LDA_MODEL_FILE_V1.0\n";
@@ -288,7 +282,7 @@ bool LDA::saveModelToFile(fstream &file) const{
     return true;
 }
     
-bool LDA::loadModelFromFile(fstream &file){
+bool LDA::loadModelFromFile(istream &file){
     
     trained = false;
     numInputDimensions = 0;
@@ -296,45 +290,39 @@ bool LDA::loadModelFromFile(fstream &file){
     models.clear();
     classLabels.clear();
     
-    if(!file.is_open())
-    {
-        errorLog << "loadModelFromFile(fstream &file) - The file is not open!" << endl;
-        return false;
-    }
-    
     std::string word;
     
     //Find the file type header
     file >> word;
     if(word != "GRT_LDA_MODEL_FILE_V1.0"){
-        errorLog << "loadModelFromFile(fstream &file) - Could not find Model File Header" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Could not find Model File Header" << endl;
         return false;
     }
     
     file >> word;
     if(word != "NumFeatures:"){
-        errorLog << "loadModelFromFile(fstream &file) - Could not find NumFeatures " << endl;
+        errorLog << "loadModelFromFile(istream &file) - Could not find NumFeatures " << endl;
         return false;
     }
     file >> numInputDimensions;
     
     file >> word;
     if(word != "NumClasses:"){
-        errorLog << "loadModelFromFile(fstream &file) - Could not find NumClasses" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Could not find NumClasses" << endl;
         return false;
     }
     file >> numClasses;
     
     file >> word;
     if(word != "UseScaling:"){
-        errorLog << "loadModelFromFile(fstream &file) - Could not find UseScaling" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Could not find UseScaling" << endl;
         return false;
     }
     file >> useScaling;
     
     file >> word;
     if(word != "UseNullRejection:"){
-        errorLog << "loadModelFromFile(fstream &file) - Could not find UseNullRejection" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Could not find UseNullRejection" << endl;
         return false;
     }
     file >> useNullRejection;
@@ -346,7 +334,7 @@ bool LDA::loadModelFromFile(fstream &file){
         
         file >> word;
         if(word != "Ranges:"){
-            errorLog << "loadModelFromFile(fstream &file) - Could not find the Ranges" << endl;
+            errorLog << "loadModelFromFile(istream &file) - Could not find the Ranges" << endl;
             return false;
         }
         for(UINT n=0; n<ranges.size(); n++){
@@ -363,7 +351,7 @@ bool LDA::loadModelFromFile(fstream &file){
     for(UINT k=0; k<numClasses; k++){
         file >> word;
         if(word != "ClassLabel:"){
-            errorLog << "loadModelFromFile(fstream &file) - Could not find ClassLabel for the "<<k+1<<"th model" << endl;
+            errorLog << "loadModelFromFile(istream &file) - Could not find ClassLabel for the "<<k+1<<"th model" << endl;
             return false;
         }
         file >> models[k].classLabel;
@@ -371,7 +359,7 @@ bool LDA::loadModelFromFile(fstream &file){
         
         file >> word;
         if(word != "PriorProbability:"){
-            errorLog << "loadModelFromFile(fstream &file) - Could not find the PriorProbability for the "<<k+1<<"th model" << endl;
+            errorLog << "loadModelFromFile(istream &file) - Could not find the PriorProbability for the "<<k+1<<"th model" << endl;
             return false;
         }
         file >> models[k].priorProb;
@@ -381,7 +369,7 @@ bool LDA::loadModelFromFile(fstream &file){
         //Load the weights
         file >> word;
         if(word != "Weights:"){
-            errorLog << "loadModelFromFile(fstream &file) - Could not find the Weights vector for the "<<k+1<<"th model" << endl;
+            errorLog << "loadModelFromFile(istream &file) - Could not find the Weights vector for the "<<k+1<<"th model" << endl;
             return false;
         }
         

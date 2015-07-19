@@ -244,13 +244,7 @@ bool DecisionTreeClusterNode::computeBestSpilt( const UINT &numSplittingSteps, c
      return true;
 }
 
-bool DecisionTreeClusterNode::saveParametersToFile(fstream &file) const{
-
-    if( !file.is_open() )
-    {
-        errorLog << "saveParametersToFile(fstream &file) - File is not open!" << endl;
-        return false;
-    }
+bool DecisionTreeClusterNode::saveParametersToFile(ostream &file) const{
 
     //Save the DecisionTreeNode parameters
     if( !DecisionTreeNode::saveParametersToFile( file ) ){
@@ -265,14 +259,7 @@ bool DecisionTreeClusterNode::saveParametersToFile(fstream &file) const{
     return true;
 }
 
-bool DecisionTreeClusterNode::loadParametersFromFile(fstream &file){
-
-    if(!file.is_open())
-    {
-        errorLog << "loadParametersFromFile(fstream &file) - File is not open!" << endl;
-        return false;
-    }
-
+bool DecisionTreeClusterNode::loadParametersFromFile(istream &file){
     //Load the DecisionTreeNode parameters
     if( !DecisionTreeNode::loadParametersFromFile( file ) ){
         errorLog << "loadParametersFromFile(fstream &file) - Failed to load DecisionTreeNode parameters from file!" << endl;

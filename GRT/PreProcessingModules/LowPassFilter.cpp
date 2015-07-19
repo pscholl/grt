@@ -123,12 +123,7 @@ bool LowPassFilter::saveModelToFile(string filename) const{
     return true;
 }
 
-bool LowPassFilter::saveModelToFile(fstream &file) const{
-    
-    if( !file.is_open() ){
-        errorLog << "saveModelToFile(fstream &file) - The file is not open!" << endl;
-        return false;
-    }
+bool LowPassFilter::saveModelToFile(ostream &file) const{
     
     file << "GRT_LOW_PASS_FILTER_FILE_V1.0" << endl;
     
@@ -156,12 +151,7 @@ bool LowPassFilter::loadModelFromFile(string filename){
     return true;
 }
 
-bool LowPassFilter::loadModelFromFile(fstream &file){
-    
-    if( !file.is_open() ){
-        errorLog << "loadModelFromFile(fstream &file) - The file is not open!" << endl;
-        return false;
-    }
+bool LowPassFilter::loadModelFromFile(istream &file){
     
     string word;
     
@@ -169,14 +159,14 @@ bool LowPassFilter::loadModelFromFile(fstream &file){
     file >> word;
     
     if( word != "GRT_LOW_PASS_FILTER_FILE_V1.0" ){
-        errorLog << "loadModelFromFile(fstream &file) - Invalid file format!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Invalid file format!" << endl;
         return false;     
     }
     
     //Load the number of input dimensions
     file >> word;
     if( word != "NumInputDimensions:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read NumInputDimensions header!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read NumInputDimensions header!" << endl;
         return false;     
     }
     file >> numInputDimensions;
@@ -184,7 +174,7 @@ bool LowPassFilter::loadModelFromFile(fstream &file){
     //Load the number of output dimensions
     file >> word;
     if( word != "NumOutputDimensions:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read NumOutputDimensions header!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read NumOutputDimensions header!" << endl;
         return false;     
     }
     file >> numOutputDimensions;
@@ -192,7 +182,7 @@ bool LowPassFilter::loadModelFromFile(fstream &file){
     //Load the filter factor
     file >> word;
     if( word != "FilterFactor:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read FilterFactor header!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read FilterFactor header!" << endl;
         return false;     
     }
     file >> filterFactor;
@@ -200,7 +190,7 @@ bool LowPassFilter::loadModelFromFile(fstream &file){
     //Load the number of output dimensions
     file >> word;
     if( word != "Gain:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read Gain header!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read Gain header!" << endl;
         return false;     
     }
     file >> gain;

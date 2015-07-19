@@ -422,19 +422,13 @@ bool BernoulliRBM::clear(){
     return true;
 }
 
-bool BernoulliRBM::saveModelToFile(fstream &file) const{
-    
-    if(!file.is_open())
-	{
-		errorLog <<"saveModelToFile(fstream &file) - The file is not open!" << endl;
-		return false;
-	}
+bool BernoulliRBM::saveModelToFile(ostream &file) const{
     
 	//Write the header info
 	file<<"GRT_BERNOULLI_RBM_MODEL_FILE_V1.1\n";
     
     if( !saveBaseSettingsToFile( file ) ){
-        errorLog <<"saveModelToFile(fstream &file) - Failed to save base settings to file!" << endl;
+        errorLog <<"saveModelToFile(ostream &file) - Failed to save base settings to file!" << endl;
         return false;
     }
     
@@ -481,13 +475,7 @@ bool BernoulliRBM::saveModelToFile(fstream &file) const{
     return true;
 }
 
-bool BernoulliRBM::loadModelFromFile(fstream &file){
-    
-    if(!file.is_open())
-    {
-        errorLog <<"loadModelFromFile(fstream &file) - The file is not open!" << endl;
-        return false;
-    }
+bool BernoulliRBM::loadModelFromFile(istream &file){
     
     string word;
     
@@ -499,19 +487,19 @@ bool BernoulliRBM::loadModelFromFile(fstream &file){
     }
     
     if( word != "GRT_BERNOULLI_RBM_MODEL_FILE_V1.1" ){
-        errorLog <<"loadModelFromFile(fstream &file) - Failed to read file header!" << endl;
+        errorLog <<"loadModelFromFile(istream &file) - Failed to read file header!" << endl;
         return false;
     }
     
     if( !loadBaseSettingsFromFile( file ) ){
-        errorLog <<"loadModelFromFile(fstream &file) - Failed to load base settings to file!" << endl;
+        errorLog <<"loadModelFromFile(istream &file) - Failed to load base settings to file!" << endl;
         return false;
     }
     
     //Read the number of visible units
     file >> word;
     if( word != "NumVisibleUnits:" ){
-        errorLog <<"loadModelFromFile(fstream &file) - Failed to read NumVisibleUnits header!" << endl;
+        errorLog <<"loadModelFromFile(istream &file) - Failed to read NumVisibleUnits header!" << endl;
         return false;
     }
     file >> numVisibleUnits;
@@ -519,7 +507,7 @@ bool BernoulliRBM::loadModelFromFile(fstream &file){
     //Read the number of hidden units
     file >> word;
     if( word != "NumHiddenUnits:" ){
-        errorLog <<"loadModelFromFile(fstream &file) - Failed to read NumHiddenUnits header!" << endl;
+        errorLog <<"loadModelFromFile(istream &file) - Failed to read NumHiddenUnits header!" << endl;
         return false;
     }
     file >> numHiddenUnits;
@@ -527,7 +515,7 @@ bool BernoulliRBM::loadModelFromFile(fstream &file){
     //Read the batch size
     file >> word;
     if( word != "BatchSize:" ){
-        errorLog <<"loadModelFromFile(fstream &file) - Failed to read BatchSize header!" << endl;
+        errorLog <<"loadModelFromFile(istream &file) - Failed to read BatchSize header!" << endl;
         return false;
     }
     file >> batchSize;
@@ -535,7 +523,7 @@ bool BernoulliRBM::loadModelFromFile(fstream &file){
     //Read the batch step size
     file >> word;
     if( word != "BatchStepSize:" ){
-        errorLog <<"loadModelFromFile(fstream &file) - Failed to read BatchStepSize header!" << endl;
+        errorLog <<"loadModelFromFile(istream &file) - Failed to read BatchStepSize header!" << endl;
         return false;
     }
     file >> batchStepSize;
@@ -543,7 +531,7 @@ bool BernoulliRBM::loadModelFromFile(fstream &file){
     //Read the learning rate
     file >> word;
     if( word != "LearningRate:" ){
-        errorLog <<"loadModelFromFile(fstream &file) - Failed to read LearningRate header!" << endl;
+        errorLog <<"loadModelFromFile(istream &file) - Failed to read LearningRate header!" << endl;
         return false;
     }
     file >> learningRate;
@@ -551,7 +539,7 @@ bool BernoulliRBM::loadModelFromFile(fstream &file){
     //Read the learning rate update
     file >> word;
     if( word != "LearningRateUpdate:" ){
-        errorLog <<"loadModelFromFile(fstream &file) - Failed to read LearningRateUpdate header!" << endl;
+        errorLog <<"loadModelFromFile(istream &file) - Failed to read LearningRateUpdate header!" << endl;
         return false;
     }
     file >> learningRateUpdate;
@@ -559,7 +547,7 @@ bool BernoulliRBM::loadModelFromFile(fstream &file){
     //Read the momentum
     file >> word;
     if( word != "Momentum:" ){
-        errorLog <<"loadModelFromFile(fstream &file) - Failed to read Momentum header!" << endl;
+        errorLog <<"loadModelFromFile(istream &file) - Failed to read Momentum header!" << endl;
         return false;
     }
     file >> momentum;
@@ -567,7 +555,7 @@ bool BernoulliRBM::loadModelFromFile(fstream &file){
     //Read the randomizeWeightsForTraining
     file >> word;
     if( word != "RandomizeWeightsForTraining:" ){
-        errorLog <<"loadModelFromFile(fstream &file) - Failed to read RandomizeWeightsForTraining header!" << endl;
+        errorLog <<"loadModelFromFile(istream &file) - Failed to read RandomizeWeightsForTraining header!" << endl;
         return false;
     }
     file >> randomizeWeightsForTraining;
@@ -575,7 +563,7 @@ bool BernoulliRBM::loadModelFromFile(fstream &file){
     //Read the ranges
     file >> word;
     if( word != "Ranges:" ){
-        errorLog <<"loadModelFromFile(fstream &file) - Failed to read Ranges header!" << endl;
+        errorLog <<"loadModelFromFile(istream &file) - Failed to read Ranges header!" << endl;
         return false;
     }
     ranges.resize(numInputDimensions);
@@ -590,7 +578,7 @@ bool BernoulliRBM::loadModelFromFile(fstream &file){
         //Load the weights matrix
         file >> word;
         if( word != "WeightsMatrix:" ){
-            errorLog <<"loadModelFromFile(fstream &file) - Failed to read WeightsMatrix header!" << endl;
+            errorLog <<"loadModelFromFile(istream &file) - Failed to read WeightsMatrix header!" << endl;
             return false;
         }
         weightsMatrix.resize(numHiddenUnits, numVisibleUnits);
@@ -604,7 +592,7 @@ bool BernoulliRBM::loadModelFromFile(fstream &file){
         //Load the VisibleLayerBias
         file >> word;
         if( word != "VisibleLayerBias:" ){
-            errorLog <<"loadModelFromFile(fstream &file) - Failed to read VisibleLayerBias header!" << endl;
+            errorLog <<"loadModelFromFile(istream &file) - Failed to read VisibleLayerBias header!" << endl;
             return false;
         }
         visibleLayerBias.resize(numVisibleUnits);
@@ -616,7 +604,7 @@ bool BernoulliRBM::loadModelFromFile(fstream &file){
         //Load the HiddenLayerBias
         file >> word;
         if( word != "HiddenLayerBias:" ){
-            errorLog <<"loadModelFromFile(fstream &file) - Failed to read HiddenLayerBias header!" << endl;
+            errorLog <<"loadModelFromFile(istream &file) - Failed to read HiddenLayerBias header!" << endl;
             return false;
         }
         hiddenLayerBias.resize(numHiddenUnits);
@@ -710,20 +698,20 @@ bool BernoulliRBM::setBatchStepSize(const UINT batchStepSize){
     return true;
 }
     
-bool BernoulliRBM::loadLegacyModelFromFile(fstream &file){
+bool BernoulliRBM::loadLegacyModelFromFile(istream &file){
     
     string word;
     UINT numGibbsSteps = 0;
     
     if( !loadBaseSettingsFromFile( file ) ){
-        errorLog <<"loadModelFromFile(fstream &file) - Failed to load base settings to file!" << endl;
+        errorLog <<"loadModelFromFile(istream &file) - Failed to load base settings to file!" << endl;
         return false;
     }
     
     //Read the number of visible units
     file >> word;
     if( word != "NumVisibleUnits:" ){
-        errorLog <<"loadModelFromFile(fstream &file) - Failed to read NumVisibleUnits header!" << endl;
+        errorLog <<"loadModelFromFile(istream &file) - Failed to read NumVisibleUnits header!" << endl;
         return false;
     }
     file >> numVisibleUnits;
@@ -731,7 +719,7 @@ bool BernoulliRBM::loadLegacyModelFromFile(fstream &file){
     //Read the number of hidden units
     file >> word;
     if( word != "NumHiddenUnits:" ){
-        errorLog <<"loadModelFromFile(fstream &file) - Failed to read NumHiddenUnits header!" << endl;
+        errorLog <<"loadModelFromFile(istream &file) - Failed to read NumHiddenUnits header!" << endl;
         return false;
     }
     file >> numHiddenUnits;
@@ -739,7 +727,7 @@ bool BernoulliRBM::loadLegacyModelFromFile(fstream &file){
     //Read the number of training epochs
     file >> word;
     if( word != "NumTrainingEpochs:" ){
-        errorLog <<"loadModelFromFile(fstream &file) - Failed to read NumTrainingEpochs header!" << endl;
+        errorLog <<"loadModelFromFile(istream &file) - Failed to read NumTrainingEpochs header!" << endl;
         return false;
     }
     file >> maxNumEpochs;
@@ -747,7 +735,7 @@ bool BernoulliRBM::loadLegacyModelFromFile(fstream &file){
     //Read the number of gibbs steps
     file >> word;
     if( word != "NumGibbsSteps:" ){
-        errorLog <<"loadModelFromFile(fstream &file) - Failed to read NumGibbsSteps header!" << endl;
+        errorLog <<"loadModelFromFile(istream &file) - Failed to read NumGibbsSteps header!" << endl;
         return false;
     }
     file >> numGibbsSteps;
@@ -755,7 +743,7 @@ bool BernoulliRBM::loadLegacyModelFromFile(fstream &file){
     //Read the learning rate
     file >> word;
     if( word != "LearningRate:" ){
-        errorLog <<"loadModelFromFile(fstream &file) - Failed to read LearningRate header!" << endl;
+        errorLog <<"loadModelFromFile(istream &file) - Failed to read LearningRate header!" << endl;
         return false;
     }
     file >> learningRate;
@@ -763,7 +751,7 @@ bool BernoulliRBM::loadLegacyModelFromFile(fstream &file){
     //Read the learning rate update
     file >> word;
     if( word != "LearningRateUpdate:" ){
-        errorLog <<"loadModelFromFile(fstream &file) - Failed to read LearningRateUpdate header!" << endl;
+        errorLog <<"loadModelFromFile(istream &file) - Failed to read LearningRateUpdate header!" << endl;
         return false;
     }
     file >> learningRateUpdate;
@@ -771,7 +759,7 @@ bool BernoulliRBM::loadLegacyModelFromFile(fstream &file){
     //Read the momentum
     file >> word;
     if( word != "Momentum:" ){
-        errorLog <<"loadModelFromFile(fstream &file) - Failed to read Momentum header!" << endl;
+        errorLog <<"loadModelFromFile(istream &file) - Failed to read Momentum header!" << endl;
         return false;
     }
     file >> momentum;
@@ -779,7 +767,7 @@ bool BernoulliRBM::loadLegacyModelFromFile(fstream &file){
     //Read the randomizeWeightsForTraining
     file >> word;
     if( word != "RandomizeWeightsForTraining:" ){
-        errorLog <<"loadModelFromFile(fstream &file) - Failed to read RandomizeWeightsForTraining header!" << endl;
+        errorLog <<"loadModelFromFile(istream &file) - Failed to read RandomizeWeightsForTraining header!" << endl;
         return false;
     }
     file >> randomizeWeightsForTraining;
@@ -787,7 +775,7 @@ bool BernoulliRBM::loadLegacyModelFromFile(fstream &file){
     //Read the ranges
     file >> word;
     if( word != "Ranges:" ){
-        errorLog <<"loadModelFromFile(fstream &file) - Failed to read Ranges header!" << endl;
+        errorLog <<"loadModelFromFile(istream &file) - Failed to read Ranges header!" << endl;
         return false;
     }
     ranges.resize(numInputDimensions);
@@ -802,7 +790,7 @@ bool BernoulliRBM::loadLegacyModelFromFile(fstream &file){
         //Load the weights matrix
         file >> word;
         if( word != "WeightsMatrix:" ){
-            errorLog <<"loadModelFromFile(fstream &file) - Failed to read WeightsMatrix header!" << endl;
+            errorLog <<"loadModelFromFile(istream &file) - Failed to read WeightsMatrix header!" << endl;
             return false;
         }
         weightsMatrix.resize(numHiddenUnits, numVisibleUnits);
@@ -816,7 +804,7 @@ bool BernoulliRBM::loadLegacyModelFromFile(fstream &file){
         //Load the VisibleLayerBias
         file >> word;
         if( word != "VisibleLayerBias:" ){
-            errorLog <<"loadModelFromFile(fstream &file) - Failed to read VisibleLayerBias header!" << endl;
+            errorLog <<"loadModelFromFile(istream &file) - Failed to read VisibleLayerBias header!" << endl;
             return false;
         }
         visibleLayerBias.resize(numVisibleUnits);
@@ -828,7 +816,7 @@ bool BernoulliRBM::loadLegacyModelFromFile(fstream &file){
         //Load the HiddenLayerBias
         file >> word;
         if( word != "HiddenLayerBias:" ){
-            errorLog <<"loadModelFromFile(fstream &file) - Failed to read HiddenLayerBias header!" << endl;
+            errorLog <<"loadModelFromFile(istream &file) - Failed to read HiddenLayerBias header!" << endl;
             return false;
         }
         hiddenLayerBias.resize(numHiddenUnits);

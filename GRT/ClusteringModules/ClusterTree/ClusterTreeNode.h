@@ -252,14 +252,7 @@ protected:
      @param fstream &file: a reference to the file the parameters will be saved to
      @return returns true if the model was saved successfully, false otherwise
      */
-    virtual bool saveParametersToFile(fstream &file) const{
-        
-        if(!file.is_open())
-        {
-            errorLog << "saveParametersToFile(fstream &file) - File is not open!" << endl;
-            return false;
-        }
-        
+    virtual bool saveParametersToFile(ostream &file) const{
         //Save the custom ClusterTreeNode parameters
         file << "NodeSize: " << nodeSize << endl;
         file << "FeatureIndex: " << featureIndex << endl;
@@ -275,14 +268,7 @@ protected:
      @param fstream &file: a reference to the file the parameters will be loaded from
      @return returns true if the model was loaded successfully, false otherwise
      */
-    virtual bool loadParametersFromFile(fstream &file){
-        
-        if(!file.is_open())
-        {
-            errorLog << "loadFromFile(fstream &file) - File is not open!" << endl;
-            return false;
-        }
-        
+    virtual bool loadParametersFromFile(istream &file){
         string word;
         
         //Load the custom ClusterTreeNode Parameters

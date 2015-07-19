@@ -281,20 +281,14 @@ bool SwipeDetector::reset(){
     return true;
 }
     
-bool SwipeDetector::saveModelToFile(fstream &file) const{
-    
-    if(!file.is_open())
-	{
-		errorLog <<"saveModelToFile(fstream &file) - The file is not open!" << endl;
-		return false;
-	}
+bool SwipeDetector::saveModelToFile(ostream &file) const{
     
 	//Write the header info
 	file<<"GRT_SWIPE_DETECTION_MODEL_FILE_V1.0\n";
     
     //Write the classifier settings to the file
     if( !Classifier::saveBaseSettingsToFile(file) ){
-        errorLog <<"saveModelToFile(fstream &file) - Failed to save classifier base settings to file!" << endl;
+        errorLog <<"saveModelToFile(ostream &file) - Failed to save classifier base settings to file!" << endl;
 		return false;
     }
     
@@ -318,18 +312,12 @@ bool SwipeDetector::saveModelToFile(fstream &file) const{
     return true;
 }
     
-bool SwipeDetector::loadModelFromFile(fstream &file){
+bool SwipeDetector::loadModelFromFile(istream &file){
     
     trained = false;
     numInputDimensions = 0;
     numClasses = 0;
     classLabels.clear();
-    
-    if(!file.is_open())
-    {
-        errorLog << "loadModelFromFile(string filename) - Could not open file to load model" << endl;
-        return false;
-    }
     
     std::string word;
     

@@ -120,12 +120,7 @@ bool DeadZone::saveModelToFile(string filename) const{
 	return true;
 }
 
-bool DeadZone::saveModelToFile(fstream &file) const{
-    
-    if( !file.is_open() ){
-        errorLog << "saveModelToFile(fstream &file) - The file is not open!" << endl;
-        return false;
-    }
+bool DeadZone::saveModelToFile(ostream &file) const{
     
     file << "GRT_DEAD_ZONE_FILE_V1.0" << endl;
     
@@ -153,12 +148,7 @@ bool DeadZone::loadModelFromFile(string filename){
 	return true;
 }
 
-bool DeadZone::loadModelFromFile(fstream &file){
-    
-    if( !file.is_open() ){
-        errorLog << "loadModelFromFile(fstream &file) - The file is not open!" << endl;
-        return false;
-    }
+bool DeadZone::loadModelFromFile(istream &file){
     
     string word;
     
@@ -166,14 +156,14 @@ bool DeadZone::loadModelFromFile(fstream &file){
     file >> word;
     
     if( word != "GRT_DEAD_ZONE_FILE_V1.0" ){
-        errorLog << "loadModelFromFile(fstream &file) - Invalid file format!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Invalid file format!" << endl;
         return false;     
     }
     
     //Load the number of input dimensions
     file >> word;
     if( word != "NumInputDimensions:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read NumInputDimensions header!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read NumInputDimensions header!" << endl;
         return false;     
     }
     file >> numInputDimensions;
@@ -181,7 +171,7 @@ bool DeadZone::loadModelFromFile(fstream &file){
     //Load the number of output dimensions
     file >> word;
     if( word != "NumOutputDimensions:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read NumOutputDimensions header!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read NumOutputDimensions header!" << endl;
         return false;     
     }
     file >> numOutputDimensions;
@@ -189,14 +179,14 @@ bool DeadZone::loadModelFromFile(fstream &file){
     //Load the lower limit
     file >> word;
     if( word != "LowerLimit:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read LowerLimit header!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read LowerLimit header!" << endl;
         return false;     
     }
     file >> lowerLimit;
     
     file >> word;
     if( word != "UpperLimit:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read UpperLimit header!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read UpperLimit header!" << endl;
         return false;     
     }
     file >> upperLimit;

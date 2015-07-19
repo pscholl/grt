@@ -139,12 +139,7 @@ bool TimeDomainFeatures::loadModelFromFile(string filename){
     return true;
 }
 
-bool TimeDomainFeatures::saveModelToFile(fstream &file) const{
-    
-    if( !file.is_open() ){
-        errorLog << "saveModelToFile(fstream &file) - The file is not open!" << endl;
-        return false;
-    }
+bool TimeDomainFeatures::saveModelToFile(ostream &file) const{
     
     //Write the file header
     file << "GRT_TIME_DOMAIN_FEATURES_FILE_V1.0" << endl;	
@@ -167,12 +162,7 @@ bool TimeDomainFeatures::saveModelToFile(fstream &file) const{
     return true;
 }
 
-bool TimeDomainFeatures::loadModelFromFile(fstream &file){
-    
-    if( !file.is_open() ){
-        errorLog << "loadModelFromFile(fstream &file) - The file is not open!" << endl;
-        return false;
-    }
+bool TimeDomainFeatures::loadModelFromFile(istream &file){
     
     string word;
     
@@ -180,7 +170,7 @@ bool TimeDomainFeatures::loadModelFromFile(fstream &file){
     file >> word;
     
     if( word != "GRT_TIME_DOMAIN_FEATURES_FILE_V1.0" ){
-        errorLog << "loadModelFromFile(fstream &file) - Invalid file format!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Invalid file format!" << endl;
         return false;     
     }
     
@@ -192,7 +182,7 @@ bool TimeDomainFeatures::loadModelFromFile(fstream &file){
     //Load the BufferLength
     file >> word;
     if( word != "BufferLength:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read BufferLength header!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read BufferLength header!" << endl;
         return false;     
     }
     file >> bufferLength;
@@ -200,7 +190,7 @@ bool TimeDomainFeatures::loadModelFromFile(fstream &file){
     //Load the NumFrames
     file >> word;
     if( word != "NumFrames:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read NumFrames header!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read NumFrames header!" << endl;
         return false;     
     }
     file >> numFrames;
@@ -208,7 +198,7 @@ bool TimeDomainFeatures::loadModelFromFile(fstream &file){
     //Load the OffsetInput
     file >> word;
     if( word != "OffsetInput:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read OffsetInput header!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read OffsetInput header!" << endl;
         return false;     
     }
     file >> offsetInput;
@@ -216,7 +206,7 @@ bool TimeDomainFeatures::loadModelFromFile(fstream &file){
     //Load the UseMean
     file >> word;
     if( word != "UseMean:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read UseMean header!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read UseMean header!" << endl;
         return false;     
     }
     file >> useMean;
@@ -224,7 +214,7 @@ bool TimeDomainFeatures::loadModelFromFile(fstream &file){
     //Load the UseStdDev
     file >> word;
     if( word != "UseStdDev:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read UseStdDev header!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read UseStdDev header!" << endl;
         return false;     
     }
     file >> useStdDev;
@@ -232,7 +222,7 @@ bool TimeDomainFeatures::loadModelFromFile(fstream &file){
     //Load the UseEuclideanNorm
     file >> word;
     if( word != "UseEuclideanNorm:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read UseEuclideanNorm header!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read UseEuclideanNorm header!" << endl;
         return false;     
     }
     file >> useEuclideanNorm;
@@ -240,7 +230,7 @@ bool TimeDomainFeatures::loadModelFromFile(fstream &file){
     //Load the UseRMS
     file >> word;
     if( word != "UseRMS:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read UseRMS header!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read UseRMS header!" << endl;
         return false;
     }
     file >> useRMS;

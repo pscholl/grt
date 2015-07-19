@@ -249,13 +249,7 @@ bool BAG::clear(){
     return true;
 }
     
-bool BAG::saveModelToFile(fstream &file) const{
-    
-    if(!file.is_open())
-	{
-		errorLog <<"saveModelToFile(fstream &file) - The file is not open!" << endl;
-		return false;
-	}
+bool BAG::saveModelToFile(ostream &file) const{
     
     const UINT ensembleSize = getEnsembleSize();
     
@@ -264,7 +258,7 @@ bool BAG::saveModelToFile(fstream &file) const{
     
     //Write the classifier settings to the file
     if( !Classifier::saveBaseSettingsToFile(file) ){
-        errorLog <<"saveModelToFile(fstream &file) - Failed to save classifier base settings to file!" << endl;
+        errorLog <<"saveModelToFile(ostream &file) - Failed to save classifier base settings to file!" << endl;
 		return false;
     }
     
@@ -292,7 +286,7 @@ bool BAG::saveModelToFile(fstream &file) const{
             file << "Ensemble: \n";
             for(UINT i=0; i<getEnsembleSize(); i++){
                 if( !ensemble[i]->saveModelToFile( file ) ){
-                    errorLog <<"saveModelToFile(fstream &file) - Failed to save classifier " << i << " to file!" << endl;
+                    errorLog <<"saveModelToFile(ostream &file) - Failed to save classifier " << i << " to file!" << endl;
                     return false;
                 }
             }
@@ -305,16 +299,10 @@ bool BAG::saveModelToFile(fstream &file) const{
     return true;
 }
     
-bool BAG::loadModelFromFile(fstream &file){
+bool BAG::loadModelFromFile(istream &file){
     
     clear();
     UINT ensembleSize = 0;
-    
-    if(!file.is_open())
-    {
-        errorLog << "loadModelFromFile(string filename) - Could not open file to load model" << endl;
-        return false;
-    }
     
     std::string word;
     file >> word;
@@ -462,7 +450,7 @@ bool BAG::setWeights(const VectorDouble &weights){
     return true;
 }
     
-    bool BAG::loadLegacyModelFromFile( fstream &file ){
+    bool BAG::loadLegacyModelFromFile( istream &file ){
         
         string word;
         

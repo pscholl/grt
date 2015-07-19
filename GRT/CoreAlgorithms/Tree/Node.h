@@ -96,7 +96,7 @@ public:
      @param fstream &file: a reference to the file the Node model will be saved to
      @return returns true if the model was saved successfully, false otherwise
      */
-    virtual bool saveToFile(fstream &file) const;
+    virtual bool saveToFile(ostream &file) const;
     
     /**
      This loads the Node from a file.
@@ -104,7 +104,7 @@ public:
      @param fstream &file: a reference to the file the Node model will be loaded from
      @return returns true if the model was loaded successfully, false otherwise
      */
-    virtual bool loadFromFile(fstream &file);
+    virtual bool loadFromFile(istream &file);
     
     /**
      This function returns a deep copy of the Node and all it's children.
@@ -220,7 +220,7 @@ protected:
      @param fstream &file: a reference to the file the parameters will be saved to
      @return returns true if the parameters were saved successfully, false otherwise
      */
-    virtual bool saveParametersToFile(fstream &file) const{
+    virtual bool saveParametersToFile(ostream &file) const{
 
         return true;
     }
@@ -232,7 +232,7 @@ protected:
      @param fstream &file: a reference to the file the parameters will be loaded from
      @return returns true if the parameters were loaded successfully, false otherwise
      */
-    virtual bool loadParametersFromFile(fstream &file){
+    virtual bool loadParametersFromFile(istream &file){
         
         return true;
     }

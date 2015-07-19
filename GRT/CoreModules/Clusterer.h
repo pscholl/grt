@@ -236,14 +236,14 @@ protected:
      
      @return returns true if the base settings were saved, false otherwise
      */
-    bool saveClustererSettingsToFile(fstream &file) const;
+    bool saveClustererSettingsToFile(ostream &file) const;
     
     /**
      Loads the core clusterer settings from a file.
      
      @return returns true if the base settings were loaded, false otherwise
      */
-    bool loadClustererSettingsFromFile(fstream &file);
+    bool loadClustererSettingsFromFile(istream &file);
 
     string clustererType;
     UINT numClusters;                   ///< Number of clusters in the model

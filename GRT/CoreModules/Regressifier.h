@@ -165,14 +165,14 @@ protected:
      
      @return returns true if the base settings were saved, false otherwise
      */
-    bool saveBaseSettingsToFile(fstream &file) const;
+    bool saveBaseSettingsToFile(ostream &file) const;
     
     /**
      Loads the core base settings from a file.
      
      @return returns true if the base settings were loaded, false otherwise
      */
-    bool loadBaseSettingsFromFile(fstream &file);
+    bool loadBaseSettingsFromFile(istream &file);
 
     string regressifierType;
     VectorDouble regressionData;

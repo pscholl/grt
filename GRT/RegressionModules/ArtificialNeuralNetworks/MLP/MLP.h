@@ -118,7 +118,7 @@ public:
      @param fstream &file: a reference to the file the MLP model will be saved to
      @return returns true if the model was saved successfully, false otherwise
      */
-    virtual bool saveModelToFile(fstream &file) const;
+    virtual bool saveModelToFile(ostream &file) const;
     
     /**
      This loads a trained MLP model from a file.
@@ -127,7 +127,7 @@ public:
      @param fstream &file: a reference to the file the MLP model will be loaded from
      @return returns true if the model was loaded successfully, false otherwise
      */
-    virtual bool loadModelFromFile(fstream &file);
+    virtual bool loadModelFromFile(istream &file);
     
     /**
      Returns the number of classes in the MLP model if the MLP is in classification mode.
@@ -495,7 +495,7 @@ protected:
     
     bool trainOnlineGradientDescentRegression(const RegressionData &trainingData,const RegressionData &validationData);
     
-    bool loadLegacyModelFromFile( fstream &file );
+    bool loadLegacyModelFromFile( istream &file );
     
     /**
      Performs one round of back propagation, using the training example and target vector

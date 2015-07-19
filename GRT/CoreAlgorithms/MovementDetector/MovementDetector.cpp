@@ -103,14 +103,14 @@ bool MovementDetector::reset(){
     return true;
 }
 
-bool MovementDetector::saveModelToFile(fstream &file) const{
+bool MovementDetector::saveModelToFile(ostream &file) const{
     
     //Write the header info
     file << "GRT_MOVEMENT_DETECTOR_MODEL_FILE_V1.0\n";
     
     //Write the base settings to the file
     if( !MLBase::saveBaseSettingsToFile(file) ){
-        errorLog <<"saveModelToFile(fstream &file) - Failed to save ML base settings to file!" << endl;
+        errorLog <<"saveModelToFile(ostream &file) - Failed to save ML base settings to file!" << endl;
         return false;
     }
     
@@ -123,22 +123,16 @@ bool MovementDetector::saveModelToFile(fstream &file) const{
     return true;
 }
 
-bool MovementDetector::loadModelFromFile(fstream &file){
+bool MovementDetector::loadModelFromFile(istream &file){
     
     clear();
-    
-    if(!file.is_open())
-    {
-        errorLog << "loadModelFromFile(string filename) - Could not open file to load model!" << endl;
-        return false;
-    }
     
     std::string word;
     file >> word;
     
     //Write the header info
     if( word != "GRT_MOVEMENT_DETECTOR_MODEL_FILE_V1.0" ){
-        errorLog <<"loadModelFromFile(fstream &file) - Failed to read file header!" << endl;
+        errorLog <<"loadModelFromFile(istream &file) - Failed to read file header!" << endl;
         return false;
     }
     
@@ -150,28 +144,28 @@ bool MovementDetector::loadModelFromFile(fstream &file){
     
     file >> word;
     if( word != "SearchTimeout:" ){
-        errorLog <<"loadModelFromFile(fstream &file) - Failed to read SearchTimeout header!" << endl;
+        errorLog <<"loadModelFromFile(istream &file) - Failed to read SearchTimeout header!" << endl;
         return false;
     }
     file >> searchTimeout;
     
     file >> word;
     if( word != "UpperThreshold:" ){
-        errorLog <<"loadModelFromFile(fstream &file) - Failed to read UpperThreshold header!" << endl;
+        errorLog <<"loadModelFromFile(istream &file) - Failed to read UpperThreshold header!" << endl;
         return false;
     }
     file >> upperThreshold;
     
     file >> word;
     if( word != "LowerThreshold:" ){
-        errorLog <<"loadModelFromFile(fstream &file) - Failed to read LowerThreshold header!" << endl;
+        errorLog <<"loadModelFromFile(istream &file) - Failed to read LowerThreshold header!" << endl;
         return false;
     }
     file >> lowerThreshold;
     
     file >> word;
     if( word != "Gamma:" ){
-        errorLog <<"loadModelFromFile(fstream &file) - Failed to read Gamma header!" << endl;
+        errorLog <<"loadModelFromFile(istream &file) - Failed to read Gamma header!" << endl;
         return false;
     }
     file >> gamma;

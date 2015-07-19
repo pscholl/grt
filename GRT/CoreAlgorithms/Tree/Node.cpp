@@ -128,13 +128,7 @@ bool Node::getModel(ostream &stream) const{
     return true;
 }
 
-bool Node::saveToFile(fstream &file) const{
-    
-    if(!file.is_open())
-    {
-        errorLog << "saveToFile(fstream &file) - File is not open!" << endl;
-        return false;
-    }
+bool Node::saveToFile(ostream &file) const{
     
     file << "NodeType: " << nodeType << endl;
     file << "Depth: " << depth << endl;
@@ -170,16 +164,10 @@ bool Node::saveToFile(fstream &file) const{
     return true;
 }
 
-bool Node::loadFromFile(fstream &file){
+bool Node::loadFromFile(istream &file){
     
     //Clear any previous nodes
     clear();
-    
-    if(!file.is_open())
-    {
-        errorLog << "loadFromFile(fstream &file) - File is not open!" << endl;
-        return false;
-    }
     
     string word;
     bool hasLeftChild = false;

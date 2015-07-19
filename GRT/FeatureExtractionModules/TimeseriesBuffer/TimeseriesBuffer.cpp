@@ -132,12 +132,7 @@ bool TimeseriesBuffer::loadModelFromFile(string filename){
     return true;
 }
 
-bool TimeseriesBuffer::saveModelToFile(fstream &file) const{
-    
-    if( !file.is_open() ){
-        errorLog << "saveModelToFile(fstream &file) - The file is not open!" << endl;
-        return false;
-    }
+bool TimeseriesBuffer::saveModelToFile(ostream &file) const{
     
     //Write the file header
     file << "GRT_TIMESERIES_BUFFER_FILE_V1.0" << endl;
@@ -154,12 +149,7 @@ bool TimeseriesBuffer::saveModelToFile(fstream &file) const{
     return true;
 }
 
-bool TimeseriesBuffer::loadModelFromFile(fstream &file){
-    
-    if( !file.is_open() ){
-        errorLog << "loadModelFromFile(fstream &file) - The file is not open!" << endl;
-        return false;
-    }
+bool TimeseriesBuffer::loadModelFromFile(istream &file){
     
     string word;
     
@@ -167,7 +157,7 @@ bool TimeseriesBuffer::loadModelFromFile(fstream &file){
     file >> word;
     
     if( word != "GRT_TIMESERIES_BUFFER_FILE_V1.0" ){
-        errorLog << "loadModelFromFile(fstream &file) - Invalid file format!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Invalid file format!" << endl;
         return false;     
     }
     
@@ -178,7 +168,7 @@ bool TimeseriesBuffer::loadModelFromFile(fstream &file){
     
     file >> word;
     if( word != "BufferSize:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read BufferSize header!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read BufferSize header!" << endl;
         return false;     
     }
     file >> bufferSize;

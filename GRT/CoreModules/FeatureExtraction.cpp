@@ -113,13 +113,7 @@ bool FeatureExtraction::clear(){
     return true;
 }
     
-bool FeatureExtraction::saveFeatureExtractionSettingsToFile(fstream &file) const{
-    
-    if( !file.is_open() ){
-        errorLog << "saveFeatureExtractionSettingsToFile(fstream &file) - The file is not open!" << endl;
-        return false;
-    }
-    
+bool FeatureExtraction::saveFeatureExtractionSettingsToFile(ostream &file) const{
     if( !MLBase::saveBaseSettingsToFile( file ) ) return false;
     
     file << "Initialized: " << initialized << endl;
@@ -127,13 +121,7 @@ bool FeatureExtraction::saveFeatureExtractionSettingsToFile(fstream &file) const
     return true;
 }
 
-bool FeatureExtraction::loadFeatureExtractionSettingsFromFile(fstream &file){
-    
-    if( !file.is_open() ){
-        errorLog << "loadFeatureExtractionSettingsFromFile(fstream &file) - The file is not open!" << endl;
-        return false;
-    }
-    
+bool FeatureExtraction::loadFeatureExtractionSettingsFromFile(istream &file){
     //Try and load the base settings from the file
     if( !MLBase::loadBaseSettingsFromFile( file ) ){
         return false;

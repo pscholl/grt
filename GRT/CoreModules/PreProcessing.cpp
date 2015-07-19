@@ -135,12 +135,7 @@ bool PreProcessing::loadModelFromFile(string filename){
     return true;
 }
     
-bool PreProcessing::savePreProcessingSettingsToFile(fstream &file) const{
-    
-    if( !file.is_open() ){
-        errorLog << "savePreProcessingSettingsToFile(fstream &file) - The file is not open!" << endl;
-        return false;
-    }
+bool PreProcessing::savePreProcessingSettingsToFile(ostream &file) const{
     
     if( !MLBase::saveBaseSettingsToFile( file ) ){
         errorLog << "savePreProcessingSettingsToFile(fstream &file) - Failed to save base settings to file!" << endl;
@@ -152,12 +147,7 @@ bool PreProcessing::savePreProcessingSettingsToFile(fstream &file) const{
     return true;
 }
     
-bool PreProcessing::loadPreProcessingSettingsFromFile(fstream &file){
-    
-    if( !file.is_open() ){
-        errorLog << "loadPreProcessingSettingsFromFile(fstream &file) - The file is not open!" << endl;
-        return false;
-    }
+bool PreProcessing::loadPreProcessingSettingsFromFile(istream &file){
     
     //Try and load the base settings from the file
     if( !MLBase::loadBaseSettingsFromFile( file ) ){

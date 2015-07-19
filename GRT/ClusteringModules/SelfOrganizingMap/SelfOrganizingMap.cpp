@@ -319,17 +319,17 @@ bool SelfOrganizingMap::map_( VectorDouble &x ){
     return true;
 }
     
-bool SelfOrganizingMap::saveModelToFile(fstream &file) const{
+bool SelfOrganizingMap::saveModelToFile(ostream &file) const{
     
     if( !trained ){
-        errorLog << "saveModelToFile(fstream &file) - Can't save model to file, the model has not been trained!" << endl;
+        errorLog << "saveModelToFile(ostream &file) - Can't save model to file, the model has not been trained!" << endl;
         return false;
     }
     
     file << "GRT_SELF_ORGANIZING_MAP_MODEL_FILE_V1.0\n";
     
     if( !saveClustererSettingsToFile( file ) ){
-        errorLog << "saveModelToFile(fstream &file) - Failed to save cluster settings to file!" << endl;
+        errorLog << "saveModelToFile(ostream &file) - Failed to save cluster settings to file!" << endl;
         return false;
     }
     
@@ -350,7 +350,7 @@ bool SelfOrganizingMap::saveModelToFile(fstream &file) const{
         file << "Neurons: \n";
         for(UINT i=0; i<neurons.size(); i++){
             if( !neurons[i].saveNeuronToFile( file ) ){
-                errorLog << "saveModelToFile(fstream &file) - Failed to save neuron to file!" << endl;
+                errorLog << "saveModelToFile(ostream &file) - Failed to save neuron to file!" << endl;
                 return false;
             }
         }
@@ -360,7 +360,7 @@ bool SelfOrganizingMap::saveModelToFile(fstream &file) const{
     
 }
 
-bool SelfOrganizingMap::loadModelFromFile(fstream &file){
+bool SelfOrganizingMap::loadModelFromFile(istream &file){
     
     //Clear any previous model
     clear();
@@ -368,32 +368,32 @@ bool SelfOrganizingMap::loadModelFromFile(fstream &file){
     string word;
     file >> word;
     if( word != "GRT_SELF_ORGANIZING_MAP_MODEL_FILE_V1.0" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to load file header!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to load file header!" << endl;
         return false;
     }
     
     if( !loadClustererSettingsFromFile( file ) ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to load cluster settings from file!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to load cluster settings from file!" << endl;
         return false;
     }
     
     file >> word;
     if( word != "NetworkTypology:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to load NetworkTypology header!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to load NetworkTypology header!" << endl;
         return false;
     }
     file >> networkTypology;
     
     file >> word;
     if( word != "AlphaStart:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to load AlphaStart header!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to load AlphaStart header!" << endl;
         return false;
     }
     file >> alphaStart;
     
     file >> word;
     if( word != "AlphaEnd:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to load alphaEnd header!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to load alphaEnd header!" << endl;
         return false;
     }
     file >> alphaEnd;
@@ -402,7 +402,7 @@ bool SelfOrganizingMap::loadModelFromFile(fstream &file){
     if( trained ){
         file >> word;
         if( word != "NetworkWeights:" ){
-            errorLog << "loadModelFromFile(fstream &file) - Failed to load NetworkWeights header!" << endl;
+            errorLog << "loadModelFromFile(istream &file) - Failed to load NetworkWeights header!" << endl;
             return false;
         }
         
@@ -415,14 +415,14 @@ bool SelfOrganizingMap::loadModelFromFile(fstream &file){
         
         file >> word;
         if( word != "Neurons:" ){
-            errorLog << "loadModelFromFile(fstream &file) - Failed to load Neurons header!" << endl;
+            errorLog << "loadModelFromFile(istream &file) - Failed to load Neurons header!" << endl;
             return false;
         }
         
         neurons.resize(numClusters);
         for(UINT i=0; i<neurons.size(); i++){
             if( !neurons[i].loadNeuronFromFile( file ) ){
-                errorLog << "loadModelFromFile(fstream &file) - Failed to save neuron to file!" << endl;
+                errorLog << "loadModelFromFile(istream &file) - Failed to save neuron to file!" << endl;
                 return false;
             }
         }

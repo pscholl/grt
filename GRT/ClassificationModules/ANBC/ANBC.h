@@ -128,7 +128,7 @@ public:
      @param fstream &file: a reference to the file the ANBC model will be saved to
      @return returns true if the model was saved successfully, false otherwise
      */
-    virtual bool saveModelToFile(fstream &file) const;
+    virtual bool saveModelToFile(ostream &file) const;
     
     /**
      This loads a trained ANBC model from a file.
@@ -137,7 +137,7 @@ public:
      @param fstream &file: a reference to the file the ANBC model will be loaded from
      @return returns true if the model was loaded successfully, false otherwise
      */
-    virtual bool loadModelFromFile(fstream &file);
+    virtual bool loadModelFromFile(istream &file);
     
     /**
      This recomputes the null rejection thresholds for each of the classes in the ANBC model.
@@ -197,7 +197,7 @@ public:
     using MLBase::predict_;
 
 protected:
-    bool loadLegacyModelFromFile( fstream &file );
+    bool loadLegacyModelFromFile( istream &file );
     
     bool weightsDataSet;                  //A flag to indicate if the user has manually set the weights buffer
     ClassificationData weightsData;       //The weights of each feature for each class for training the algorithm

@@ -144,12 +144,7 @@ bool SOMQuantizer::loadModelFromFile(string filename){
     return true;
 }
 
-bool SOMQuantizer::saveModelToFile(fstream &file) const{
-    
-    if( !file.is_open() ){
-        errorLog << "saveModelToFile(fstream &file) - The file is not open!" << endl;
-        return false;
-    }
+bool SOMQuantizer::saveModelToFile(ostream &file) const{
     
     //First, you should add a header (with no spaces) e.g.
     file << "SOM_QUANTIZER_FILE_V1.0" << endl;
@@ -166,7 +161,7 @@ bool SOMQuantizer::saveModelToFile(fstream &file) const{
     if( trained ){
         file << "SOM: \n";
         if( !som.saveModelToFile( file ) ){
-            errorLog << "saveModelToFile(fstream &file) - Failed to save SelfOrganizingMap settings to file!" << endl;
+            errorLog << "saveModelToFile(ostream &file) - Failed to save SelfOrganizingMap settings to file!" << endl;
             return false;
         }
     }
@@ -174,22 +169,17 @@ bool SOMQuantizer::saveModelToFile(fstream &file) const{
     return true;
 }
 
-bool SOMQuantizer::loadModelFromFile(fstream &file){
+bool SOMQuantizer::loadModelFromFile(istream &file){
     
     //Clear any previous model
     clear();
-    
-    if( !file.is_open() ){
-        errorLog << "loadModelFromFile(fstream &file) - The file is not open!" << endl;
-        return false;
-    }
     
     string word;
     
     //First, you should read and validate the header
     file >> word;
     if( word != "SOM_QUANTIZER_FILE_V1.0" ){
-        errorLog << "loadModelFromFile(fstream &file) - Invalid file format!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Invalid file format!" << endl;
         return false;
     }
     
@@ -201,14 +191,14 @@ bool SOMQuantizer::loadModelFromFile(fstream &file){
     
     file >> word;
     if( word != "QuantizerTrained:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to load QuantizerTrained!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to load QuantizerTrained!" << endl;
         return false;
     }
     file >> trained;
     
     file >> word;
     if( word != "NumClusters:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to load NumClusters!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to load NumClusters!" << endl;
         return false;
     }
     file >> numClusters;
@@ -216,12 +206,12 @@ bool SOMQuantizer::loadModelFromFile(fstream &file){
     if( trained ){
         file >> word;
         if( word != "SOM:" ){
-            errorLog << "loadModelFromFile(fstream &file) - Failed to load SOM!" << endl;
+            errorLog << "loadModelFromFile(istream &file) - Failed to load SOM!" << endl;
             return false;
         }
         
         if( !som.loadModelFromFile( file ) ){
-            errorLog << "loadModelFromFile(fstream &file) - Failed to load SelfOrganizingMap settings from file!" << endl;
+            errorLog << "loadModelFromFile(istream &file) - Failed to load SelfOrganizingMap settings from file!" << endl;
             return false;
         }
         

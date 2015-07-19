@@ -151,13 +151,7 @@ bool Clusterer::clear(){
     return true;
 }
     
-bool Clusterer::saveClustererSettingsToFile(fstream &file) const{
-	
-    if( !file.is_open() ){
-        errorLog << "saveClustererSettingsToFile(fstream &file) - The file is not open!" << endl;
-        return false;
-    }
-    
+bool Clusterer::saveClustererSettingsToFile(ostream &file) const{
     if( !MLBase::saveBaseSettingsToFile( file ) ) return false;
     
     file << "NumClusters: " << numClusters << endl;
@@ -173,13 +167,7 @@ bool Clusterer::saveClustererSettingsToFile(fstream &file) const{
     return true;
 }
 
-bool Clusterer::loadClustererSettingsFromFile(fstream &file){
-    
-    if( !file.is_open() ){
-        errorLog << "loadClustererSettingsFromFile(fstream &file) - The file is not open!" << endl;
-        return false;
-    }
-    
+bool Clusterer::loadClustererSettingsFromFile(istream &file){
     //Try and load the base settings from the file
     if( !MLBase::loadBaseSettingsFromFile( file ) ){
         return false;

@@ -105,12 +105,7 @@ bool LeakyIntegrator::reset(){
     return false;
 }
     
-bool LeakyIntegrator::saveModelToFile(fstream &file) const{
-    
-    if( !file.is_open() ){
-        errorLog << "saveModelToFile(fstream &file) - The file is not open!" << endl;
-        return false;
-    }
+bool LeakyIntegrator::saveModelToFile(ostream &file) const{
     
     file << "GRT_LEAKY_INTEGRATOR_FILE_V1.0" << endl;
     
@@ -124,12 +119,7 @@ bool LeakyIntegrator::saveModelToFile(fstream &file) const{
     return true;
 }
 
-bool LeakyIntegrator::loadModelFromFile(fstream &file){
-    
-    if( !file.is_open() ){
-        errorLog << "loadModelFromFile(fstream &file) - The file is not open!" << endl;
-        return false;
-    }
+bool LeakyIntegrator::loadModelFromFile(istream &file){
     
     string word;
     
@@ -137,7 +127,7 @@ bool LeakyIntegrator::loadModelFromFile(fstream &file){
     file >> word;
     
     if( word != "GRT_LEAKY_INTEGRATOR_FILE_V1.0" ){
-        errorLog << "loadModelFromFile(fstream &file) - Invalid file format!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Invalid file format!" << endl;
         return false;     
     }
     
@@ -149,7 +139,7 @@ bool LeakyIntegrator::loadModelFromFile(fstream &file){
     //Load the LeakRate
     file >> word;
     if( word != "LeakRate:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read LeakRate header!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read LeakRate header!" << endl;
         return false;     
     }
     file >> leakRate;

@@ -230,14 +230,7 @@ bool DecisionTreeTripleFeatureNode::computeBestSpilt( const UINT &numSplittingSt
      return true;
 }
 
-bool DecisionTreeTripleFeatureNode::saveParametersToFile(fstream &file) const{
-    
-    if( !file.is_open() )
-    {
-        errorLog << "saveParametersToFile(fstream &file) - File is not open!" << endl;
-        return false;
-    }
-    
+bool DecisionTreeTripleFeatureNode::saveParametersToFile(ostream &file) const{
     //Save the DecisionTreeNode parameters
     if( !DecisionTreeNode::saveParametersToFile( file ) ){
         errorLog << "saveParametersToFile(fstream &file) - Failed to save DecisionTreeNode parameters to file!" << endl;
@@ -252,14 +245,7 @@ bool DecisionTreeTripleFeatureNode::saveParametersToFile(fstream &file) const{
     return true;
 }
 
-bool DecisionTreeTripleFeatureNode::loadParametersFromFile(fstream &file){
-    
-    if(!file.is_open())
-    {
-        errorLog << "loadParametersFromFile(fstream &file) - File is not open!" << endl;
-        return false;
-    }
-    
+bool DecisionTreeTripleFeatureNode::loadParametersFromFile(istream &file){
     //Load the DecisionTreeNode parameters
     if( !DecisionTreeNode::loadParametersFromFile( file ) ){
         errorLog << "loadParametersFromFile(fstream &file) - Failed to load DecisionTreeNode parameters from file!" << endl;

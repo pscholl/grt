@@ -153,12 +153,7 @@ bool KMeansFeatures::loadModelFromFile(string filename){
     return true;
 }
 
-bool KMeansFeatures::saveModelToFile(fstream &file) const{
-    
-    if( !file.is_open() ){
-        errorLog << "saveModelToFile(fstream &file) - The file is not open!" << endl;
-        return false;
-    }
+bool KMeansFeatures::saveModelToFile(ostream &file) const{
     
     //First, you should add a header (with no spaces) e.g.
     file << "KMEANS_FEATURES_FILE_V1.0" << endl;
@@ -203,14 +198,9 @@ bool KMeansFeatures::saveModelToFile(fstream &file) const{
     return true;
 }
 
-bool KMeansFeatures::loadModelFromFile(fstream &file){
+bool KMeansFeatures::loadModelFromFile(istream &file){
     
     clear();
-    
-    if( !file.is_open() ){
-        errorLog << "loadModelFromFile(fstream &file) - The file is not open!" << endl;
-        return false;
-    }
     
     string word;
     UINT numLayers = 0;
@@ -220,7 +210,7 @@ bool KMeansFeatures::loadModelFromFile(fstream &file){
     //First, you should read and validate the header
     file >> word;
     if( word != "KMEANS_FEATURES_FILE_V1.0" ){
-        errorLog << "loadModelFromFile(fstream &file) - Invalid file format!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Invalid file format!" << endl;
         return false;
     }
     
@@ -233,7 +223,7 @@ bool KMeansFeatures::loadModelFromFile(fstream &file){
     //Load the number of layers
     file >> word;
     if( word != "NumLayers:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read NumLayers header!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read NumLayers header!" << endl;
         return false;
     }
     file >> numLayers;
@@ -242,7 +232,7 @@ bool KMeansFeatures::loadModelFromFile(fstream &file){
     //Load the number clusters per layer
     file >> word;
     if( word != "NumClustersPerLayer:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read NumClustersPerLayer header!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read NumClustersPerLayer header!" << endl;
         return false;
     }
     for(UINT i=0; i<numClustersPerLayer.size(); i++){
@@ -252,7 +242,7 @@ bool KMeansFeatures::loadModelFromFile(fstream &file){
     //Load the alpha parameter
     file >> word;
     if( word != "Alpha:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read Alpha header!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read Alpha header!" << endl;
         return false;
     }
     file >> alpha;
@@ -263,7 +253,7 @@ bool KMeansFeatures::loadModelFromFile(fstream &file){
         //Load the Ranges
         file >> word;
         if( word != "Ranges:" ){
-            errorLog << "loadModelFromFile(fstream &file) - Failed to read Ranges header!" << endl;
+            errorLog << "loadModelFromFile(istream &file) - Failed to read Ranges header!" << endl;
             return false;
         }
         ranges.resize(numInputDimensions);
@@ -275,7 +265,7 @@ bool KMeansFeatures::loadModelFromFile(fstream &file){
         //Load the Clusters
         file >> word;
         if( word != "Clusters:" ){
-            errorLog << "loadModelFromFile(fstream &file) - Failed to read Clusters header!" << endl;
+            errorLog << "loadModelFromFile(istream &file) - Failed to read Clusters header!" << endl;
             return false;
         }
         clusters.resize( numLayers );
@@ -285,7 +275,7 @@ bool KMeansFeatures::loadModelFromFile(fstream &file){
             //Load the NumRows
             file >> word;
             if( word != "NumRows:" ){
-                errorLog << "loadModelFromFile(fstream &file) - Failed to read NumRows header!" << endl;
+                errorLog << "loadModelFromFile(istream &file) - Failed to read NumRows header!" << endl;
                 return false;
             }
             file >> numRows;
@@ -293,7 +283,7 @@ bool KMeansFeatures::loadModelFromFile(fstream &file){
             //Load the NumCols
             file >> word;
             if( word != "NumCols:" ){
-                errorLog << "loadModelFromFile(fstream &file) - Failed to read NumCols header!" << endl;
+                errorLog << "loadModelFromFile(istream &file) - Failed to read NumCols header!" << endl;
                 return false;
             }
             file >> numCols;

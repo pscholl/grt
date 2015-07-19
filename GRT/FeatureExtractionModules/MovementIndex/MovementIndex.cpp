@@ -132,12 +132,7 @@ bool MovementIndex::loadModelFromFile(string filename){
     return true;
 }
 
-bool MovementIndex::saveModelToFile(fstream &file) const{
-    
-    if( !file.is_open() ){
-        errorLog << "saveModelToFile(fstream &file) - The file is not open!" << endl;
-        return false;
-    }
+bool MovementIndex::saveModelToFile(ostream &file) const{
     
     //Write the file header
     file << "GRT_MOVEMENT_INDEX_FILE_V1.0" << endl;	
@@ -154,12 +149,7 @@ bool MovementIndex::saveModelToFile(fstream &file) const{
     return true;
 }
 
-bool MovementIndex::loadModelFromFile(fstream &file){
-    
-    if( !file.is_open() ){
-        errorLog << "loadModelFromFile(fstream &file) - The file is not open!" << endl;
-        return false;
-    }
+bool MovementIndex::loadModelFromFile(istream &file){
     
     string word;
     
@@ -167,7 +157,7 @@ bool MovementIndex::loadModelFromFile(fstream &file){
     file >> word;
     
     if( word != "GRT_MOVEMENT_INDEX_FILE_V1.0" ){
-        errorLog << "loadModelFromFile(fstream &file) - Invalid file format!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Invalid file format!" << endl;
         return false;     
     }
     
@@ -179,7 +169,7 @@ bool MovementIndex::loadModelFromFile(fstream &file){
     //Load the BufferLength
     file >> word;
     if( word != "BufferLength:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read BufferLength header!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read BufferLength header!" << endl;
         return false;     
     }
     file >> bufferLength;

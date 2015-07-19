@@ -931,18 +931,13 @@ void DTW::smoothData(MatrixDouble &data,UINT smoothFactor,MatrixDouble &resultsD
 
 ////////////////////////////// SAVE & LOAD FUNCTIONS ////////////////////////////////
     
-bool DTW::saveModelToFile( fstream &file ) const{
-    
-    if(!file.is_open()){
-        errorLog << "saveModelToFile( string fileName ) - Could not open file to save data" << endl;
-        return false;
-    }
+bool DTW::saveModelToFile( ostream &file ) const{
     
     file << "GRT_DTW_Model_File_V2.0" <<endl;
     
     //Write the classifier settings to the file
     if( !Classifier::saveBaseSettingsToFile(file) ){
-        errorLog <<"saveModelToFile(fstream &file) - Failed to save classifier base settings to file!" << endl;
+        errorLog <<"saveModelToFile(ostream &file) - Failed to save classifier base settings to file!" << endl;
 		return false;
     }
     
@@ -992,17 +987,11 @@ bool DTW::saveModelToFile( fstream &file ) const{
     return true;
 }
 
-bool DTW::loadModelFromFile( fstream &file ){
+bool DTW::loadModelFromFile( istream &file ){
     
     std::string word;
     UINT timeSeriesLength;
     UINT ts;
-    
-    if(!file.is_open())
-    {
-        errorLog << "loadDTWModelFromFile( string fileName ) - Failed to open file!" << endl;
-        return false;
-    }
     
     file >> word;
     
@@ -1278,7 +1267,7 @@ void DTW::offsetTimeseries(MatrixDouble &timeseries){
     }
 }
     
-bool DTW::loadLegacyModelFromFile( fstream &file ){
+bool DTW::loadLegacyModelFromFile( istream &file ){
     
     string word;
     UINT timeSeriesLength;

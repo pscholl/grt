@@ -213,20 +213,15 @@ bool RegressionTree::print() const{
     return false;
 }
     
-bool RegressionTree::saveModelToFile(fstream &file) const{
+bool RegressionTree::saveModelToFile(ostream &file) const{
     
-    if(!file.is_open())
-	{
-		Regressifier::errorLog <<"saveModelToFile(fstream &file) - The file is not open!" << endl;
-		return false;
-	}
     
 	//Write the header info
 	file << "GRT_REGRESSION_TREE_MODEL_FILE_V1.0\n";
     
     //Write the classifier settings to the file
     if( !Regressifier::saveBaseSettingsToFile(file) ){
-        Regressifier::errorLog <<"saveModelToFile(fstream &file) - Failed to save classifier base settings to file!" << endl;
+        Regressifier::errorLog <<"saveModelToFile(ostream &file) - Failed to save classifier base settings to file!" << endl;
 		return false;
     }
     
@@ -240,7 +235,7 @@ bool RegressionTree::saveModelToFile(fstream &file) const{
     if( tree != NULL ){
         file << "Tree:\n";
         if( !tree->saveToFile( file ) ){
-            Regressifier::errorLog << "saveModelToFile(fstream &file) - Failed to save tree to file!" << endl;
+            Regressifier::errorLog << "saveModelToFile(ostream &file) - Failed to save tree to file!" << endl;
             return false;
         }
     }
@@ -248,15 +243,10 @@ bool RegressionTree::saveModelToFile(fstream &file) const{
     return true;
 }
     
-bool RegressionTree::loadModelFromFile(fstream &file){
+bool RegressionTree::loadModelFromFile(istream &file){
     
     clear();
     
-    if(!file.is_open())
-    {
-        Regressifier::errorLog << "loadModelFromFile(string filename) - Could not open file to load model" << endl;
-        return false;
-    }
     
     std::string word;
     file >> word;
@@ -327,14 +317,14 @@ bool RegressionTree::loadModelFromFile(fstream &file){
         
         if( tree == NULL ){
             clear();
-            Regressifier::errorLog << "loadModelFromFile(fstream &file) - Failed to create new RegressionTreeNode!" << endl;
+            Regressifier::errorLog << "loadModelFromFile(istream &file) - Failed to create new RegressionTreeNode!" << endl;
             return false;
         }
         
         tree->setParent( NULL );
         if( !tree->loadFromFile( file ) ){
             clear();
-            Regressifier::errorLog << "loadModelFromFile(fstream &file) - Failed to load tree from file!" << endl;
+            Regressifier::errorLog << "loadModelFromFile(istream &file) - Failed to load tree from file!" << endl;
             return false;
         }
     }

@@ -279,13 +279,7 @@ bool DecisionTreeThresholdNode::computeBestSpiltBestRandomSpilt( const UINT &num
     return true;
 }
 
-bool DecisionTreeThresholdNode::saveParametersToFile(fstream &file) const{
-    
-    if(!file.is_open())
-    {
-        errorLog << "saveParametersToFile(fstream &file) - File is not open!" << endl;
-        return false;
-    }
+bool DecisionTreeThresholdNode::saveParametersToFile(ostream &file) const{
     
     //Save the DecisionTreeNode parameters
     if( !DecisionTreeNode::saveParametersToFile( file ) ){
@@ -300,13 +294,7 @@ bool DecisionTreeThresholdNode::saveParametersToFile(fstream &file) const{
     return true;
 }
 
-bool DecisionTreeThresholdNode::loadParametersFromFile(fstream &file){
-    
-    if(!file.is_open())
-    {
-        errorLog << "loadParametersFromFile(fstream &file) - File is not open!" << endl;
-        return false;
-    }
+bool DecisionTreeThresholdNode::loadParametersFromFile(istream &file){
     
     //Load the DecisionTreeNode parameters
     if( !DecisionTreeNode::loadParametersFromFile( file ) ){

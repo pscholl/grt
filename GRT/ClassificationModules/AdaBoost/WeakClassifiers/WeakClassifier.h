@@ -115,7 +115,7 @@ public:
      @param fstream &file: a reference to the file that the model will be saved to
      @return returns true if the data was saved, false otherwise
      */
-    virtual bool saveModelToFile(fstream &file) const{ return false; }
+    virtual bool saveModelToFile(ostream &file) const{ return false; }
     
     /**
      This function can be used to load the WeakClassifier model and settings.
@@ -124,7 +124,7 @@ public:
      @param fstream &file: a reference to the file that the model will be saved to
      @return returns true if the data was loaded, false otherwise
      */
-    virtual bool loadModelFromFile(fstream &file){ return false; }
+    virtual bool loadModelFromFile(istream &file){ return false; }
     
     /**
      This function can be used to print the WeakClassifier model and settings.

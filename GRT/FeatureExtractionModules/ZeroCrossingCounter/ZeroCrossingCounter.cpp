@@ -134,12 +134,7 @@ bool ZeroCrossingCounter::loadModelFromFile(string filename){
     return true;
 }
     
-bool ZeroCrossingCounter::saveModelToFile(fstream &file) const{
-    
-    if( !file.is_open() ){
-        errorLog << "saveModelToFile(fstream &file) - The file is not open!" << endl;
-        return false;
-    }
+bool ZeroCrossingCounter::saveModelToFile(ostream &file) const{
     
     //Write the file header
     file << "GRT_ZERO_CROSSING_COUNTER_FILE_V1.0" << endl;
@@ -158,12 +153,7 @@ bool ZeroCrossingCounter::saveModelToFile(fstream &file) const{
     return true;
 }
 
-bool ZeroCrossingCounter::loadModelFromFile(fstream &file){
-    
-    if( !file.is_open() ){
-        errorLog << "loadModelFromFile(fstream &file) - The file is not open!" << endl;
-        return false;
-    }
+bool ZeroCrossingCounter::loadModelFromFile(istream &file){
     
     string word;
     
@@ -171,7 +161,7 @@ bool ZeroCrossingCounter::loadModelFromFile(fstream &file){
     file >> word;
     
     if( word != "GRT_ZERO_CROSSING_COUNTER_FILE_V1.0" ){
-        errorLog << "loadModelFromFile(fstream &file) - Invalid file format!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Invalid file format!" << endl;
         return false;     
     }
     
@@ -182,21 +172,21 @@ bool ZeroCrossingCounter::loadModelFromFile(fstream &file){
     
     file >> word;
     if( word != "SearchWindowSize:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read SearchWindowSize header!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read SearchWindowSize header!" << endl;
         return false;     
     }
     file >> searchWindowSize;
     
     file >> word;
     if( word != "FeatureMode:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read FeatureMode header!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read FeatureMode header!" << endl;
         return false;     
     }
     file >> featureMode;
     
     file >> word;
     if( word != "DeadZoneThreshold:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read DeadZoneThreshold header!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read DeadZoneThreshold header!" << endl;
         return false;     
     }
     file >> deadZoneThreshold;

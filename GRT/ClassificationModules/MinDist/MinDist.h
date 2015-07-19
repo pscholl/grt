@@ -113,7 +113,7 @@ public:
      @param fstream &file: a reference to the file the MinDist model will be saved to
      @return returns true if the model was saved successfully, false otherwise
      */
-    virtual bool saveModelToFile(fstream &file) const;
+    virtual bool saveModelToFile(ostream &file) const;
     
     /**
      This loads a trained MinDist model from a file.
@@ -122,7 +122,7 @@ public:
      @param fstream &file: a reference to the file the MinDist model will be loaded from
      @return returns true if the model was loaded successfully, false otherwise
      */
-    virtual bool loadModelFromFile(fstream &file);
+    virtual bool loadModelFromFile(istream &file);
     
     /**
      This recomputes the null rejection thresholds for each of the classes in the MinDist model.
@@ -166,7 +166,7 @@ public:
     bool setNumClusters(UINT numClusters);
 
 protected:
-    bool loadLegacyModelFromFile( fstream &file );
+    bool loadLegacyModelFromFile( istream &file );
     
 	UINT numClusters; 
 	vector< MinDistModel > models;            //A buffer to hold all the models

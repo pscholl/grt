@@ -95,7 +95,7 @@ public:
      @param fstream &file: a reference to the file to save the settings to
      @return returns true if the settings were saved successfully, false otherwise (the base class always returns false)
      */
-    virtual bool saveModelToFile(fstream &file) const{ return false; }
+    virtual bool saveModelToFile(ostream &file) const{ return false; }
     
     /**
      This loads the feature extraction settings from a file.
@@ -104,7 +104,7 @@ public:
      @param fstream &file: a reference to the file to load the settings from
      @return returns true if the settings were loaded successfully, false otherwise (the base class always returns false)
      */
-    virtual bool loadModelFromFile(fstream &file){ return false; }
+    virtual bool loadModelFromFile(istream &file){ return false; }
 	
     /**
      Returns the feature extraction type as a string.
@@ -189,14 +189,14 @@ protected:
      
      @return returns true if the base settings were saved, false otherwise
      */
-    bool saveFeatureExtractionSettingsToFile(fstream &file) const;
+    bool saveFeatureExtractionSettingsToFile(ostream &file) const;
     
     /**
      Loads the core base settings from a file.
      
      @return returns true if the base settings were loaded, false otherwise
      */
-    bool loadFeatureExtractionSettingsFromFile(fstream &file);
+    bool loadFeatureExtractionSettingsFromFile(istream &file);
 
     string featureExtractionType;
     bool initialized;

@@ -113,19 +113,14 @@ bool KMeansQuantizer::clear(){
     return true;
 }
 
-bool KMeansQuantizer::saveModelToFile(fstream &file) const{
-    
-    if( !file.is_open() ){
-        errorLog << "saveModelToFile(fstream &file) - The file is not open!" << endl;
-        return false;
-    }
+bool KMeansQuantizer::saveModelToFile(ostream &file) const{
     
     //Save the header
     file << "KMEANS_QUANTIZER_FILE_V1.0" << endl;
 	
     //Save the feature extraction base class settings
     if( !saveFeatureExtractionSettingsToFile( file ) ){
-        errorLog << "saveModelToFile(fstream &file) - Failed to save base feature extraction settings to file!" << endl;
+        errorLog << "saveModelToFile(ostream &file) - Failed to save base feature extraction settings to file!" << endl;
         return false;
     }
     
@@ -147,22 +142,17 @@ bool KMeansQuantizer::saveModelToFile(fstream &file) const{
     return true;
 }
 
-bool KMeansQuantizer::loadModelFromFile(fstream &file){
+bool KMeansQuantizer::loadModelFromFile(istream &file){
     
     //Clear any previouly built model and settings
     clear();
-    
-    if( !file.is_open() ){
-        errorLog << "loadModelFromFile(fstream &file) - The file is not open!" << endl;
-        return false;
-    }
     
     string word;
     
     //First, you should read and validate the header
     file >> word;
     if( word != "KMEANS_QUANTIZER_FILE_V1.0" ){
-        errorLog << "loadModelFromFile(fstream &file) - Invalid file format!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Invalid file format!" << endl;
         return false;
     }
     
@@ -174,14 +164,14 @@ bool KMeansQuantizer::loadModelFromFile(fstream &file){
     
     file >> word;
     if( word != "QuantizerTrained:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to load QuantizerTrained!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to load QuantizerTrained!" << endl;
         return false;
     }
     file >> trained;
     
     file >> word;
     if( word != "NumClusters:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to load NumClusters!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to load NumClusters!" << endl;
         return false;
     }
     file >> numClusters;
@@ -190,7 +180,7 @@ bool KMeansQuantizer::loadModelFromFile(fstream &file){
         clusters.resize(numClusters, numInputDimensions);
         file >> word;
         if( word != "Clusters:" ){
-            errorLog << "loadModelFromFile(fstream &file) - Failed to load Clusters!" << endl;
+            errorLog << "loadModelFromFile(istream &file) - Failed to load Clusters!" << endl;
             return false;
         }
         

@@ -113,7 +113,7 @@ public:
      @param fstream &file: a reference to the file the Softmax model will be saved to
      @return returns true if the model was saved successfully, false otherwise
      */
-    virtual bool saveModelToFile(fstream &file) const;
+    virtual bool saveModelToFile(ostream &file) const;
     
     /**
      This loads a trained Softmax model from a file.
@@ -122,7 +122,7 @@ public:
      @param fstream &file: a reference to the file the Softmax model will be loaded from
      @return returns true if the model was loaded successfully, false otherwise
      */
-    virtual bool loadModelFromFile(fstream &file);
+    virtual bool loadModelFromFile(istream &file);
     
     /**
      Get the softmax models for each class. The Softmax class must be trained first.
@@ -137,7 +137,7 @@ public:
     
 protected:
     bool trainSoftmaxModel(UINT classLabel,SoftmaxModel &model,ClassificationData &data);
-    bool loadLegacyModelFromFile( fstream &file );
+    bool loadLegacyModelFromFile( istream &file );
     
     vector< SoftmaxModel > models;
     

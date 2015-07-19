@@ -248,12 +248,7 @@ bool ClassLabelTimeoutFilter::saveModelToFile(string filename) const{
     return true;
 }
 
-bool ClassLabelTimeoutFilter::saveModelToFile(fstream &file) const{
-    
-    if( !file.is_open() ){
-        errorLog << "saveModelToFile(fstream &file) - The file is not open!" << endl;
-        return false;
-    }
+bool ClassLabelTimeoutFilter::saveModelToFile(ostream &file) const{
     
     file << "GRT_CLASS_LABEL_TIMEOUT_FILTER_FILE_V1.0" << endl;
     file << "NumInputDimensions: " << numInputDimensions << endl;
@@ -280,12 +275,7 @@ bool ClassLabelTimeoutFilter::loadModelFromFile(string filename){
     return true;
 }
 
-bool ClassLabelTimeoutFilter::loadModelFromFile(fstream &file){
-    
-    if( !file.is_open() ){
-        errorLog << "loadModelFromFile(fstream &file) - The file is not open!" << endl;
-        return false;
-    }
+bool ClassLabelTimeoutFilter::loadModelFromFile(istream &file){
     
     string word;
     
@@ -293,13 +283,13 @@ bool ClassLabelTimeoutFilter::loadModelFromFile(fstream &file){
     file >> word;
     
     if( word != "GRT_CLASS_LABEL_TIMEOUT_FILTER_FILE_V1.0" ){
-        errorLog << "loadModelFromFile(fstream &file) - Invalid file format!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Invalid file format!" << endl;
         return false;     
     }
     
     file >> word;
     if( word != "NumInputDimensions:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read NumInputDimensions header!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read NumInputDimensions header!" << endl;
         return false;     
     }
     file >> numInputDimensions;
@@ -307,7 +297,7 @@ bool ClassLabelTimeoutFilter::loadModelFromFile(fstream &file){
     //Load the number of output dimensions
     file >> word;
     if( word != "NumOutputDimensions:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read NumOutputDimensions header!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read NumOutputDimensions header!" << endl;
         return false;     
     }
     file >> numOutputDimensions;
@@ -315,14 +305,14 @@ bool ClassLabelTimeoutFilter::loadModelFromFile(fstream &file){
     //Load the filterMode
     file >> word;
     if( word != "FilterMode:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read FilterMode header!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read FilterMode header!" << endl;
         return false;     
     }
     file >> filterMode;
     
     file >> word;
     if( word != "TimeoutDuration:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read TimeoutDuration header!" << endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read TimeoutDuration header!" << endl;
         return false;     
     }
     file >> timeoutDuration;
