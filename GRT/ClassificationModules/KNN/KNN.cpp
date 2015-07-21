@@ -27,9 +27,9 @@ namespace GRT{
 //Register the DTW module with the Classifier base class
 RegisterClassifierModule< KNN > KNN::registerModule("KNN");
 
-KNN::KNN(unsigned int K,bool useScaling,bool useNullRejection,double nullRejectionCoeff,bool searchForBestKValue,UINT minKSearchValue,UINT maxKSearchValue){
+KNN::KNN(unsigned int K,bool useScaling,bool useNullRejection,double nullRejectionCoeff,bool searchForBestKValue,UINT minKSearchValue,UINT maxKSearchValue,UINT distanceMethod) {
     this->K = K;
-    this->distanceMethod = EUCLIDEAN_DISTANCE;
+    this->distanceMethod = distanceMethod;
     this->useScaling = useScaling;
     this->useNullRejection = useNullRejection;
     this->nullRejectionCoeff = nullRejectionCoeff;
