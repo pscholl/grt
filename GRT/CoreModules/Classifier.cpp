@@ -55,14 +55,14 @@ const Classifier* Classifier::getClassifierPointer() const{
 }
 
 vector< string > Classifier::getRegisteredClassifiers(){
-	vector< string > registeredClassifiers;
-	
-	StringClassifierMap::iterator iter = getMap()->begin();
-	while( iter != getMap()->end() ){
-		registeredClassifiers.push_back( iter->first );
-		iter++;
-	}
-	return registeredClassifiers;
+    vector< string > registeredClassifiers;
+    
+    StringClassifierMap::iterator iter = getMap()->begin();
+    while( iter != getMap()->end() ){
+        registeredClassifiers.push_back( iter->first );
+        iter++;
+    }
+    return registeredClassifiers;
 }
     
 Classifier::Classifier(void){
@@ -115,7 +115,7 @@ bool Classifier::copyBaseVariables(const Classifier *classifier){
     this->classLikelihoods = classifier->classLikelihoods;
     this->classDistances = classifier->classDistances;
     this->nullRejectionThresholds = classifier->nullRejectionThresholds;
-	this->ranges = classifier->ranges;
+    this->ranges = classifier->ranges;
     
     return true;
 }
@@ -263,11 +263,11 @@ bool Classifier::setNullRejectionCoeff(double nullRejectionCoeff){
 }
 
 bool Classifier::setNullRejectionThresholds(VectorDouble newRejectionThresholds){
-	if( newRejectionThresholds.size() == getNumClasses() ){
-		nullRejectionThresholds = newRejectionThresholds;
-		return true;
-	}
-	return false;
+    if( newRejectionThresholds.size() == getNumClasses() ){
+        nullRejectionThresholds = newRejectionThresholds;
+        return true;
+    }
+    return false;
 }
     
 const Classifier& Classifier::getBaseClassifier() const{
@@ -288,7 +288,7 @@ bool Classifier::saveBaseSettingsToFile(ostream &file) const{
         file << "NumClasses: " << numClasses << endl;
         
         file << "NullRejectionThresholds: ";
-		if (useNullRejection && nullRejectionThresholds.size()){
+        if (useNullRejection && nullRejectionThresholds.size()){
             for(UINT i=0; i<nullRejectionThresholds.size(); i++){
                 file << " " << nullRejectionThresholds[i];
             }
@@ -307,15 +307,13 @@ bool Classifier::saveBaseSettingsToFile(ostream &file) const{
         file << endl;
 
         file << "ClassNames: ";
-        for(UINT i=0; i<classNames.size(); i++){
-          string name = classNames[i];
+        for(UINT i=0; i<classLabels.size(); i++){
+          string name = classNames[classLabels[i]-1];
           if (name.find_first_not_of(" \t\n\v\f\r") == std::string::npos) name = "_";
           std::replace(name.begin(), name.end(), ' ', '_');
           std::replace(name.begin(), name.end(), '\t', '_');
           file << " " << name;
         }
-        for(UINT i=0; i<(classLabels.size()-classNames.size()); i++)
-          file << " _";
         file << endl;
         
         if( useScaling ){
