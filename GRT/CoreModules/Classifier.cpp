@@ -308,7 +308,9 @@ bool Classifier::saveBaseSettingsToFile(ostream &file) const{
 
         file << "ClassNames: ";
         for(UINT i=0; i<classLabels.size(); i++){
-          string name = classNames[classLabels[i]-1];
+          string name = "NULL";
+          if (classLabels[i] != 0)
+            name = classNames[classLabels[i]-1];
           if (name.find_first_not_of(" \t\n\v\f\r") == std::string::npos) name = "_";
           std::replace(name.begin(), name.end(), ' ', '_');
           std::replace(name.begin(), name.end(), '\t', '_');
