@@ -54,10 +54,10 @@ public:
         if( *loggingEnabledPtr && instanceLoggingEnabled ){
             if( *writeProceedingTextPtr ){
                 *writeProceedingTextPtr = false;
-                std::cout << proceedingText.c_str();
+                std::cerr << proceedingText.c_str();
                 *lastMessagePtr = "";
             }
-            std::cout << val;
+            std::cerr << val;
             std::stringstream stream;
             stream << val;
             *lastMessagePtr += stream.str();
@@ -65,7 +65,7 @@ public:
         return *this;
     }
 
-    // this is the type of std::cout
+    // this is the type of std::cerr
     typedef std::basic_ostream<char, std::char_traits<char> > CoutType;
     
     // this is the function signature of std::endl
@@ -80,7 +80,7 @@ public:
 
         if( *loggingEnabledPtr && instanceLoggingEnabled ){
             // call the function, but we cannot return it's value
-            manip(std::cout);
+            manip(std::cerr);
             *writeProceedingTextPtr = true;
             
             //Trigger any logging callbacks
