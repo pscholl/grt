@@ -44,14 +44,14 @@ LogisticRegression::~LogisticRegression(void)
 }
     
 LogisticRegression& LogisticRegression::operator=(const LogisticRegression &rhs){
-	if( this != &rhs ){
+    if( this != &rhs ){
         this->w0 = rhs.w0;
         this->w = rhs.w;
         
         //Copy the base variables
         copyBaseVariables( (Regressifier*)&rhs );
-	}
-	return *this;
+    }
+    return *this;
 }
 
 bool LogisticRegression::deepCopyFrom(const Regressifier *regressifier){
@@ -94,16 +94,16 @@ bool LogisticRegression::train_(RegressionData &trainingData){
     targetVectorRanges.clear();
     
     //Scale the training and validation data, if needed
-	if( useScaling ){
-		//Find the ranges for the input data
+    if( useScaling ){
+        //Find the ranges for the input data
         inputVectorRanges = trainingData.getInputRanges();
         
         //Find the ranges for the target data
-		targetVectorRanges = trainingData.getTargetRanges();
+        targetVectorRanges = trainingData.getTargetRanges();
         
-		//Scale the training data
-		trainingData.scale(inputVectorRanges,targetVectorRanges,0.0,1.0);
-	}
+        //Scale the training data
+        trainingData.scale(inputVectorRanges,targetVectorRanges,0.0,1.0);
+    }
     
     //Reset the weights
     Random rand;
@@ -202,10 +202,10 @@ bool LogisticRegression::predict_(VectorFloat &inputVector){
     
     if( !trained ) return false;
     
-	if( inputVector.getSize() != numInputDimensions ){
+    if( inputVector.getSize() != numInputDimensions ){
         errorLog << "predict_(VectorFloat &inputVector) - The size of the input Vector (" << inputVector.getSize() << ") does not match the num features in the model (" << numInputDimensions << std::endl;
-		return false;
-	}
+        return false;
+    }
     
     if( useScaling ){
         for(UINT n=0; n<numInputDimensions; n++){
@@ -218,7 +218,7 @@ bool LogisticRegression::predict_(VectorFloat &inputVector){
         regressionData[0] += inputVector[j] * w[j];
     }
     Float sum = regressionData[0];
-	regressionData[0] = sigmoid( regressionData[0] );
+    regressionData[0] = sigmoid( regressionData[0] );
     std::cout << "reg sum: " << sum << " sig: " << regressionData[0] << std::endl; 
     if( useScaling ){
         for(UINT n=0; n<numOutputDimensions; n++){
@@ -229,21 +229,15 @@ bool LogisticRegression::predict_(VectorFloat &inputVector){
     return true;
 }
     
-bool LogisticRegression::saveModelToFile( std::fstream &file ) const{
+bool LogisticRegression::saveModelToFile( std::ostream &file ) const{
     
-    if(!file.is_open())
-	{
-        errorLog << "loadModelFromFile(fstream &file) - The file is not open!" << std::endl;
-		return false;
-	}
-    
-	//Write the header info
-	file<<"GRT_LOGISTIC_REGRESSION_MODEL_FILE_V2.0\n";
+    //Write the header info
+    file<<"GRT_LOGISTIC_REGRESSION_MODEL_FILE_V2.0\n";
     
     //Write the regressifier settings to the file
     if( !Regressifier::saveBaseSettingsToFile(file) ){
-        errorLog <<"saveModelToFile(fstream &file) - Failed to save Regressifier base settings to file!" << std::endl;
-		return false;
+        errorLog <<"saveModelToFile(ostream &file) - Failed to save Regressifier base settings to file!" << std::endl;
+        return false;
     }
     
     if( trained ){
@@ -258,18 +252,12 @@ bool LogisticRegression::saveModelToFile( std::fstream &file ) const{
     return true;
 }
     
-bool LogisticRegression::loadModelFromFile( std::fstream &file ){
+bool LogisticRegression::loadModelFromFile( std::istream &file ){
     
     trained = false;
     numInputDimensions = 0;
     w0 = 0;
     w.clear();
-    
-    if(!file.is_open())
-    {
-        errorLog << "loadModelFromFile(string filename) - Could not open file to load model" << std::endl;
-        return false;
-    }
     
     std::string word;
     
@@ -282,14 +270,14 @@ bool LogisticRegression::loadModelFromFile( std::fstream &file ){
     }
     
     if( word != "GRT_LOGISTIC_REGRESSION_MODEL_FILE_V2.0" ){
-        errorLog << "loadModelFromFile( fstream &file ) - Could not find Model File Header" << std::endl;
+        errorLog << "loadModelFromFile( istream &file ) - Could not find Model File Header" << std::endl;
         return false;
     }
     
     //Load the regressifier settings from the file
     if( !Regressifier::loadBaseSettingsFromFile(file) ){
-        errorLog <<"loadModelFromFile( fstream &file ) - Failed to save Regressifier base settings to file!" << std::endl;
-		return false;
+        errorLog <<"loadModelFromFile( istream &file ) - Failed to save Regressifier base settings to file!" << std::endl;
+        return false;
     }
     
     if( trained ){
@@ -300,7 +288,7 @@ bool LogisticRegression::loadModelFromFile( std::fstream &file ){
         //Load the weights
         file >> word;
         if(word != "Weights:"){
-            errorLog << "loadModelFromFile( fstream &file ) - Could not find the Weights!" << std::endl;
+            errorLog << "loadModelFromFile( istream &file ) - Could not find the Weights!" << std::endl;
             return false;
         }
         
@@ -323,30 +311,30 @@ return setMaxNumEpochs( maxNumIterations );
 }
 
 Float LogisticRegression::sigmoid(const Float x) const{
-	return 1.0 / (1 + exp(-x));
+    return 1.0 / (1 + exp(-x));
 }
     
-bool LogisticRegression::loadLegacyModelFromFile( std::fstream &file ){
+bool LogisticRegression::loadLegacyModelFromFile( std::istream &file ){
     
     std::string word;
     
     file >> word;
     if(word != "NumFeatures:"){
-        errorLog << "loadLegacyModelFromFile( fstream &file ) - Could not find NumFeatures!" << std::endl;
+        errorLog << "loadLegacyModelFromFile( istream &file ) - Could not find NumFeatures!" << std::endl;
         return false;
     }
     file >> numInputDimensions;
     
     file >> word;
     if(word != "NumOutputDimensions:"){
-        errorLog << "loadLegacyModelFromFile( fstream &file ) - Could not find NumOutputDimensions!" << std::endl;
+        errorLog << "loadLegacyModelFromFile( istream &file ) - Could not find NumOutputDimensions!" << std::endl;
         return false;
     }
     file >> numOutputDimensions;
     
     file >> word;
     if(word != "UseScaling:"){
-        errorLog << "loadLegacyModelFromFile( fstream &file ) - Could not find UseScaling!" << std::endl;
+        errorLog << "loadLegacyModelFromFile( istream &file ) - Could not find UseScaling!" << std::endl;
         return false;
     }
     file >> useScaling;
@@ -361,7 +349,7 @@ bool LogisticRegression::loadLegacyModelFromFile( std::fstream &file ){
         file >> word;
         if(word != "InputVectorRanges:"){
             file.close();
-            errorLog << "loadLegacyModelFromFile( fstream &file ) - Failed to find InputVectorRanges!" << std::endl;
+            errorLog << "loadLegacyModelFromFile( istream &file ) - Failed to find InputVectorRanges!" << std::endl;
             return false;
         }
         for(UINT j=0; j<inputVectorRanges.getSize(); j++){
@@ -372,7 +360,7 @@ bool LogisticRegression::loadLegacyModelFromFile( std::fstream &file ){
         file >> word;
         if(word != "OutputVectorRanges:"){
             file.close();
-            errorLog << "loadLegacyModelFromFile( fstream &file ) - Failed to find OutputVectorRanges!" << std::endl;
+            errorLog << "loadLegacyModelFromFile( istream &file ) - Failed to find OutputVectorRanges!" << std::endl;
             return false;
         }
         for(UINT j=0; j<targetVectorRanges.getSize(); j++){
@@ -387,7 +375,7 @@ bool LogisticRegression::loadLegacyModelFromFile( std::fstream &file ){
     //Load the weights
     file >> word;
     if(word != "Weights:"){
-        errorLog << "loadLegacyModelFromFile( fstream &file ) - Could not find the Weights!" << std::endl;
+        errorLog << "loadLegacyModelFromFile( istream &file ) - Could not find the Weights!" << std::endl;
         return false;
     }
     

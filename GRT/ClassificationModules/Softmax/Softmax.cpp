@@ -56,7 +56,7 @@ Softmax::~Softmax(void)
 }
     
 Softmax& Softmax::operator=(const Softmax &rhs){
-	if( this != &rhs ){
+    if( this != &rhs ){
         this->learningRate = rhs.learningRate;
         this->minChange = rhs.minChange;
         this->maxNumEpochs = rhs.maxNumEpochs;
@@ -64,8 +64,8 @@ Softmax& Softmax::operator=(const Softmax &rhs){
         
         //Copy the base classifier variables
         copyBaseVariables( (Classifier*)&rhs );
-	}
-	return *this;
+    }
+    return *this;
 }
 
 bool Softmax::deepCopyFrom(const Classifier *classifier){
@@ -138,14 +138,14 @@ bool Softmax::predict_(VectorFloat &inputVector){
     }
     
     predictedClassLabel = 0;
-	maxLikelihood = -10000;
+    maxLikelihood = -10000;
     
     if( !trained ) return false;
     
-	if( inputVector.size() != numInputDimensions ){
+    if( inputVector.size() != numInputDimensions ){
         errorLog << "predict_(VectorFloat &inputVector) - The size of the input vector (" << inputVector.size() << ") does not match the num features in the model (" << numInputDimensions << std::endl;
-		return false;
-	}
+        return false;
+    }
     
     if( useScaling ){
         for(UINT n=0; n<numInputDimensions; n++){
@@ -270,21 +270,15 @@ bool Softmax::clear(){
     return true;
 }
     
-bool Softmax::saveModelToFile( std::fstream &file ) const{
+bool Softmax::saveModelToFile( std::ostream &file ) const{
     
-    if(!file.is_open())
-	{
-		errorLog <<"loadModelFromFile(fstream &file) - The file is not open!" << std::endl;
-		return false;
-	}
-    
-	//Write the header info
-	file<<"GRT_SOFTMAX_MODEL_FILE_V2.0\n";
+    //Write the header info
+    file<<"GRT_SOFTMAX_MODEL_FILE_V2.0\n";
     
     //Write the classifier settings to the file
     if( !Classifier::saveBaseSettingsToFile(file) ){
-        errorLog <<"saveModelToFile(fstream &file) - Failed to save classifier base settings to file!" << std::endl;
-		return false;
+        errorLog <<"saveModelToFile(ostream &file) - Failed to save classifier base settings to file!" << std::endl;
+        return false;
     }
     
     if( trained ){
@@ -302,19 +296,13 @@ bool Softmax::saveModelToFile( std::fstream &file ) const{
     return true;
 }
     
-bool Softmax::loadModelFromFile( std::fstream &file ){
+bool Softmax::loadModelFromFile( std::istream &file ){
     
     trained = false;
     numInputDimensions = 0;
     numClasses = 0;
     models.clear();
     classLabels.clear();
-    
-    if(!file.is_open())
-    {
-        errorLog << "loadModelFromFile(string filename) - Could not open file to load model" << std::endl;
-        return false;
-    }
     
     std::string word;
     
@@ -389,7 +377,7 @@ Vector< SoftmaxModel > Softmax::getModels() const{
     return models;
 }
     
-bool Softmax::loadLegacyModelFromFile( std::fstream &file ){
+bool Softmax::loadLegacyModelFromFile( std::istream &file ){
     
     std::string word;
     

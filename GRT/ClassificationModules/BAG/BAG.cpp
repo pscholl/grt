@@ -55,7 +55,7 @@ BAG::~BAG(void)
 }
     
 BAG& BAG::operator=(const BAG &rhs){
-	if( this != &rhs ){
+    if( this != &rhs ){
         //Clear any previous ensemble
         clearEnsemble();
         
@@ -68,8 +68,8 @@ BAG& BAG::operator=(const BAG &rhs){
         }
         //Copy the base classifier variables
         copyBaseVariables( (Classifier*)&rhs );
-	}
-	return *this;
+    }
+    return *this;
 }
 
 bool BAG::deepCopyFrom(const Classifier *classifier){
@@ -164,14 +164,14 @@ bool BAG::predict_(VectorFloat &inputVector){
     }
     
     predictedClassLabel = 0;
-	maxLikelihood = -10000;
+    maxLikelihood = -10000;
     
     if( !trained ) return false;
     
-	if( inputVector.getSize() != numInputDimensions ){
+    if( inputVector.getSize() != numInputDimensions ){
         errorLog << "predict_(VectorFloat &inputVector) - The size of the input Vector (" << inputVector.getSize() << ") does not match the num features in the model (" << numInputDimensions << std::endl;
-		return false;
-	}
+        return false;
+    }
     
     if( useScaling ){
         for(UINT n=0; n<numInputDimensions; n++){
@@ -249,23 +249,17 @@ bool BAG::clear(){
     return true;
 }
     
-bool BAG::saveModelToFile( std::fstream &file ) const{
-    
-    if(!file.is_open())
-	{
-		errorLog <<"saveModelToFile(fstream &file) - The file is not open!" << std::endl;
-		return false;
-	}
+bool BAG::saveModelToFile( std::ostream &file ) const{
     
     const UINT ensembleSize = getEnsembleSize();
     
-	//Write the header info
-	file << "GRT_BAG_MODEL_FILE_V2.0\n";
+    //Write the header info
+    file << "GRT_BAG_MODEL_FILE_V2.0\n";
     
     //Write the classifier settings to the file
     if( !Classifier::saveBaseSettingsToFile(file) ){
-        errorLog <<"saveModelToFile(fstream &file) - Failed to save classifier base settings to file!" << std::endl;
-		return false;
+        errorLog <<"saveModelToFile(ostream &file) - Failed to save classifier base settings to file!" << std::endl;
+        return false;
     }
     
     if( trained ){
@@ -292,7 +286,7 @@ bool BAG::saveModelToFile( std::fstream &file ) const{
             file << "Ensemble: \n";
             for(UINT i=0; i<getEnsembleSize(); i++){
                 if( !ensemble[i]->saveModelToFile( file ) ){
-                    errorLog <<"saveModelToFile(fstream &file) - Failed to save classifier " << i << " to file!" << std::endl;
+                    errorLog <<"saveModelToFile(ostream &file) - Failed to save classifier " << i << " to file!" << std::endl;
                     return false;
                 }
             }
@@ -305,16 +299,10 @@ bool BAG::saveModelToFile( std::fstream &file ) const{
     return true;
 }
     
-bool BAG::loadModelFromFile( std::fstream &file ){
+bool BAG::loadModelFromFile( std::istream &file ){
     
     clear();
     UINT ensembleSize = 0;
-    
-    if(!file.is_open())
-    {
-        errorLog << "loadModelFromFile(string filename) - Could not open file to load model" << std::endl;
-        return false;
-    }
     
     std::string word;
     file >> word;
@@ -462,7 +450,7 @@ bool BAG::setWeights(const VectorFloat &weights){
     return true;
 }
     
-bool BAG::loadLegacyModelFromFile( std::fstream &file ){
+bool BAG::loadLegacyModelFromFile( std::istream &file ){
     
     std::string word;
     

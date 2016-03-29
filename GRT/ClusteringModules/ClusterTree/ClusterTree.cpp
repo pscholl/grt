@@ -82,8 +82,8 @@ ClusterTree& ClusterTree::operator=(const ClusterTree &rhs){
         
         //Copy the base variables
         copyBaseVariables( (Clusterer*)&rhs );
-	}
-	return *this;
+    }
+    return *this;
 }
 
 bool ClusterTree::deepCopyFrom(const Clusterer *clusterer){
@@ -183,10 +183,10 @@ bool ClusterTree::predict_(VectorFloat &inputVector){
         return false;
     }
     
-	if( inputVector.size() != numInputDimensions ){
+    if( inputVector.size() != numInputDimensions ){
         Clusterer::errorLog << "predict_(VectorFloat &inputVector) - The size of the input Vector (" << inputVector.size() << ") does not match the num features in the model (" << numInputDimensions << std::endl;
-		return false;
-	}
+        return false;
+    }
     
     if( useScaling ){
         for(UINT n=0; n<numInputDimensions; n++){
@@ -224,138 +224,126 @@ bool ClusterTree::print() const{
     return false;
 }
     
-bool ClusterTree::saveModelToFile( std::fstream &file ) const{
-    
-    if( !file.is_open() )
-    {
-        Clusterer::errorLog <<"saveModelToFile(fstream &file) - The file is not open!" << std::endl;
-        return false;
-    }
+bool ClusterTree::saveModelToFile( std::ostream &file ) const{
     
     //Write the header info
     file << "GRT_CLUSTER_TREE_MODEL_FILE_V1.0" << std::endl;
     
     //Write the clusterer settings to the file
     if( !saveClustererSettingsToFile(file) ){
-        Clusterer::errorLog <<"saveModelToFile(fstream &file) - Failed to save clusterer settings to file!" << std::endl;
+        Clusterer::errorLog <<"saveModelToFile(ostream &file) - Failed to save clusterer settings to file!" << std::endl;
         return false;
     }
     
-	file << "NumSplittingSteps: " << numSplittingSteps << std::endl;
-	file << "MinNumSamplesPerNode: " << minNumSamplesPerNode << std::endl;
+    file << "NumSplittingSteps: " << numSplittingSteps << std::endl;
+    file << "MinNumSamplesPerNode: " << minNumSamplesPerNode << std::endl;
     file << "MaxDepth: " << maxDepth << std::endl;
-	file << "RemoveFeaturesAtEachSpilt: " << removeFeaturesAtEachSpilt << std::endl;
-	file << "TrainingMode: " << trainingMode << std::endl;
-	file << "MinRMSErrorPerNode: " << minRMSErrorPerNode << std::endl;
-	file << "TreeBuilt: " << (tree != NULL ? 1 : 0) << std::endl;
+    file << "RemoveFeaturesAtEachSpilt: " << removeFeaturesAtEachSpilt << std::endl;
+    file << "TrainingMode: " << trainingMode << std::endl;
+    file << "MinRMSErrorPerNode: " << minRMSErrorPerNode << std::endl;
+    file << "TreeBuilt: " << (tree != NULL ? 1 : 0) << std::endl;
 
-	if( tree != NULL ){
-    	file << "Tree:\n";
-    	if( !tree->saveToFile( file ) ){
-        	Clusterer::errorLog << "saveModelToFile(fstream &file) - Failed to save tree to file!" << std::endl;
-        	return false;
-    	}
-	}
+    if( tree != NULL ){
+        file << "Tree:\n";
+        if( !tree->saveToFile( file ) ){
+            Clusterer::errorLog << "saveModelToFile(ostream &file) - Failed to save tree to file!" << std::endl;
+            return false;
+        }
+    }
 
-	return true;
+    return true;
 }
     
-bool ClusterTree::loadModelFromFile( std::fstream &file ){
+bool ClusterTree::loadModelFromFile( std::istream &file ){
     
-	clear();
+    clear();
 
-	if(!file.is_open())
-	{
-    	Clusterer::errorLog << "loadModelFromFile(string filename) - Could not open file to load model" << std::endl;
-    	return false;
-	}
+    std::string word;
 
-	std::string word;
-
-	//Find the file type header
-	file >> word;
-	if(word != "GRT_CLUSTER_TREE_MODEL_FILE_V1.0"){
-    	Clusterer::errorLog << "loadModelFromFile(string filename) - Could not find Model File Header" << std::endl;
-    	return false;
-	}
-
-	//Load the base settings from the file
-	if( !loadClustererSettingsFromFile(file) ){
-    	Clusterer::errorLog << "loadModelFromFile(string filename) - Failed to load base settings from file!" << std::endl;
-    	return false;
-	}
-
-	file >> word;
-	if(word != "NumSplittingSteps:"){
-    	Clusterer::errorLog << "loadModelFromFile(string filename) - Could not find the NumSplittingSteps!" << std::endl;
-    	return false;
-	}
-	file >> numSplittingSteps;
-
-	file >> word;
-	if(word != "MinNumSamplesPerNode:"){
-    	Clusterer::errorLog << "loadModelFromFile(string filename) - Could not find the MinNumSamplesPerNode!" << std::endl;
-    	return false;
-	}
-	file >> minNumSamplesPerNode;
-
-	file >> word;
-	if(word != "MaxDepth:"){
-    	Clusterer::errorLog << "loadModelFromFile(string filename) - Could not find the MaxDepth!" << std::endl;
-    	return false;
-	}
-	file >> maxDepth;
-
-	file >> word;
-	if(word != "RemoveFeaturesAtEachSpilt:"){
-    	Clusterer::errorLog << "loadModelFromFile(string filename) - Could not find the RemoveFeaturesAtEachSpilt!" << std::endl;
-    	return false;
-	}
-	file >> removeFeaturesAtEachSpilt;
-
-	file >> word;
-	if(word != "TrainingMode:"){
-    	Clusterer::errorLog << "loadModelFromFile(string filename) - Could not find the TrainingMode!" << std::endl;
-    	return false;
-	}
-	file >> trainingMode;
-
-	file >> word;
-	if(word != "MinRMSErrorPerNode:"){
-    	Clusterer::errorLog << "loadModelFromFile(string filename) - Could not find the MinRMSErrorPerNode!" << std::endl;
-    	return false;
-	}	
-	file >> minRMSErrorPerNode;
-
-	file >> word;
-	if(word != "TreeBuilt:"){
-    	Clusterer::errorLog << "loadModelFromFile(string filename) - Could not find the TreeBuilt!" << std::endl;
-    	return false;
+    //Find the file type header
+    file >> word;
+    if(word != "GRT_CLUSTER_TREE_MODEL_FILE_V1.0"){
+        Clusterer::errorLog << "loadModelFromFile(string filename) - Could not find Model File Header" << std::endl;
+        return false;
     }
-	file >> trained;
 
-	if( trained ){
-    	file >> word;
-    	if(word != "Tree:"){
-        		Clusterer::errorLog << "loadModelFromFile(string filename) - Could not find the Tree!" << std::endl;
-        		return false;
-    	}
+    //Load the base settings from the file
+    if( !loadClustererSettingsFromFile(file) ){
+        Clusterer::errorLog << "loadModelFromFile(string filename) - Failed to load base settings from file!" << std::endl;
+        return false;
+    }
 
-    	//Create a new tree
-   		tree = new ClusterTreeNode;
+    file >> word;
+    if(word != "NumSplittingSteps:"){
+        Clusterer::errorLog << "loadModelFromFile(string filename) - Could not find the NumSplittingSteps!" << std::endl;
+        return false;
+    }
+    file >> numSplittingSteps;
+
+    file >> word;
+    if(word != "MinNumSamplesPerNode:"){
+        Clusterer::errorLog << "loadModelFromFile(string filename) - Could not find the MinNumSamplesPerNode!" << std::endl;
+        return false;
+    }
+    file >> minNumSamplesPerNode;
+
+    file >> word;
+    if(word != "MaxDepth:"){
+        Clusterer::errorLog << "loadModelFromFile(string filename) - Could not find the MaxDepth!" << std::endl;
+        return false;
+    }
+    file >> maxDepth;
+
+    file >> word;
+    if(word != "RemoveFeaturesAtEachSpilt:"){
+        Clusterer::errorLog << "loadModelFromFile(string filename) - Could not find the RemoveFeaturesAtEachSpilt!" << std::endl;
+        return false;
+    }
+    file >> removeFeaturesAtEachSpilt;
+
+    file >> word;
+    if(word != "TrainingMode:"){
+        Clusterer::errorLog << "loadModelFromFile(string filename) - Could not find the TrainingMode!" << std::endl;
+        return false;
+    }
+    file >> trainingMode;
+
+    file >> word;
+    if(word != "MinRMSErrorPerNode:"){
+        Clusterer::errorLog << "loadModelFromFile(string filename) - Could not find the MinRMSErrorPerNode!" << std::endl;
+        return false;
+    }   
+    file >> minRMSErrorPerNode;
+
+    file >> word;
+    if(word != "TreeBuilt:"){
+        Clusterer::errorLog << "loadModelFromFile(string filename) - Could not find the TreeBuilt!" << std::endl;
+        return false;
+    }
+    file >> trained;
+
+    if( trained ){
+        file >> word;
+        if(word != "Tree:"){
+                Clusterer::errorLog << "loadModelFromFile(string filename) - Could not find the Tree!" << std::endl;
+                return false;
+        }
+
+        //Create a new tree
+        tree = new ClusterTreeNode;
     
-    	if( tree == NULL ){
+        if( tree == NULL ){
             clear();
-            Clusterer::errorLog << "loadModelFromFile(fstream &file) - Failed to create new RegressionTreeNode!" << std::endl;
+            Clusterer::errorLog << "loadModelFromFile(istream &file) - Failed to create new RegressionTreeNode!" << std::endl;
             return false;
-    	}
+        }
     
-    	tree->setParent( NULL );
-    	if( !tree->loadFromFile( file ) ){
+        tree->setParent( NULL );
+        if( !tree->loadFromFile( file ) ){
             clear();
-            Clusterer::errorLog << "loadModelFromFile(fstream &file) - Failed to load tree from file!" << std::endl;
+            Clusterer::errorLog << "loadModelFromFile(istream &file) - Failed to load tree from file!" << std::endl;
             return false;
-    	}
+        }
         
         //Setup the cluster labels
         clusterLabels.resize(numClusters);
@@ -364,9 +352,9 @@ bool ClusterTree::loadModelFromFile( std::fstream &file ){
         }
         clusterLikelihoods.resize(numClusters,0);
         clusterDistances.resize(numClusters,0);
-	}
+    }
 
-	return true;
+    return true;
 }
     
 ClusterTreeNode* ClusterTree::deepCopyTree() const{

@@ -230,17 +230,11 @@ bool DecisionTreeTripleFeatureNode::computeBestSpilt( const UINT &numSplittingSt
      return true;
 }
 
-bool DecisionTreeTripleFeatureNode::saveParametersToFile( std::fstream &file ) const{
-    
-    if( !file.is_open() )
-    {
-        errorLog << "saveParametersToFile(fstream &file) - File is not open!" << std::endl;
-        return false;
-    }
+bool DecisionTreeTripleFeatureNode::saveParametersToFile( std::ostream &file ) const{
     
     //Save the DecisionTreeNode parameters
     if( !DecisionTreeNode::saveParametersToFile( file ) ){
-        errorLog << "saveParametersToFile(fstream &file) - Failed to save DecisionTreeNode parameters to file!" << std::endl;
+        errorLog << "saveParametersToFile(ostream &file) - Failed to save DecisionTreeNode parameters to file!" << std::endl;
         return false;
     }
     
@@ -252,17 +246,11 @@ bool DecisionTreeTripleFeatureNode::saveParametersToFile( std::fstream &file ) c
     return true;
 }
 
-bool DecisionTreeTripleFeatureNode::loadParametersFromFile( std::fstream &file ){
-    
-    if(!file.is_open())
-    {
-        errorLog << "loadParametersFromFile(fstream &file) - File is not open!" << std::endl;
-        return false;
-    }
+bool DecisionTreeTripleFeatureNode::loadParametersFromFile( std::istream &file ){
     
     //Load the DecisionTreeNode parameters
     if( !DecisionTreeNode::loadParametersFromFile( file ) ){
-        errorLog << "loadParametersFromFile(fstream &file) - Failed to load DecisionTreeNode parameters from file!" << std::endl;
+        errorLog << "loadParametersFromFile(istream &file) - Failed to load DecisionTreeNode parameters from file!" << std::endl;
         return false;
     }
     
@@ -270,21 +258,21 @@ bool DecisionTreeTripleFeatureNode::loadParametersFromFile( std::fstream &file )
     //Load the custom DecisionTreeThresholdNode Parameters
     file >> word;
     if( word != "FeatureIndexA:" ){
-        errorLog << "loadParametersFromFile(fstream &file) - Failed to find FeatureIndexA header!" << std::endl;
+        errorLog << "loadParametersFromFile(istream &file) - Failed to find FeatureIndexA header!" << std::endl;
         return false;
     }
     file >> featureIndexA;
     
     file >> word;
     if( word != "FeatureIndexB:" ){
-        errorLog << "loadParametersFromFile(fstream &file) - Failed to find FeatureIndexB header!" << std::endl;
+        errorLog << "loadParametersFromFile(istream &file) - Failed to find FeatureIndexB header!" << std::endl;
         return false;
     }
     file >> featureIndexB;
 
     file >> word;
     if( word != "FeatureIndexC:" ){
-        errorLog << "loadParametersFromFile(fstream &file) - Failed to find FeatureIndexC header!" << std::endl;
+        errorLog << "loadParametersFromFile(istream &file) - Failed to find FeatureIndexC header!" << std::endl;
         return false;
     }
     file >> featureIndexC;

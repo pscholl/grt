@@ -163,7 +163,7 @@ protected:
      @param file: a reference to the file the parameters will be saved to
      @return returns true if the model was saved successfully, false otherwise
      */
-    virtual bool saveParametersToFile( std::fstream &file ) const;
+    virtual bool saveParametersToFile( std::ostream &file ) const;
     
     /**
      This loads the Decision Tree Node parameters from a file.
@@ -171,7 +171,7 @@ protected:
      @param file: a reference to the file the parameters will be loaded from
      @return returns true if the model was loaded successfully, false otherwise
      */
-    virtual bool loadParametersFromFile( std::fstream &file );
+    virtual bool loadParametersFromFile( std::istream &file );
     
     UINT featureIndex;
     Float threshold;

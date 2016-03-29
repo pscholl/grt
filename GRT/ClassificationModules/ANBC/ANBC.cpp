@@ -57,16 +57,16 @@ ANBC::~ANBC(void)
 } 
 
 ANBC& ANBC::operator=(const ANBC &rhs){
-	if( this != &rhs ){
+    if( this != &rhs ){
         //ANBC variables
         this->weightsDataSet = rhs.weightsDataSet;
         this->weightsData = rhs.weightsData;
-		this->models = rhs.models;
+        this->models = rhs.models;
         
         //Classifier variables
         copyBaseVariables( (Classifier*)&rhs );
-	}
-	return *this;
+    }
+    return *this;
 }
 
 bool ANBC::deepCopyFrom(const Classifier *classifier){
@@ -79,7 +79,7 @@ bool ANBC::deepCopyFrom(const Classifier *classifier){
         //Clone the ANBC values 
         this->weightsDataSet = ptr->weightsDataSet;
         this->weightsData = ptr->weightsData;
-		this->models = ptr->models;
+        this->models = ptr->models;
         
         //Clone the classifier variables
         return copyBaseVariables( classifier );
@@ -204,14 +204,14 @@ bool ANBC::predict_(VectorFloat &inputVector){
     }
     
     predictedClassLabel = 0;
-	maxLikelihood = -10000;
+    maxLikelihood = -10000;
     
     if( !trained ) return false;
     
-	if( inputVector.size() != numInputDimensions ){
+    if( inputVector.size() != numInputDimensions ){
         errorLog << "predict_(VectorFloat &inputVector) - The size of the input vector (" << inputVector.size() << ") does not match the num features in the model (" << numInputDimensions << std::endl;
-		return false;
-	}
+        return false;
+    }
     
     if( useScaling ){
         for(UINT n=0; n<numInputDimensions; n++){
@@ -224,8 +224,8 @@ bool ANBC::predict_(VectorFloat &inputVector){
     
     Float classLikelihoodsSum = 0;
     Float minDist = -99e+99;
-	for(UINT k=0; k<numClasses; k++){
-		classDistances[k] = models[k].predict( inputVector );
+    for(UINT k=0; k<numClasses; k++){
+        classDistances[k] = models[k].predict( inputVector );
         
         //At this point the class likelihoods and class distances are the same thing
         classLikelihoods[k] = classDistances[k];
@@ -297,21 +297,15 @@ bool ANBC::clear(){
     return true;
 }
     
-bool ANBC::saveModelToFile( std::fstream &file ) const{
+bool ANBC::saveModelToFile( std::ostream &file ) const{
     
-    if(!file.is_open())
-	{
-		errorLog <<"saveModelToFile(fstream &file) - The file is not open!" << std::endl;
-		return false;
-	}
-    
-	//Write the header info
-	file<<"GRT_ANBC_MODEL_FILE_V2.0\n";
+    //Write the header info
+    file<<"GRT_ANBC_MODEL_FILE_V2.0\n";
     
     //Write the classifier settings to the file
     if( !Classifier::saveBaseSettingsToFile(file) ){
-        errorLog <<"saveModelToFile(fstream &file) - Failed to save classifier base settings to file!" << std::endl;
-		return false;
+        errorLog <<"saveModelToFile(ostream &file) - Failed to save classifier base settings to file!" << std::endl;
+        return false;
     }
     
     if( trained ){
@@ -346,19 +340,13 @@ bool ANBC::saveModelToFile( std::fstream &file ) const{
     return true;
 }
     
-bool ANBC::loadModelFromFile( std::fstream &file ){
+bool ANBC::loadModelFromFile( std::istream &file ){
     
     trained = false;
     numInputDimensions = 0;
     numClasses = 0;
     models.clear();
     classLabels.clear();
-    
-    if(!file.is_open())
-    {
-        errorLog << "loadModelFromFile(string filename) - Could not open file to load model" << std::endl;
-        return false;
-    }
     
     std::string word;
     file >> word;
@@ -533,7 +521,7 @@ bool ANBC::setWeights(const ClassificationData &weightsData){
     return false;
 }
     
-bool ANBC::loadLegacyModelFromFile( std::fstream &file ){
+bool ANBC::loadLegacyModelFromFile( std::istream &file ){
     
     std::string word;
     

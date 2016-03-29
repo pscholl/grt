@@ -40,7 +40,7 @@ public:
     /**
      Default Constructor.
      */
-	GaussianMixtureModels(const UINT numClusters=10,const UINT minNumEpochs=5,const UINT maxNumEpochs=1000,const Float minChange=1.0e-5);
+    GaussianMixtureModels(const UINT numClusters=10,const UINT minNumEpochs=5,const UINT maxNumEpochs=1000,const Float minChange=1.0e-5);
     
     /**
      Defines how the data from the rhs instance should be copied to this instance
@@ -52,7 +52,7 @@ public:
     /**
      Default Destructor
      */
-	virtual ~GaussianMixtureModels();
+    virtual ~GaussianMixtureModels();
     
     /**
      Defines how the data from the rhs instance should be copied to this instance
@@ -62,7 +62,7 @@ public:
      */
     GaussianMixtureModels &operator=(const GaussianMixtureModels &rhs);
     
-	/**
+    /**
      This deep copies the variables and models from the Clusterer pointer to this GaussianMixtureModels instance.
      This overrides the base deep copy function for the Clusterer modules.
      
@@ -108,7 +108,7 @@ public:
      @param trainingData: a reference to the training data that will be used to train the ML model
      @return returns true if the model was successfully trained, false otherwise
      */
-	virtual bool train_(UnlabelledData &trainingData);
+    virtual bool train_(UnlabelledData &trainingData);
     
     
     virtual bool predict_(VectorDouble &inputVector);
@@ -120,7 +120,7 @@ public:
      @param fstream &file: a reference to the file the GaussianMixtureModels model will be saved to
      @return returns true if the model was saved successfully, false otherwise
      */
-    virtual bool saveModelToFile( std::fstream &file ) const;
+    virtual bool saveModelToFile( std::ostream &file ) const;
     
     /**
      This loads a trained GaussianMixtureModels model from a file.
@@ -129,7 +129,7 @@ public:
      @param fstream &file: a reference to the file the GaussianMixtureModels model will be loaded from
      @return returns true if the model was loaded successfully, false otherwise
      */
-    virtual bool loadModelFromFile( std::fstream &file );
+    virtual bool loadModelFromFile( std::istream &file );
     
     /**
      This function returns the mu matrix which is built during the training phase.
@@ -167,13 +167,13 @@ public:
     //Tell the compiler we are using the base class train method to stop hidden virtual function warnings
     using MLBase::saveModelToFile;
     using MLBase::loadModelFromFile;
-	
+    
 protected:
     bool estep( const MatrixFloat &data, VectorDouble &u, VectorDouble &v, Float &change );
-	bool mstep( const MatrixFloat &data );
-	bool computeInvAndDet();
-	inline void SWAP(UINT &a,UINT &b);
-	inline Float SQR(const Float v){ return v*v; }
+    bool mstep( const MatrixFloat &data );
+    bool computeInvAndDet();
+    inline void SWAP(UINT &a,UINT &b);
+    inline Float SQR(const Float v){ return v*v; }
     
     Float gauss(const VectorDouble &x,const UINT clusterIndex,const VectorDouble &det,const MatrixFloat &mu,const Vector< MatrixFloat > &invSigma){
         
@@ -197,15 +197,15 @@ protected:
         return ( y*exp( -0.5*sum ) );
     }
     
-	UINT numTrainingSamples;                    ///< The number of samples in the training data
-	Float loglike;                             ///< The current loglikelihood value of the models given the data
-	MatrixFloat mu;                            ///< A matrix holding the estimated mean values of each Gaussian
-	MatrixFloat resp;                          ///< The responsibility matrix
-	VectorDouble frac;                          ///< A vector holding the P(k)'s
-	VectorDouble lndets;                        ///< A vector holding the log detminants of SIGMA'k
-	VectorDouble det;                         
-	Vector< MatrixFloat > sigma;
-	Vector< MatrixFloat > invSigma;
+    UINT numTrainingSamples;                    ///< The number of samples in the training data
+    Float loglike;                             ///< The current loglikelihood value of the models given the data
+    MatrixFloat mu;                            ///< A matrix holding the estimated mean values of each Gaussian
+    MatrixFloat resp;                          ///< The responsibility matrix
+    VectorDouble frac;                          ///< A vector holding the P(k)'s
+    VectorDouble lndets;                        ///< A vector holding the log detminants of SIGMA'k
+    VectorDouble det;                         
+    Vector< MatrixFloat > sigma;
+    Vector< MatrixFloat > invSigma;
     
 private:
     static RegisterClustererModule< GaussianMixtureModels > registerModule;

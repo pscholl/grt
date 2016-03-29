@@ -42,7 +42,7 @@ public:
      @param numDimensions: sets the number of dimensions that will be input to the feature extraction. Default value = 1
      */
     TimeseriesBuffer(UINT bufferSize = 5,UINT numDimensions = 1);
-	
+    
     /**
      Copy constructor, copies the TimeseriesBuffer from the rhs instance to this instance.
      
@@ -115,7 +115,7 @@ public:
      @param file: a reference to the file to save the settings to
      @return returns true if the settings were saved successfully, false otherwise
      */
-    virtual bool saveModelToFile( std::fstream &file ) const;
+    virtual bool saveModelToFile( std::ostream &file ) const;
     
     /**
      This loads the feature extraction settings from a file.
@@ -124,7 +124,7 @@ public:
      @param file: a reference to the file to load the settings from
      @return returns true if the settings were loaded successfully, false otherwise
      */
-    virtual bool loadModelFromFile( std::fstream &file );
+    virtual bool loadModelFromFile( std::istream &file );
 
     /**
      Initializes the TimeseriesBuffer, setting the bufferSize and the dimensionality of the data it will buffer.
@@ -133,7 +133,7 @@ public:
      
      @param bufferSize: sets the size of the timeseries buffer
      @param numDimensions: sets the number of dimensions that will be input to the feature extraction
-	 @return true if the TimeseriesBuffer was initiliazed, false otherwise
+     @return true if the TimeseriesBuffer was initiliazed, false otherwise
      */
     bool init(UINT bufferSize,UINT numDimensions);
     
@@ -141,15 +141,15 @@ public:
      Updates the timeseries buffer with the new data x, this should only be called if the dimensionality of this instance was set to 1.
      
      @param x: the value to add to the buffer, this should only be called if the dimensionality of the filter was set to 1
-	 @return a vector containing the timeseries buffer, an empty vector will be returned if the buffer is not initialized
+     @return a vector containing the timeseries buffer, an empty vector will be returned if the buffer is not initialized
      */
-	VectorFloat update(Float x);
+    VectorFloat update(Float x);
     
     /**
      Updates the timeseries buffer with the new data x, the dimensionality of x should match that of this instance.
      
      @param x: a vector containing the values to be processed, must be the same size as the numInputDimensions
-	 @return a vector containing the timeseries buffer, an empty vector will be returned if the buffer is not initialized
+     @return a vector containing the timeseries buffer, an empty vector will be returned if the buffer is not initialized
      */
     VectorFloat update(const VectorFloat &x);
     
@@ -158,7 +158,7 @@ public:
      Calling this function will reset the feature extraction.
      
      @param bufferSize: sets the size of the timeseries buffer
-	 @return true if the bufferSize value was updated, false otherwise
+     @return true if the bufferSize value was updated, false otherwise
      */
     bool setBufferSize(UINT bufferSize);
 

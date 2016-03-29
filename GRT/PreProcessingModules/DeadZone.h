@@ -112,7 +112,7 @@ public:
      @param fstream &file: a reference to the file the settings will be saved to
      @return returns true if the settings were saved successfully, false otherwise
      */
-    virtual bool saveModelToFile(std::fstream &file) const;
+    virtual bool saveModelToFile(std::ostream &file) const;
     
     /**
      This loads the DeadZone settings from a file.
@@ -127,10 +127,10 @@ public:
      This loads the DeadZone settings from a file.
      This overrides the loadModelFromFile function in the PreProcessing base class.
      
-     @param fstream &file: a reference to the file to load the settings from
+     @param istream &file: a reference to the file to load the settings from
      @return returns true if the model was loaded successfully, false otherwise
      */
-    virtual bool loadModelFromFile(std::fstream &file);
+    virtual bool loadModelFromFile(std::istream &file);
 
 	/**
      Initializes the instance, sets the lower and upper limits of the dead-zone region and the dimensionality of the input data.

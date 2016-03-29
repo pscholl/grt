@@ -64,7 +64,7 @@ RegressionTree::~RegressionTree(void)
 }
     
 RegressionTree& RegressionTree::operator=(const RegressionTree &rhs){
-	if( this != &rhs ){
+    if( this != &rhs ){
         //Clear this tree
         this->clear();
         
@@ -82,8 +82,8 @@ RegressionTree& RegressionTree::operator=(const RegressionTree &rhs){
 
         //Copy the base variables
         copyBaseVariables( (Regressifier*)&rhs );
-	}
-	return *this;
+    }
+    return *this;
 }
 
 bool RegressionTree::deepCopyFrom(const Regressifier *regressifier){
@@ -174,10 +174,10 @@ bool RegressionTree::predict_(VectorFloat &inputVector){
         return false;
     }
     
-	if( inputVector.size() != numInputDimensions ){
+    if( inputVector.size() != numInputDimensions ){
         Regressifier::errorLog << "predict_(VectorFloat &inputVector) - The size of the input Vector (" << inputVector.size() << ") does not match the num features in the model (" << numInputDimensions << std::endl;
-		return false;
-	}
+        return false;
+    }
     
     if( useScaling ){
         for(UINT n=0; n<numInputDimensions; n++){
@@ -213,21 +213,15 @@ bool RegressionTree::print() const{
     return false;
 }
     
-bool RegressionTree::saveModelToFile( std::fstream &file ) const{
+bool RegressionTree::saveModelToFile( std::ostream &file ) const{
     
-    if(!file.is_open())
-	{
-		Regressifier::errorLog <<"saveModelToFile(fstream &file) - The file is not open!" << std::endl;
-		return false;
-	}
-    
-	//Write the header info
-	file << "GRT_REGRESSION_TREE_MODEL_FILE_V1.0\n";
+    //Write the header info
+    file << "GRT_REGRESSION_TREE_MODEL_FILE_V1.0\n";
     
     //Write the classifier settings to the file
     if( !Regressifier::saveBaseSettingsToFile(file) ){
-        Regressifier::errorLog <<"saveModelToFile(fstream &file) - Failed to save classifier base settings to file!" << std::endl;
-		return false;
+        Regressifier::errorLog <<"saveModelToFile(ostream &file) - Failed to save classifier base settings to file!" << std::endl;
+        return false;
     }
     
     file << "NumSplittingSteps: " << numSplittingSteps << std::endl;
@@ -240,7 +234,7 @@ bool RegressionTree::saveModelToFile( std::fstream &file ) const{
     if( tree != NULL ){
         file << "Tree:\n";
         if( !tree->saveToFile( file ) ){
-            Regressifier::errorLog << "saveModelToFile(fstream &file) - Failed to save tree to file!" << std::endl;
+            Regressifier::errorLog << "saveModelToFile(ostream &file) - Failed to save tree to file!" << std::endl;
             return false;
         }
     }
@@ -251,12 +245,6 @@ bool RegressionTree::saveModelToFile( std::fstream &file ) const{
 bool RegressionTree::loadModelFromFile( std::fstream &file ){
     
     clear();
-    
-    if(!file.is_open())
-    {
-        Regressifier::errorLog << "loadModelFromFile(string filename) - Could not open file to load model" << std::endl;
-        return false;
-    }
     
     std::string word;
     file >> word;
@@ -327,14 +315,14 @@ bool RegressionTree::loadModelFromFile( std::fstream &file ){
         
         if( tree == NULL ){
             clear();
-            Regressifier::errorLog << "loadModelFromFile(fstream &file) - Failed to create new RegressionTreeNode!" << std::endl;
+            Regressifier::errorLog << "loadModelFromFile(istream &file) - Failed to create new RegressionTreeNode!" << std::endl;
             return false;
         }
         
         tree->setParent( NULL );
         if( !tree->loadFromFile( file ) ){
             clear();
-            Regressifier::errorLog << "loadModelFromFile(fstream &file) - Failed to load tree from file!" << std::endl;
+            Regressifier::errorLog << "loadModelFromFile(istream &file) - Failed to load tree from file!" << std::endl;
             return false;
         }
     }

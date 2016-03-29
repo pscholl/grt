@@ -66,7 +66,7 @@ public:
      @param useCrossValidation: sets if the SVM model will be trained using cross validation. The default value is useCrossValidation=false
      @param kFoldValue: sets the number of folds that will be used for cross validation. The default value is kFoldValue=10
      */
-	SVM(UINT kernelType = LINEAR_KERNEL,UINT svmType = C_SVC,bool useScaling = true,bool useNullRejection = false,bool useAutoGamma = true,Float gamma = 0.1,UINT degree = 3,Float coef0 = 0,Float nu = 0.5,Float C = 1,bool useCrossValidation = false,UINT kFoldValue = 10);
+    SVM(UINT kernelType = LINEAR_KERNEL,UINT svmType = C_SVC,bool useScaling = true,bool useNullRejection = false,bool useAutoGamma = true,Float gamma = 0.1,UINT degree = 3,Float coef0 = 0,Float nu = 0.5,Float C = 1,bool useCrossValidation = false,UINT kFoldValue = 10);
     
     /**
      Default copy constructor.  Copies the settings from the rhs SVM instance to this instance
@@ -78,7 +78,7 @@ public:
     /**
      Default Destructor
      */
-	virtual ~SVM();
+    virtual ~SVM();
     
     /**
      Defines how the data from the rhs SVM should be copied to this SVM
@@ -118,7 +118,7 @@ public:
     /**
      Clears any previous model or problem.
      */
-	virtual bool clear();
+    virtual bool clear();
     
     /**
      This saves the trained SVM model to a file.
@@ -127,7 +127,7 @@ public:
      @param file: a reference to the file the SVM model will be saved to
      @return returns true if the model was saved successfully, false otherwise
      */
-    virtual bool saveModelToFile( std::fstream &file ) const;
+    virtual bool saveModelToFile( std::ostream &file ) const;
     
     /**
      This loads a trained SVM model from a file.
@@ -136,7 +136,7 @@ public:
      @param file: a reference to the file the SVM model will be loaded from
      @return returns true if the model was loaded successfully, false otherwise
      */
-    virtual bool loadModelFromFile( std::fstream &file );
+    virtual bool loadModelFromFile( std::istream &file );
     
     /**
      This initializes the SVM settings and parameters.  Any previous model, settings, or problems will be cleared.
@@ -159,7 +159,7 @@ public:
     /**
      This initializes the default SVM settings and parameters. Any previous model, settings, or problems will be cleared.
      */
-	void initDefaultSVMSettings();
+    void initDefaultSVMSettings();
 
     /**
      Gets if cross validation is enabled.
@@ -183,7 +183,7 @@ public:
      
      @return returns the current SVM type as a string.
      */
-	std::string getSVMType() const;
+    std::string getSVMType() const;
     
     /**
      Gets the current kernel type as a string.
@@ -347,24 +347,24 @@ protected:
     bool validateSVMType(UINT svmType);
     bool validateKernelType(UINT kernelType);
     bool convertClassificationDataToLIBSVMFormat(ClassificationData &trainingData);
-	bool trainSVM();
+    bool trainSVM();
     
     bool predictSVM(VectorFloat &inputVector);
-	bool predictSVM(VectorFloat &inputVector,Float &maxProbability, VectorFloat &probabilites);
-    bool loadLegacyModelFromFile( std::fstream &file );
+    bool predictSVM(VectorFloat &inputVector,Float &maxProbability, VectorFloat &probabilites);
+    bool loadLegacyModelFromFile( std::istream &file );
     
     struct svm_model *deepCopyModel() const;
     bool deepCopyProblem( const struct svm_problem &source_problem, struct svm_problem &target_problem, const unsigned int numInputDimensions ) const;
     bool deepCopyParam( const svm_parameter &source_param, svm_parameter &target_param ) const;
     
-	bool problemSet;
-	struct svm_model *model;
-	struct svm_parameter param;
-	struct svm_problem prob;
-	UINT kFoldValue;
-	Float classificationThreshold;
-	Float crossValidationResult;
-	bool useAutoGamma;
+    bool problemSet;
+    struct svm_model *model;
+    struct svm_parameter param;
+    struct svm_problem prob;
+    UINT kFoldValue;
+    Float classificationThreshold;
+    Float crossValidationResult;
+    bool useAutoGamma;
     bool useCrossValidation;
     
     static RegisterClassifierModule< SVM > registerModule;

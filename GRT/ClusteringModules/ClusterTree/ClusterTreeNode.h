@@ -252,13 +252,7 @@ protected:
      @param file: a reference to the file the parameters will be saved to
      @return returns true if the model was saved successfully, false otherwise
      */
-    virtual bool saveParametersToFile(std::fstream &file) const{
-        
-        if(!file.is_open())
-        {
-            errorLog << "saveParametersToFile(fstream &file) - File is not open!" << std::endl;
-            return false;
-        }
+    virtual bool saveParametersToFile(std::ostream &file) const{
         
         //Save the custom ClusterTreeNode parameters
         file << "NodeSize: " << nodeSize << std::endl;
@@ -275,41 +269,35 @@ protected:
      @param file: a reference to the file the parameters will be loaded from
      @return returns true if the model was loaded successfully, false otherwise
      */
-    virtual bool loadParametersFromFile(std::fstream &file){
-        
-        if(!file.is_open())
-        {
-            errorLog << "loadFromFile(fstream &file) - File is not open!" << std::endl;
-            return false;
-        }
+    virtual bool loadParametersFromFile(std::istream &file){
         
         std::string word;
         
         //Load the custom ClusterTreeNode Parameters
         file >> word;
         if( word != "NodeSize:" ){
-            errorLog << "loadParametersFromFile(fstream &file) - Failed to find NodeSize header!" << std::endl;
+            errorLog << "loadParametersFromFile(istream &file) - Failed to find NodeSize header!" << std::endl;
             return false;
         }
         file >> nodeSize;
         
         file >> word;
         if( word != "FeatureIndex:" ){
-            errorLog << "loadParametersFromFile(fstream &file) - Failed to find FeatureIndex header!" << std::endl;
+            errorLog << "loadParametersFromFile(istream &file) - Failed to find FeatureIndex header!" << std::endl;
             return false;
         }
         file >> featureIndex;
         
         file >> word;
         if( word != "Threshold:" ){
-            errorLog << "loadParametersFromFile(fstream &file) - Failed to find Threshold header!" << std::endl;
+            errorLog << "loadParametersFromFile(istream &file) - Failed to find Threshold header!" << std::endl;
             return false;
         }
         file >> threshold;
         
         file >> word;
         if( word != "ClusterLabel:" ){
-            errorLog << "loadParametersFromFile(fstream &file) - Failed to find ClusterLabel header!" << std::endl;
+            errorLog << "loadParametersFromFile(istream &file) - Failed to find ClusterLabel header!" << std::endl;
             return false;
         }
         file >> clusterLabel;

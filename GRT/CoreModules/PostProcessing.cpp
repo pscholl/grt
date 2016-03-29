@@ -121,12 +121,7 @@ bool PostProcessing::loadModelFromFile(std::string filename){
     return true;
 }
 
-bool PostProcessing::savePostProcessingSettingsToFile(std::fstream &file) const{
-    
-    if( !file.is_open() ){
-        errorLog << "savePostProcessingSettingsToFile(fstream &file) - The file is not open!" << std::endl;
-        return false;
-    }
+bool PostProcessing::savePostProcessingSettingsToFile(std::ostream &file) const{
     
     if( !MLBase::saveBaseSettingsToFile( file ) ) return false;
     
@@ -135,14 +130,9 @@ bool PostProcessing::savePostProcessingSettingsToFile(std::fstream &file) const{
     return true;
 }
 
-bool PostProcessing::loadPostProcessingSettingsFromFile(std::fstream &file){
+bool PostProcessing::loadPostProcessingSettingsFromFile(std::istream &file){
     
-    if( !file.is_open() ){
-        errorLog << "loadPostProcessingSettingsFromFile(fstream &file) - The file is not open!" << std::endl;
-        return false;
-    }
-    
-    //Try and load the base settings from the file
+    /Try and load the base settings from the file
     if( !MLBase::loadBaseSettingsFromFile( file ) ){
         return false;
     }
@@ -152,7 +142,7 @@ bool PostProcessing::loadPostProcessingSettingsFromFile(std::fstream &file){
     //Load if the filter has been initialized
     file >> word;
     if( word != "Initialized:" ){
-        errorLog << "loadPostProcessingSettingsFromFile(fstream &file) - Failed to read Initialized header!" << std::endl;
+        errorLog << "loadPostProcessingSettingsFromFile(istream &file) - Failed to read Initialized header!" << std::endl;
         clear();
         return false;
     }
@@ -214,5 +204,15 @@ VectorFloat PostProcessing::getProcessedData() const{
     return processedData; 
 }
 
-GRT_END_NAMESPACE
+vector< string > PostProcessing::getRegisteredPostProcessors() {
+  vector< string > registeredPostProcessors;
 
+  StringPostProcessingMap::iterator iter = getMap()->begin();
+  while( iter != getMap()->end() ){
+    registeredPostProcessors.push_back( iter->first );
+    iter++;
+  }
+  return registeredPostProcessors;
+}
+
+GRT_END_NAMESPACE

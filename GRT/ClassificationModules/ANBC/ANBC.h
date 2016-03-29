@@ -57,7 +57,7 @@ public:
      @param useNullRejection: sets if null rejection will be used for the realtime prediction.  If useNullRejection is set to true then the predictedClassLabel will be set to 0 (which is the default null label) if the distance between the inputVector and the top K datum is greater than the null rejection threshold for the top predicted class.  The null rejection threshold is computed for each class during the training phase. Default value is useNullRejection = false
      @param nullRejectionCoeff: sets the null rejection coefficient, this is a multipler controlling the null rejection threshold for each class.  This will only be used if the useNullRejection parameter is set to true.  Default value is nullRejectionCoeff = 10.0
      */
-	ANBC(bool useScaling=false,bool useNullRejection=false,double nullRejectionCoeff=10.0);
+    ANBC(bool useScaling=false,bool useNullRejection=false,double nullRejectionCoeff=10.0);
     
     /**
      Defines the copy constructor.
@@ -69,7 +69,7 @@ public:
     /**
      Default Destructor
      */
-	virtual ~ANBC(void);
+    virtual ~ANBC(void);
     
     /**
      Defines how the data from the rhs ANBC should be copied to this ANBC
@@ -77,7 +77,7 @@ public:
      @param rhs: another instance of a ANBC
      @return returns a pointer to this instance of the ANBC
      */
-	ANBC &operator=(const ANBC &rhs);
+    ANBC &operator=(const ANBC &rhs);
     
     /**
      This is required for the Gesture Recognition Pipeline for when the pipeline.setClassifier(...) method is called.  
@@ -86,7 +86,7 @@ public:
      @param classifier: a pointer to the Classifier Base Class, this should be pointing to another ANBC instance
      @return returns true if the clone was successfull, false otherwise
     */
-	virtual bool deepCopyFrom(const Classifier *classifier);
+    virtual bool deepCopyFrom(const Classifier *classifier);
     
     /**
      This trains the ANBC model, using the labelled classification data.
@@ -128,7 +128,7 @@ public:
      @param file: a reference to the file the ANBC model will be saved to
      @return returns true if the model was saved successfully, false otherwise
      */
-    virtual bool saveModelToFile( std::fstream &file ) const;
+    virtual bool saveModelToFile( std::ostream &file ) const;
     
     /**
      This loads a trained ANBC model from a file.
@@ -137,7 +137,7 @@ public:
      @param file: a reference to the file the ANBC model will be loaded from
      @return returns true if the model was loaded successfully, false otherwise
      */
-    virtual bool loadModelFromFile( std::fstream &file );
+    virtual bool loadModelFromFile( std::istream &file );
     
     /**
      This recomputes the null rejection thresholds for each of the classes in the ANBC model.
@@ -146,7 +146,7 @@ public:
      
      @return returns true if the null rejection thresholds were updated successfully, false otherwise
      */
-	virtual bool recomputeNullRejectionThresholds();
+    virtual bool recomputeNullRejectionThresholds();
     
     /**
      Gets a vector containing the null rejection thresholds for each class, this will be an N-dimensional vector, where N is the number of classes in the model.
@@ -197,11 +197,11 @@ public:
     using MLBase::predict_;
 
 protected:
-    bool loadLegacyModelFromFile( std::fstream &file );
+    bool loadLegacyModelFromFile( std::istream &file );
     
     bool weightsDataSet;                  //A flag to indicate if the user has manually set the weights buffer
     ClassificationData weightsData;       //The weights of each feature for each class for training the algorithm
-	Vector< ANBC_Model > models;          //A buffer to hold all the models
+    Vector< ANBC_Model > models;          //A buffer to hold all the models
     
     static RegisterClassifierModule< ANBC > registerModule;
 };

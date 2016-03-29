@@ -100,7 +100,7 @@ public:
      fstream file: a reference to the file you want to save the RBF model to
      @return returns true if the RBF was saved successfull, false otherwise
      */
-    virtual bool saveModelToFile( std::fstream &file ) const;
+    virtual bool saveModelToFile( std::ostream &file ) const;
     
     /**
      This function loads an RBF model from a file.
@@ -108,7 +108,7 @@ public:
      fstream file: a reference to the file you want to load the RBF model from
      @return returns true if the RBF was loaded successfull, false otherwise
      */
-    virtual bool loadModelFromFile( std::fstream &file );
+    virtual bool loadModelFromFile( std::istream &file );
     
     /**
      This function prints out some basic info about the RBF to std::cout.

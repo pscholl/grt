@@ -45,12 +45,12 @@ public:
 
      @param useScaling: sets if the training and real-time data should be scaled between [0 1]. Default value = true
      */
-	LogisticRegression(const bool useScaling=true);
+    LogisticRegression(const bool useScaling=true);
     
     /**
      Default Destructor
      */
-	virtual ~LogisticRegression(void);
+    virtual ~LogisticRegression(void);
     
     /**
      Defines how the data from the rhs LogisticRegression should be copied to this LogisticRegression
@@ -58,7 +58,7 @@ public:
      @param rhs: another instance of a LogisticRegression
      @return returns a pointer to this instance of the LogisticRegression
      */
-	LogisticRegression &operator=(const LogisticRegression &rhs);
+    LogisticRegression &operator=(const LogisticRegression &rhs);
     
     /**
      This is required for the Gesture Recognition Pipeline for when the pipeline.setRegressifier(...) method is called.  
@@ -67,7 +67,7 @@ public:
      @param regressifier: a pointer to the Regressifier Base Class, this should be pointing to another Logistic Regression instance
      @return returns true if the clone was successfull, false otherwise
     */
-	virtual bool deepCopyFrom(const Regressifier *regressifier);
+    virtual bool deepCopyFrom(const Regressifier *regressifier);
     
     /**
      This trains the Logistic Regression model, using the labelled regression data.
@@ -94,7 +94,7 @@ public:
      @param file: a reference to the file the Logistic Regression model will be saved to
      @return returns true if the model was saved successfully, false otherwise
      */
-    virtual bool saveModelToFile( std::fstream &file ) const;
+    virtual bool saveModelToFile( std::ostream &file ) const;
     
     /**
      This loads a trained Logistic Regression model from a file.
@@ -103,7 +103,7 @@ public:
      @param file: a reference to the file the Logistic Regression model will be loaded from
      @return returns true if the model was loaded successfully, false otherwise
      */
-    virtual bool loadModelFromFile( std::fstream &file );
+    virtual bool loadModelFromFile( std::istream &file );
     
     /**
      Gets the current maxNumIterations value, this is the maximum number of iterations that can be run during the training phase.
@@ -126,9 +126,9 @@ public:
     using MLBase::loadModelFromFile;
 
 protected:
-	inline Float sigmoid(const Float x) const;
+    inline Float sigmoid(const Float x) const;
     bool loadLegacyModelFromFile( std::fstream &file );
-	
+    
     Float w0; ///<The bias
     VectorFloat w; ///<The weights vector
     static RegisterRegressifierModule< LogisticRegression > registerModule;

@@ -142,12 +142,7 @@ bool Derivative::saveModelToFile(std::string filename) const{
     return true;
 }
 
-bool Derivative::saveModelToFile(std::fstream &file) const{
-    
-    if( !file.is_open() ){
-        errorLog << "saveModelToFile(fstream &file) - The file is not open!" << std::endl;
-        return false;
-    }
+bool Derivative::saveModelToFile(std::ostream &file) const{
     
     file << "GRT_DERIVATIVE_FILE_V1.0" << std::endl;
     
@@ -177,12 +172,7 @@ bool Derivative::loadModelFromFile(std::string filename){
     return true;
 }
 
-bool Derivative::loadModelFromFile(std::fstream &file){
-    
-    if( !file.is_open() ){
-        errorLog << "loadModelFromFile(fstream &file) - The file is not open!" << std::endl;
-        return false;
-    }
+bool Derivative::loadModelFromFile(std::istream &file){
     
     std::string word;
     
@@ -190,14 +180,14 @@ bool Derivative::loadModelFromFile(std::fstream &file){
     file >> word;
     
     if( word != "GRT_DERIVATIVE_FILE_V1.0" ){
-        errorLog << "loadModelFromFile(fstream &file) - Invalid file format!" << std::endl;
+        errorLog << "loadModelFromFile(istream &file) - Invalid file format!" << std::endl;
         return false;     
     }
     
     //Load the number of input dimensions
     file >> word;
     if( word != "NumInputDimensions:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read NumInputDimensions header!" << std::endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read NumInputDimensions header!" << std::endl;
         return false;     
     }
     file >> numInputDimensions;
@@ -205,7 +195,7 @@ bool Derivative::loadModelFromFile(std::fstream &file){
     //Load the number of output dimensions
     file >> word;
     if( word != "NumOutputDimensions:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read NumOutputDimensions header!" << std::endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read NumOutputDimensions header!" << std::endl;
         return false;     
     }
     file >> numOutputDimensions;
@@ -213,7 +203,7 @@ bool Derivative::loadModelFromFile(std::fstream &file){
     //Load the DerivativeOrder
     file >> word;
     if( word != "DerivativeOrder:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read DerivativeOrder header!" << std::endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read DerivativeOrder header!" << std::endl;
         return false;     
     }
     file >> derivativeOrder;
@@ -221,7 +211,7 @@ bool Derivative::loadModelFromFile(std::fstream &file){
     //Load the FilterSize
     file >> word;
     if( word != "FilterSize:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read FilterSize header!" << std::endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read FilterSize header!" << std::endl;
         return false;     
     }
     file >> filterSize;
@@ -229,7 +219,7 @@ bool Derivative::loadModelFromFile(std::fstream &file){
     //Load the Delta
     file >> word;
     if( word != "Delta:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read Delta header!" << std::endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read Delta header!" << std::endl;
         return false;     
     }
     file >> delta;
@@ -237,7 +227,7 @@ bool Derivative::loadModelFromFile(std::fstream &file){
     //Load if the data should be filtered 
     file >> word;
     if( word != "FilterData:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read FilterData header!" << std::endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read FilterData header!" << std::endl;
         return false;     
     }
     file >> filterData;

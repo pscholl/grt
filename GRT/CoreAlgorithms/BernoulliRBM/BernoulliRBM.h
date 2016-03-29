@@ -108,7 +108,7 @@ public:
      @param file: a reference to the file the model will be saved to
      @return returns true if the model was saved successfully, false otherwise
      */
-    virtual bool saveModelToFile( std::fstream &file ) const;
+    virtual bool saveModelToFile( std::ostream &file ) const;
     
     /**
      This loads a trained model from a file.
@@ -116,7 +116,7 @@ public:
      @param file: a reference to the file the model will be loaded from
      @return returns true if the model was loaded successfully, false otherwise
      */
-    virtual bool loadModelFromFile( std::fstream &file );
+    virtual bool loadModelFromFile( std::istream &file );
     
     bool reconstruct(const VectorFloat &input,VectorFloat &output);
     
@@ -144,7 +144,7 @@ public:
     using MLBase::predict_; ///<Tell the compiler we are using the base class predict method to stop hidden virtual function warnings
     
 protected:
-    bool loadLegacyModelFromFile( std::fstream &file );
+    bool loadLegacyModelFromFile( std::istream &file );
     
     inline Float sigmoidRandom(const Float &x){
         return (1.0 / (1.0 + exp(-x)) > rand.getRandomNumberUniform(0.0,1.0)) ? 1.0 : 0.0;

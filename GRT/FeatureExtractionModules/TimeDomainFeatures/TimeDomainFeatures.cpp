@@ -139,19 +139,14 @@ bool TimeDomainFeatures::loadModelFromFile( std::string filename ){
     return true;
 }
 
-bool TimeDomainFeatures::saveModelToFile( std::fstream &file ) const{
-    
-    if( !file.is_open() ){
-        errorLog << "saveModelToFile(fstream &file) - The file is not open!" << std::endl;
-        return false;
-    }
+bool TimeDomainFeatures::saveModelToFile( std::ostream &file ) const{
     
     //Write the file header
     file << "GRT_TIME_DOMAIN_FEATURES_FILE_V1.0" << std::endl;	
     
     //Save the base settings to the file
     if( !saveFeatureExtractionSettingsToFile( file ) ){
-        errorLog << "saveFeatureExtractionSettingsToFile(fstream &file) - Failed to save base feature extraction settings to file!" << std::endl;
+        errorLog << "saveFeatureExtractionSettingsToFile(ostream &file) - Failed to save base feature extraction settings to file!" << std::endl;
         return false;
     }
     
@@ -167,12 +162,7 @@ bool TimeDomainFeatures::saveModelToFile( std::fstream &file ) const{
     return true;
 }
 
-bool TimeDomainFeatures::loadModelFromFile( std::fstream &file ){
-    
-    if( !file.is_open() ){
-        errorLog << "loadModelFromFile(fstream &file) - The file is not open!" << std::endl;
-        return false;
-    }
+bool TimeDomainFeatures::loadModelFromFile( std::istream &file ){
     
     std::string word;
     
@@ -180,19 +170,19 @@ bool TimeDomainFeatures::loadModelFromFile( std::fstream &file ){
     file >> word;
     
     if( word != "GRT_TIME_DOMAIN_FEATURES_FILE_V1.0" ){
-        errorLog << "loadModelFromFile(fstream &file) - Invalid file format!" << std::endl;
+        errorLog << "loadModelFromFile(istream &file) - Invalid file format!" << std::endl;
         return false;     
     }
     
     if( !loadFeatureExtractionSettingsFromFile( file ) ){
-        errorLog << "loadFeatureExtractionSettingsFromFile(fstream &file) - Failed to load base feature extraction settings from file!" << std::endl;
+        errorLog << "loadFeatureExtractionSettingsFromFile(istream &file) - Failed to load base feature extraction settings from file!" << std::endl;
         return false;
     }
     
     //Load the BufferLength
     file >> word;
     if( word != "BufferLength:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read BufferLength header!" << std::endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read BufferLength header!" << std::endl;
         return false;     
     }
     file >> bufferLength;
@@ -200,7 +190,7 @@ bool TimeDomainFeatures::loadModelFromFile( std::fstream &file ){
     //Load the NumFrames
     file >> word;
     if( word != "NumFrames:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read NumFrames header!" << std::endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read NumFrames header!" << std::endl;
         return false;     
     }
     file >> numFrames;
@@ -208,7 +198,7 @@ bool TimeDomainFeatures::loadModelFromFile( std::fstream &file ){
     //Load the OffsetInput
     file >> word;
     if( word != "OffsetInput:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read OffsetInput header!" << std::endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read OffsetInput header!" << std::endl;
         return false;     
     }
     file >> offsetInput;
@@ -216,7 +206,7 @@ bool TimeDomainFeatures::loadModelFromFile( std::fstream &file ){
     //Load the UseMean
     file >> word;
     if( word != "UseMean:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read UseMean header!" << std::endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read UseMean header!" << std::endl;
         return false;     
     }
     file >> useMean;
@@ -224,7 +214,7 @@ bool TimeDomainFeatures::loadModelFromFile( std::fstream &file ){
     //Load the UseStdDev
     file >> word;
     if( word != "UseStdDev:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read UseStdDev header!" << std::endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read UseStdDev header!" << std::endl;
         return false;     
     }
     file >> useStdDev;
@@ -232,7 +222,7 @@ bool TimeDomainFeatures::loadModelFromFile( std::fstream &file ){
     //Load the UseEuclideanNorm
     file >> word;
     if( word != "UseEuclideanNorm:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read UseEuclideanNorm header!" << std::endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read UseEuclideanNorm header!" << std::endl;
         return false;     
     }
     file >> useEuclideanNorm;
@@ -240,7 +230,7 @@ bool TimeDomainFeatures::loadModelFromFile( std::fstream &file ){
     //Load the UseRMS
     file >> word;
     if( word != "UseRMS:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read UseRMS header!" << std::endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read UseRMS header!" << std::endl;
         return false;
     }
     file >> useRMS;

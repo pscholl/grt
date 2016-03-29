@@ -196,13 +196,7 @@ Float RadialBasisFunction::rbf(const VectorFloat &a,const VectorFloat &b){
     return exp( gamma * r );
 }
     
-bool RadialBasisFunction::saveModelToFile( std::fstream &file ) const{
-    
-    if(!file.is_open())
-	{
-		errorLog <<"saveModelToFile(fstream &file) - The file is not open!" << std::endl;
-		return false;
-	}
+bool RadialBasisFunction::saveModelToFile( std::ostream &file ) const{
     
 	//Write the WeakClassifierType data
     file << "WeakClassifierType: " << weakClassifierType << std::endl;
@@ -227,38 +221,32 @@ bool RadialBasisFunction::saveModelToFile( std::fstream &file ) const{
     return true;
 }
 
-bool RadialBasisFunction::loadModelFromFile( std::fstream &file ){
-    
-    if(!file.is_open())
-	{
-		errorLog <<"loadModelFromFile(fstream &file) - The file is not open!" << std::endl;
-		return false;
-	}
+bool RadialBasisFunction::loadModelFromFile( std::istream &file ){
     
     std::string word;
     
     file >> word;
     if( word != "WeakClassifierType:" ){
-        errorLog <<"loadModelFromFile(fstream &file) - Failed to read WeakClassifierType header!" << std::endl;
+        errorLog <<"loadModelFromFile(istream &file) - Failed to read WeakClassifierType header!" << std::endl;
 		return false;
     }
     file >> word;
     
     if( word != weakClassifierType ){
-        errorLog <<"loadModelFromFile(fstream &file) - The weakClassifierType:" << word << " does not match: " << weakClassifierType << std::endl;
+        errorLog <<"loadModelFromFile(istream &file) - The weakClassifierType:" << word << " does not match: " << weakClassifierType << std::endl;
 		return false;
     }
     
     file >> word;
     if( word != "Trained:" ){
-        errorLog <<"loadModelFromFile(fstream &file) - Failed to read Trained header!" << std::endl;
+        errorLog <<"loadModelFromFile(istream &file) - Failed to read Trained header!" << std::endl;
 		return false;
     }
     file >> trained;
     
     file >> word;
     if( word != "NumInputDimensions:" ){
-        errorLog <<"loadModelFromFile(fstream &file) - Failed to read NumInputDimensions header!" << std::endl;
+        errorLog <<"loadModelFromFile(istream &file) - Failed to read NumInputDimensions header!" << std::endl;
 		return false;
     }
     file >> numInputDimensions;
@@ -266,42 +254,42 @@ bool RadialBasisFunction::loadModelFromFile( std::fstream &file ){
     
     file >> word;
     if( word != "NumSteps:" ){
-        errorLog <<"loadModelFromFile(fstream &file) - Failed to read NumSteps header!" << std::endl;
+        errorLog <<"loadModelFromFile(istream &file) - Failed to read NumSteps header!" << std::endl;
 		return false;
     }
     file >> numSteps;
     
     file >> word;
     if( word != "PositiveClassificationThreshold:" ){
-        errorLog <<"loadModelFromFile(fstream &file) - Failed to read PositiveClassificationThreshold header!" << std::endl;
+        errorLog <<"loadModelFromFile(istream &file) - Failed to read PositiveClassificationThreshold header!" << std::endl;
 		return false;
     }
     file >> positiveClassificationThreshold;
     
     file >> word;
     if( word != "Alpha:" ){
-        errorLog <<"loadModelFromFile(fstream &file) - Failed to read Alpha header!" << std::endl;
+        errorLog <<"loadModelFromFile(istream &file) - Failed to read Alpha header!" << std::endl;
 		return false;
     }
     file >> alpha;
     
     file >> word;
     if( word != "MinAlphaSearchRange:" ){
-        errorLog <<"loadModelFromFile(fstream &file) - Failed to read MinAlphaSearchRange header!" << std::endl;
+        errorLog <<"loadModelFromFile(istream &file) - Failed to read MinAlphaSearchRange header!" << std::endl;
 		return false;
     }
     file >> minAlphaSearchRange;
     
     file >> word;
     if( word != "MaxAlphaSearchRange:" ){
-        errorLog <<"loadModelFromFile(fstream &file) - Failed to read MaxAlphaSearchRange header!" << std::endl;
+        errorLog <<"loadModelFromFile(istream &file) - Failed to read MaxAlphaSearchRange header!" << std::endl;
 		return false;
     }
     file >> maxAlphaSearchRange;
     
     file >> word;
     if( word != "RBF:" ){
-        errorLog <<"loadModelFromFile(fstream &file) - Failed to read RBF header!" << std::endl;
+        errorLog <<"loadModelFromFile(istream &file) - Failed to read RBF header!" << std::endl;
 		return false;
     }
     rbfCentre.resize(numInputDimensions);

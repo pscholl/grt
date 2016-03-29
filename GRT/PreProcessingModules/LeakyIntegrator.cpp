@@ -105,12 +105,7 @@ bool LeakyIntegrator::reset(){
     return false;
 }
     
-bool LeakyIntegrator::saveModelToFile( std::fstream &file ) const{
-    
-    if( !file.is_open() ){
-        errorLog << "saveModelToFile(fstream &file) - The file is not open!" << std::endl;
-        return false;
-    }
+bool LeakyIntegrator::saveModelToFile( std::ostream &file ) const{
     
     file << "GRT_LEAKY_INTEGRATOR_FILE_V1.0" << std::endl;
     
@@ -124,32 +119,27 @@ bool LeakyIntegrator::saveModelToFile( std::fstream &file ) const{
     return true;
 }
 
-bool LeakyIntegrator::loadModelFromFile( std::fstream &file ){
+bool LeakyIntegrator::loadModelFromFile( std::istream &file ){
      
-    if( !file.is_open() ){
-        errorLog << "loadModelFromFile(fstream &file) - The file is not open!" << std::endl;
-        return false;
-    }
-    
     std::string word;
     
     //Load the header
     file >> word;
     
     if( word != "GRT_LEAKY_INTEGRATOR_FILE_V1.0" ){
-        errorLog << "loadModelFromFile(fstream &file) - Invalid file format!" << std::endl;
+        errorLog << "loadModelFromFile(istream &file) - Invalid file format!" << std::endl;
         return false;     
     }
     
     if( !PreProcessing::loadPreProcessingSettingsFromFile( file ) ){
-        errorLog << "loadPreProcessingSettingsFromFile(fstream &file) - Failed to load preprocessing settings from file!" << std::endl;
+        errorLog << "loadPreProcessingSettingsFromFile(istream &file) - Failed to load preprocessing settings from file!" << std::endl;
         return false;
     }
     
     //Load the LeakRate
     file >> word;
     if( word != "LeakRate:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read LeakRate header!" << std::endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read LeakRate header!" << std::endl;
         return false;     
     }
     file >> leakRate;

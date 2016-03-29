@@ -39,35 +39,35 @@ class FFTFeatures : public FeatureExtraction
 public:
     /**
      Default Constructor, sets the default settings for the FFTFeatures module.
-	 The fftWindowSize and numChannelsInFFTSignal parameters should match the settings of the FFT module that will be used as input to this module.
-	 
-	 @param fftWindowSize: the window size of the FFT that will be used as input to this module. Default value = 512
-	 @param numChannelsInFFTSignal: this is the number of channels (i.e. input dimensions) to the FFT module.  Default value = 1
-	 @param computeMaxFreqFeature: sets if the maximum frequency feature will be included in the feature vector. Default value = true
-	 @param computeMaxFreqSpectrumRatio: sets if the maximum-frequency spectrum-frequency ratio feature will be included in the feature vector. Default value = true
-	 @param computeCentroidFeature: sets if the centroid frequency feature will be included in the feature vector. Default value = true
-	 @param computeTopNFreqFeatures: sets if the top N frequency feature will be included in the feature vector. Default value = true
-	 @param N: sets if size of N for the top N frequency features. Default value = 10
+     The fftWindowSize and numChannelsInFFTSignal parameters should match the settings of the FFT module that will be used as input to this module.
+     
+     @param fftWindowSize: the window size of the FFT that will be used as input to this module. Default value = 512
+     @param numChannelsInFFTSignal: this is the number of channels (i.e. input dimensions) to the FFT module.  Default value = 1
+     @param computeMaxFreqFeature: sets if the maximum frequency feature will be included in the feature vector. Default value = true
+     @param computeMaxFreqSpectrumRatio: sets if the maximum-frequency spectrum-frequency ratio feature will be included in the feature vector. Default value = true
+     @param computeCentroidFeature: sets if the centroid frequency feature will be included in the feature vector. Default value = true
+     @param computeTopNFreqFeatures: sets if the top N frequency feature will be included in the feature vector. Default value = true
+     @param N: sets if size of N for the top N frequency features. Default value = 10
      */
-	FFTFeatures(UINT fftWindowSize=512,UINT numChannelsInFFTSignal=1,bool computeMaxFreqFeature = true,bool computeMaxFreqSpectrumRatio = true,bool computeCentroidFeature = true,bool computeTopNFreqFeatures = true,UINT N = 10);
+    FFTFeatures(UINT fftWindowSize=512,UINT numChannelsInFFTSignal=1,bool computeMaxFreqFeature = true,bool computeMaxFreqSpectrumRatio = true,bool computeCentroidFeature = true,bool computeTopNFreqFeatures = true,UINT N = 10);
     
     /**
      Copy Constructor, copies the FFTFeatures from the rhs instance to this instance
      
-	 @param rhs: another instance of the FFTFeatures class from which the data will be copied to this instance
+     @param rhs: another instance of the FFTFeatures class from which the data will be copied to this instance
      */
     FFTFeatures(const FFTFeatures &rhs);
     
     /**
      Default Destructor
      */
-	virtual ~FFTFeatures(void);
+    virtual ~FFTFeatures(void);
     
     /**
      Sets the equals operator, copies the data from the rhs instance to this instance
      
-	 @param rhs: another instance of the FFTFeatures class from which the data will be copied to this instance
-	 @return a reference to this instance of FFT
+     @param rhs: another instance of the FFTFeatures class from which the data will be copied to this instance
+     @return a reference to this instance of FFT
      */
     FFTFeatures& operator=(const FFTFeatures &rhs);
 
@@ -76,8 +76,8 @@ public:
      This function is used to deep copy the values from the input pointer to this instance of the FeatureExtraction module.
      This function is called by the GestureRecognitionPipeline when the user adds a new FeatureExtraction module to the pipeline.
      
-	 @param featureExtraction: a pointer to another instance of an FFTFeatures, the values of that instance will be cloned to this instance
-	 @return true if the deep copy was successful, false otherwise
+     @param featureExtraction: a pointer to another instance of an FFTFeatures, the values of that instance will be cloned to this instance
+     @return true if the deep copy was successful, false otherwise
      */
     virtual bool deepCopyFrom(const FeatureExtraction *featureExtraction);
     
@@ -85,8 +85,8 @@ public:
      Sets the FeatureExtraction computeFeatures function, overwriting the base FeatureExtraction function.
      This function is called by the GestureRecognitionPipeline when any new input data needs to be processed (during the prediction phase for example).
      
-	 @param inputVector: the inputVector that should be processed.  Must have the same dimensionality as the FeatureExtraction module
-	 @return true if the data was processed, false otherwise
+     @param inputVector: the inputVector that should be processed.  Must have the same dimensionality as the FeatureExtraction module
+     @return true if the data was processed, false otherwise
      */
     virtual bool computeFeatures(const VectorFloat &inputVector);
     
@@ -95,7 +95,7 @@ public:
      This function is called by the GestureRecognitionPipeline when the pipelines main reset() function is called.
      This function resets the FFTFeatures by re-initiliazing the instance.
      
-	 @return true if the FFTFeatures was reset, false otherwise
+     @return true if the FFTFeatures was reset, false otherwise
      */    
     virtual bool reset();
     
@@ -122,7 +122,7 @@ public:
      @param file: a reference to the file to save the settings to
      @return returns true if the settings were saved successfully, false otherwise
      */
-    virtual bool saveModelToFile( std::fstream &file ) const;
+    virtual bool saveModelToFile( std::ostream &file ) const;
     
     /**
      This loads the feature extraction settings from a file.
@@ -131,21 +131,21 @@ public:
      @param file: a reference to the file to load the settings from
      @return returns true if the settings were loaded successfully, false otherwise
      */
-    virtual bool loadModelFromFile( std::fstream &file );
+    virtual bool loadModelFromFile( std::istream &file );
     
     /**
      Initializes the FFTFeatures. 
      Should be called before calling the computeFFT(...) or computeFeatures(...) methods.
      This function is automatically called by the constructor.
      
-	 @param  fftWindowSize: the window size of the FFT that will be used as input to this module. Default value = FFT::FFT_WINDOW_SIZE_512
-	 @param numChannelsInFFTSignal: the size of the FFT feature vector that will be used as input to this module.  Default value = 1
-	 @param computeMaxFreqFeature: sets if the maximum frequency feature will be included in the feature vector. Default value = true
-	 @param computeMaxFreqSpectrumRatio: sets if the maximum-frequency spectrum-frequency ratio feature will be included in the feature vector. Default value = true
-	 @param computeCentroidFeature: sets if the centroid frequency feature will be included in the feature vector. Default value = true
-	 @param computeTopNFreqFeatures: sets if the top N frequency feature will be included in the feature vector. Default value = true
-	 @param N: sets if size of N for the top N frequency features. Default value = 10
-	 @return true if the FTT was initialized, false otherwise
+     @param  fftWindowSize: the window size of the FFT that will be used as input to this module. Default value = FFT::FFT_WINDOW_SIZE_512
+     @param numChannelsInFFTSignal: the size of the FFT feature vector that will be used as input to this module.  Default value = 1
+     @param computeMaxFreqFeature: sets if the maximum frequency feature will be included in the feature vector. Default value = true
+     @param computeMaxFreqSpectrumRatio: sets if the maximum-frequency spectrum-frequency ratio feature will be included in the feature vector. Default value = true
+     @param computeCentroidFeature: sets if the centroid frequency feature will be included in the feature vector. Default value = true
+     @param computeTopNFreqFeatures: sets if the top N frequency feature will be included in the feature vector. Default value = true
+     @param N: sets if size of N for the top N frequency features. Default value = 10
+     @return true if the FTT was initialized, false otherwise
      */   
     bool init(UINT fftWindowSize,UINT numChannelsInFFTSignal,bool computeMaxFreqFeature,bool computeMaxFreqSpectrumRatio,bool computeCentroidFeature,bool computeTopNFreqFeatures,UINT N);
     

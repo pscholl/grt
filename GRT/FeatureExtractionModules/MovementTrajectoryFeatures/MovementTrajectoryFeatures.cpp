@@ -139,19 +139,14 @@ bool MovementTrajectoryFeatures::loadModelFromFile( std::string filename ){
     return true;
 }
 
-bool MovementTrajectoryFeatures::saveModelToFile( std::fstream &file ) const{
-    
-    if( !file.is_open() ){
-        errorLog << "saveModelToFile(fstream &file) - The file is not open!" << std::endl;
-        return false;
-    }
+bool MovementTrajectoryFeatures::saveModelToFile( std::ostream &file ) const{
     
     //Write the file header
     file << "GRT_MOVEMENT_TRAJECTORY_FEATURES_FILE_V1.0" << std::endl;	
     
     //Save the base settings to the file
     if( !saveFeatureExtractionSettingsToFile( file ) ){
-        errorLog << "saveFeatureExtractionSettingsToFile(fstream &file) - Failed to save base feature extraction settings to file!" << std::endl;
+        errorLog << "saveFeatureExtractionSettingsToFile(ostream &file) - Failed to save base feature extraction settings to file!" << std::endl;
         return false;
     }
     
@@ -166,12 +161,7 @@ bool MovementTrajectoryFeatures::saveModelToFile( std::fstream &file ) const{
     return true;
 }
 
-bool MovementTrajectoryFeatures::loadModelFromFile( std::fstream &file ){
-    
-    if( !file.is_open() ){
-        errorLog << "loadModelFromFile(fstream &file) - The file is not open!" << std::endl;
-        return false;
-    }
+bool MovementTrajectoryFeatures::loadModelFromFile( std::istream &file ){
     
     std::string word;
     
@@ -179,19 +169,19 @@ bool MovementTrajectoryFeatures::loadModelFromFile( std::fstream &file ){
     file >> word;
     
     if( word != "GRT_MOVEMENT_TRAJECTORY_FEATURES_FILE_V1.0" ){
-        errorLog << "loadModelFromFile(fstream &file) - Invalid file format!" << std::endl;
+        errorLog << "loadModelFromFile(istream &file) - Invalid file format!" << std::endl;
         return false;     
     }
     
     if( !loadFeatureExtractionSettingsFromFile( file ) ){
-        errorLog << "loadFeatureExtractionSettingsFromFile(fstream &file) - Failed to load base feature extraction settings from file!" << std::endl;
+        errorLog << "loadFeatureExtractionSettingsFromFile(istream &file) - Failed to load base feature extraction settings from file!" << std::endl;
         return false;
     }
     
     //Load the TrajectoryLength
     file >> word;
     if( word != "TrajectoryLength:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read TrajectoryLength header!" << std::endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read TrajectoryLength header!" << std::endl;
         return false;     
     }
     file >> trajectoryLength;
@@ -199,7 +189,7 @@ bool MovementTrajectoryFeatures::loadModelFromFile( std::fstream &file ){
     //Load the NumCentroids
     file >> word;
     if( word != "NumCentroids:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read NumCentroids header!" << std::endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read NumCentroids header!" << std::endl;
         return false;     
     }
     file >> numCentroids;
@@ -207,7 +197,7 @@ bool MovementTrajectoryFeatures::loadModelFromFile( std::fstream &file ){
     //Load the FeatureMode
     file >> word;
     if( word != "FeatureMode:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read FeatureMode header!" << std::endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read FeatureMode header!" << std::endl;
         return false;     
     }
     file >> featureMode;
@@ -215,7 +205,7 @@ bool MovementTrajectoryFeatures::loadModelFromFile( std::fstream &file ){
     //Load the NumHistogramBins
     file >> word;
     if( word != "NumHistogramBins:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read NumHistogramBins header!" << std::endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read NumHistogramBins header!" << std::endl;
         return false;     
     }
     file >> numHistogramBins;
@@ -223,7 +213,7 @@ bool MovementTrajectoryFeatures::loadModelFromFile( std::fstream &file ){
     //Load the UseTrajStartAndEndValues
     file >> word;
     if( word != "UseTrajStartAndEndValues:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read UseTrajStartAndEndValues header!" << std::endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read UseTrajStartAndEndValues header!" << std::endl;
         return false;     
     }
     file >> useTrajStartAndEndValues;
@@ -231,7 +221,7 @@ bool MovementTrajectoryFeatures::loadModelFromFile( std::fstream &file ){
     //Load the UseWeightedMagnitudeValues
     file >> word;
     if( word != "UseWeightedMagnitudeValues:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read UseWeightedMagnitudeValues header!" << std::endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read UseWeightedMagnitudeValues header!" << std::endl;
         return false;     
     }
     file >> useWeightedMagnitudeValues;

@@ -189,7 +189,7 @@ bool SwipeDetector::train_(ClassificationData &trainingData){
 bool SwipeDetector::predict_(VectorDouble &inputVector){
     
     predictedClassLabel = 0;
-	maxLikelihood = 0;
+    maxLikelihood = 0;
     swipeDetected = false;
     
     if( !trained ){
@@ -197,10 +197,10 @@ bool SwipeDetector::predict_(VectorDouble &inputVector){
         return false;
     }
     
-	if( inputVector.size() != numInputDimensions ){
+    if( inputVector.size() != numInputDimensions ){
         errorLog << "predict_(VectorDouble &inputVector) - The size of the input vector (" << inputVector.size() << ") does not match the num features in the model (" << numInputDimensions << ")" << std::endl;
-		return false;
-	}
+        return false;
+    }
     
     if( useScaling ){
         for(UINT n=0; n<numInputDimensions; n++){
@@ -281,21 +281,15 @@ bool SwipeDetector::reset(){
     return true;
 }
     
-bool SwipeDetector::saveModelToFile( std::fstream &file ) const{
+bool SwipeDetector::saveModelToFile( std::ostream &file ) const{
     
-    if(!file.is_open())
-	{
-		errorLog <<"saveModelToFile(fstream &file) - The file is not open!" << std::endl;
-		return false;
-	}
-    
-	//Write the header info
-	file<<"GRT_SWIPE_DETECTION_MODEL_FILE_V1.0\n";
+    //Write the header info
+    file<<"GRT_SWIPE_DETECTION_MODEL_FILE_V1.0\n";
     
     //Write the classifier settings to the file
     if( !Classifier::saveBaseSettingsToFile(file) ){
-        errorLog <<"saveModelToFile(fstream &file) - Failed to save classifier base settings to file!" << std::endl;
-		return false;
+        errorLog <<"saveModelToFile(ostream &file) - Failed to save classifier base settings to file!" << std::endl;
+        return false;
     }
     
     if( trained ){
@@ -318,18 +312,12 @@ bool SwipeDetector::saveModelToFile( std::fstream &file ) const{
     return true;
 }
     
-bool SwipeDetector::loadModelFromFile( std::fstream &file ){
+bool SwipeDetector::loadModelFromFile( std::istream &file ){
     
     trained = false;
     numInputDimensions = 0;
     numClasses = 0;
     classLabels.clear();
-    
-    if(!file.is_open())
-    {
-        errorLog << "loadModelFromFile(string filename) - Could not open file to load model" << std::endl;
-        return false;
-    }
     
     std::string word;
     

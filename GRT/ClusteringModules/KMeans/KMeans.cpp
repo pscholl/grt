@@ -172,6 +172,11 @@ bool KMeans::train_(MatrixFloat &data){
         errorLog << "train_(MatrixFloat &data) - The number of rows or columns in the data is zero!" << std::endl;
 		return false;
 	}
+
+  if (data.getNumRows() < numClusters) {
+    errorLog << "train_(MatrixDouble &data) - The number of training samples (" << data.getNumRows() << ") is smaller than the number of clusters (" << numClusters <<")";
+    return false;
+  }
     
 	numTrainingSamples = data.getNumRows();
 	numInputDimensions = data.getNumCols();
@@ -414,17 +419,12 @@ Float KMeans::calculateTheta(const MatrixFloat &data){
 
 }
 
-bool KMeans::saveModelToFile( std::fstream &file ) const{
-
-    if( !file.is_open() ){
-        errorLog << "saveModelToFile(fstream &file) - Failed to save model, file is not open!" << std::endl;
-        return false;
-    }
+bool KMeans::saveModelToFile( std::ostream &file ) const{
 
     file << "GRT_KMEANS_MODEL_FILE_V1.0\n";
     
     if( !saveClustererSettingsToFile( file ) ){
-        errorLog << "saveModelToFile(fstream &file) - Failed to save clusterer settings to file!" << std::endl;
+        errorLog << "saveModelToFile(ostream &file) - Failed to save clusterer settings to file!" << std::endl;
         return false;
     }
     
@@ -442,16 +442,11 @@ bool KMeans::saveModelToFile( std::fstream &file ) const{
 
 }
 
-bool KMeans::loadModelFromFile( std::fstream &file ){
+bool KMeans::loadModelFromFile( std::istream &file ){
 
     //Clear any previous model
     clear();
     
-    if(!file.is_open()){
-        errorLog << "loadModelFromFile(string filename) - Failed to open file!" << std::endl;
-        return false;
-    }
-
     std::string word;
     file >> word;
     if( word != "GRT_KMEANS_MODEL_FILE_V1.0" ){

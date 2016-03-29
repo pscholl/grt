@@ -45,7 +45,7 @@ public:
      
      @param useScaling: sets if the training and prediction data should be scaled to a specific range.  Default value is useScaling = false
      */
-	SwipeDetector(const unsigned int swipeIndex = 0, const unsigned int swipeThreshold = 100,
+    SwipeDetector(const unsigned int swipeIndex = 0, const unsigned int swipeThreshold = 100,
                    const unsigned int hysteresisThreshold =0, const unsigned int swipeDirection = POSITIVE_SWIPE,bool useScaling=false);
     
     /**
@@ -58,7 +58,7 @@ public:
     /**
      Default Destructor
      */
-	virtual ~SwipeDetector(void);
+    virtual ~SwipeDetector(void);
     
     /**
      Defines how the data from the rhs SwipeDetector should be copied to this SwipeDetector
@@ -66,7 +66,7 @@ public:
      @param rhs: another instance of a SwipeDetector
      @return returns a pointer to this instance of the SwipeDetector
      */
-	SwipeDetector &operator=(const SwipeDetector &rhs);
+    SwipeDetector &operator=(const SwipeDetector &rhs);
     
     /**
      This is required for the Gesture Recognition Pipeline for when the pipeline.setClassifier(...) method is called.  
@@ -119,7 +119,7 @@ public:
      @param file: a reference to the file the SwipeDetector model will be saved to
      @return returns true if the model was saved successfully, false otherwise
      */
-    virtual bool saveModelToFile( std::fstream &file ) const;
+    virtual bool saveModelToFile( std::ostream &file ) const;
     
     /**
      This loads a trained SwipeDetector model from a file.
@@ -128,7 +128,7 @@ public:
      @param file: a reference to the file the SwipeDetector model will be loaded from
      @return returns true if the model was loaded successfully, false otherwise
      */
-    virtual bool loadModelFromFile( std::fstream &file );
+    virtual bool loadModelFromFile( std::istream &file );
     
     /**
      @return returns true if a swipe was detected, false otherwise

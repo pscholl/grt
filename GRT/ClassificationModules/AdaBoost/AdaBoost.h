@@ -131,7 +131,7 @@ public:
      @param file: a reference to the file the AdaBoost model will be saved to
      @return returns true if the model was saved successfully, false otherwise
      */
-    virtual bool saveModelToFile( std::fstream &file ) const;
+    virtual bool saveModelToFile( std::ostream &file ) const;
     
     /**
      This loads a trained AdaBoost model from a file.
@@ -140,7 +140,7 @@ public:
      @param file: a reference to the file the AdaBoost model will be loaded from
      @return returns true if the model was loaded successfully, false otherwise
      */
-    virtual bool loadModelFromFile( std::fstream &file );
+    virtual bool loadModelFromFile( std::istream &file );
     
     /**
      This recomputes the null rejection thresholds for each of the classes in the AdaBoost model.
@@ -224,7 +224,7 @@ public:
     using MLBase::predict_;
     
 protected:
-    bool loadLegacyModelFromFile( std::fstream &file );
+    bool loadLegacyModelFromFile( std::istream &file );
     
     UINT numBoostingIterations;
     UINT predictionMethod;

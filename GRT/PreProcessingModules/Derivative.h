@@ -115,7 +115,7 @@ public:
      @param file: a reference to the file the settings will be saved to
      @return returns true if the settings were saved successfully, false otherwise
      */
-    virtual bool saveModelToFile(std::fstream &file) const;
+    virtual bool saveModelToFile(std::ostream &file) const;
     
     /**
      This loads the Derivative settings from a file.
@@ -133,7 +133,7 @@ public:
      @param file: a reference to the file to load the settings from
      @return returns true if the model was loaded successfully, false otherwise
      */
-    virtual bool loadModelFromFile(std::fstream &file);
+    virtual bool loadModelFromFile(std::istream &file);
 
     /**
      Initializes the instance, sets the derivativeOrder (which should be either FIRST_DERIVATIVE or SECOND_DERIVATIVE), the delta value (which should be set to 1000.0/sampleRate, the dimensionality of the input data,

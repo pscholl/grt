@@ -72,7 +72,7 @@ DecisionTree::~DecisionTree(void)
 }
     
 DecisionTree& DecisionTree::operator=(const DecisionTree &rhs){
-	if( this != &rhs ){
+    if( this != &rhs ){
         //Clear this tree
         clear();
         
@@ -97,8 +97,8 @@ DecisionTree& DecisionTree::operator=(const DecisionTree &rhs){
 
         //Copy the base classifier variables
         copyBaseVariables( (Classifier*)&rhs );
-	}
-	return *this;
+    }
+    return *this;
 }
 
 bool DecisionTree::deepCopyFrom(const Classifier *classifier){
@@ -298,7 +298,7 @@ bool DecisionTree::train_(ClassificationData &trainingData){
 bool DecisionTree::predict_(VectorFloat &inputVector){
     
     predictedClassLabel = 0;
-	maxLikelihood = 0;
+    maxLikelihood = 0;
     
     //Validate the input is OK and the model is trained properly
     if( !trained ){
@@ -311,10 +311,10 @@ bool DecisionTree::predict_(VectorFloat &inputVector){
         return false;
     }
     
-	if( inputVector.getSize() != numInputDimensions ){
+    if( inputVector.getSize() != numInputDimensions ){
         Classifier::errorLog << "predict_(VectorFloat &inputVector) - The size of the input Vector (" << inputVector.getSize() << ") does not match the num features in the model (" << numInputDimensions << std::endl;
-		return false;
-	}
+        return false;
+    }
     
     //Scale the input data if needed
     if( useScaling ){
@@ -413,27 +413,21 @@ bool DecisionTree::recomputeNullRejectionThresholds(){
     return true;
 }
     
-bool DecisionTree::saveModelToFile( std::fstream &file ) const{
+bool DecisionTree::saveModelToFile( std::ostream &file ) const{
     
-    if(!file.is_open())
-	{
-		Classifier::errorLog <<"saveModelToFile(fstream &file) - The file is not open!" << std::endl;
-		return false;
-	}
-    
-	//Write the header info
-	file << "GRT_DECISION_TREE_MODEL_FILE_V4.0\n";
+    //Write the header info
+    file << "GRT_DECISION_TREE_MODEL_FILE_V4.0\n";
     
     //Write the classifier settings to the file
     if( !Classifier::saveBaseSettingsToFile(file) ){
-        Classifier::errorLog <<"saveModelToFile(fstream &file) - Failed to save classifier base settings to file!" << std::endl;
-		return false;
+        Classifier::errorLog <<"saveModelToFile(ostream &file) - Failed to save classifier base settings to file!" << std::endl;
+        return false;
     }
     
     if( decisionTreeNode != NULL ){
         file << "DecisionTreeNodeType: " << decisionTreeNode->getNodeType() << std::endl;
         if( !decisionTreeNode->saveToFile( file ) ){
-            Classifier::errorLog <<"saveModelToFile(fstream &file) - Failed to save decisionTreeNode settings to file!" << std::endl;
+            Classifier::errorLog <<"saveModelToFile(ostream &file) - Failed to save decisionTreeNode settings to file!" << std::endl;
             return false;
         }
     }else{
@@ -450,7 +444,7 @@ bool DecisionTree::saveModelToFile( std::fstream &file ) const{
     if( tree != NULL ){
         file << "Tree:\n";
         if( !tree->saveToFile( file ) ){
-            Classifier::errorLog << "saveModelToFile(fstream &file) - Failed to save tree to file!" << std::endl;
+            Classifier::errorLog << "saveModelToFile(ostream &file) - Failed to save tree to file!" << std::endl;
             return false;
         }
         
@@ -494,19 +488,13 @@ bool DecisionTree::saveModelToFile( std::fstream &file ) const{
     return true;
 }
     
-bool DecisionTree::loadModelFromFile( std::fstream &file ){
+bool DecisionTree::loadModelFromFile( std::istream &file ){
     
     clear();
     
     if( decisionTreeNode != NULL ){
         delete decisionTreeNode;
         decisionTreeNode = NULL;
-    }
-    
-    if( !file.is_open() )
-    {
-        Classifier::errorLog << "loadModelFromFile(string filename) - Could not open file to load model" << std::endl;
-        return false;
     }
     
     std::string word;
@@ -554,11 +542,11 @@ bool DecisionTree::loadModelFromFile( std::fstream &file ){
         }
         
         if( !decisionTreeNode->loadFromFile( file ) ){
-            Classifier::errorLog <<"loadModelFromFile(fstream &file) - Failed to load decisionTreeNode settings from file!" << std::endl;
+            Classifier::errorLog <<"loadModelFromFile(istream &file) - Failed to load decisionTreeNode settings from file!" << std::endl;
             return false;
         }
     }else{
-        Classifier::errorLog <<"loadModelFromFile(fstream &file) - Failed to load decisionTreeNode! DecisionTreeNodeType is NULL!" << std::endl;
+        Classifier::errorLog <<"loadModelFromFile(istream &file) - Failed to load decisionTreeNode! DecisionTreeNodeType is NULL!" << std::endl;
         return false;
     }
     
@@ -616,14 +604,14 @@ bool DecisionTree::loadModelFromFile( std::fstream &file ){
         
         if( tree == NULL ){
             clear();
-            Classifier::errorLog << "loadModelFromFile(fstream &file) - Failed to create new DecisionTreeNode!" << std::endl;
+            Classifier::errorLog << "loadModelFromFile(istream &file) - Failed to create new DecisionTreeNode!" << std::endl;
             return false;
         }
         
         tree->setParent( NULL );
         if( !tree->loadFromFile( file ) ){
             clear();
-            Classifier::errorLog << "loadModelFromFile(fstream &file) - Failed to load tree from file!" << std::endl;
+            Classifier::errorLog << "loadModelFromFile(istream &file) - Failed to load tree from file!" << std::endl;
             return false;
         }
         
@@ -878,7 +866,7 @@ Float DecisionTree::getNodeDistance( const VectorFloat &x, const VectorFloat &y 
     return distance;
 }
     
-bool DecisionTree::loadLegacyModelFromFile_v1( std::fstream &file ){
+bool DecisionTree::loadLegacyModelFromFile_v1( std::istream &file ){
     
     std::string word;
     
@@ -980,14 +968,14 @@ bool DecisionTree::loadLegacyModelFromFile_v1( std::fstream &file ){
         
         if( tree == NULL ){
             clear();
-            Classifier::errorLog << "loadModelFromFile(fstream &file) - Failed to create new DecisionTreeNode!" << std::endl;
+            Classifier::errorLog << "loadModelFromFile(istream &file) - Failed to create new DecisionTreeNode!" << std::endl;
             return false;
         }
         
         tree->setParent( NULL );
         if( !tree->loadFromFile( file ) ){
             clear();
-            Classifier::errorLog << "loadModelFromFile(fstream &file) - Failed to load tree from file!" << std::endl;
+            Classifier::errorLog << "loadModelFromFile(istream &file) - Failed to load tree from file!" << std::endl;
             return false;
         }
     }
@@ -995,7 +983,7 @@ bool DecisionTree::loadLegacyModelFromFile_v1( std::fstream &file ){
     return true;
 }
     
-bool DecisionTree::loadLegacyModelFromFile_v2( std::fstream &file ){
+bool DecisionTree::loadLegacyModelFromFile_v2( std::istream &file ){
         
     std::string word;
     
@@ -1059,14 +1047,14 @@ bool DecisionTree::loadLegacyModelFromFile_v2( std::fstream &file ){
         
         if( tree == NULL ){
             clear();
-            Classifier::errorLog << "loadModelFromFile(fstream &file) - Failed to create new DecisionTreeNode!" << std::endl;
+            Classifier::errorLog << "loadModelFromFile(istream &file) - Failed to create new DecisionTreeNode!" << std::endl;
             return false;
         }
         
         tree->setParent( NULL );
         if( !tree->loadFromFile( file ) ){
             clear();
-            Classifier::errorLog << "loadModelFromFile(fstream &file) - Failed to load tree from file!" << std::endl;
+            Classifier::errorLog << "loadModelFromFile(istream &file) - Failed to load tree from file!" << std::endl;
             return false;
         }
         
@@ -1083,7 +1071,7 @@ bool DecisionTree::loadLegacyModelFromFile_v2( std::fstream &file ){
     return true;
 }
     
-bool DecisionTree::loadLegacyModelFromFile_v3( std::fstream &file ){
+bool DecisionTree::loadLegacyModelFromFile_v3( std::istream &file ){
     
     std::string word;
     
@@ -1147,14 +1135,14 @@ bool DecisionTree::loadLegacyModelFromFile_v3( std::fstream &file ){
         
         if( tree == NULL ){
             clear();
-            Classifier::errorLog << "loadModelFromFile(fstream &file) - Failed to create new DecisionTreeNode!" << std::endl;
+            Classifier::errorLog << "loadModelFromFile(istream &file) - Failed to create new DecisionTreeNode!" << std::endl;
             return false;
         }
         
         tree->setParent( NULL );
         if( !tree->loadFromFile( file ) ){
             clear();
-            Classifier::errorLog << "loadModelFromFile(fstream &file) - Failed to load tree from file!" << std::endl;
+            Classifier::errorLog << "loadModelFromFile(istream &file) - Failed to load tree from file!" << std::endl;
             return false;
         }
         

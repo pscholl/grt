@@ -74,7 +74,7 @@ FIRFilter::~FIRFilter(){
 }
 
 FIRFilter& FIRFilter::operator=(const FIRFilter &rhs){
-	if(this!=&rhs){
+    if(this!=&rhs){
         this->filterType = rhs.filterType;
         this->numTaps = rhs.numTaps;
         this->sampleRate = rhs.sampleRate;
@@ -86,8 +86,8 @@ FIRFilter& FIRFilter::operator=(const FIRFilter &rhs){
         this->z = rhs.z;
         
         copyBaseVariables( (PreProcessing*)&rhs );
-	}
-	return *this;
+    }
+    return *this;
 }
     
 bool FIRFilter::deepCopyFrom(const PreProcessing *preProcessing){
@@ -171,19 +171,14 @@ bool FIRFilter::saveModelToFile( std::string filename ) const{
     return true;
 }
 
-bool FIRFilter::saveModelToFile( std::fstream &file ) const{
-    
-    if( !file.is_open() ){
-        errorLog << "saveSettingsToFile(fstream &file) - The file is not open!" << std::endl;
-        return false;
-    }
+bool FIRFilter::saveModelToFile( std::ostream &file ) const{
     
     //Save the file header
     file << "GRT_FIR_FILTER_FILE_V1.0" << std::endl;
     
     //Save the preprocessing base variables
     if( !savePreProcessingSettingsToFile( file ) ){
-        errorLog << "saveSettingsToFile(fstream &file) - Failed to save base settings to file!" << std::endl;
+        errorLog << "saveSettingsToFile(ostream &file) - Failed to save base settings to file!" << std::endl;
         return false;
     }
     
@@ -225,15 +220,10 @@ bool FIRFilter::loadModelFromFile( std::string filename ){
     return true;
 }
 
-bool FIRFilter::loadModelFromFile( std::fstream &file ){
+bool FIRFilter::loadModelFromFile( std::istream &file ){
     
     //Clear the filter
     clear();
-    
-    if( !file.is_open() ){
-        errorLog << "loadModelFromFile(fstream &file) - The file is not open!" << std::endl;
-        return false;
-    }
     
     std::string word;
     
@@ -241,13 +231,13 @@ bool FIRFilter::loadModelFromFile( std::fstream &file ){
     file >> word;
     
     if( word != "GRT_FIR_FILTER_FILE_V1.0" ){
-        errorLog << "loadModelFromFile(fstream &file) - Invalid file format!" << std::endl;
+        errorLog << "loadModelFromFile(istream &file) - Invalid file format!" << std::endl;
         clear();
         return false;     
     }
     
     if( !loadPreProcessingSettingsFromFile( file ) ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to load preprocessing base settings from file!" << std::endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to load preprocessing base settings from file!" << std::endl;
         clear();
         return false;
     }
@@ -255,7 +245,7 @@ bool FIRFilter::loadModelFromFile( std::fstream &file ){
     //Load if the filter type
     file >> word;
     if( word != "FilterType:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read FilterType header!" << std::endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read FilterType header!" << std::endl;
         clear();
         return false;
     }
@@ -264,7 +254,7 @@ bool FIRFilter::loadModelFromFile( std::fstream &file ){
     //Load if the number of taps
     file >> word;
     if( word != "NumTaps:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read NumTaps header!" << std::endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read NumTaps header!" << std::endl;
         clear();
         return false;
     }
@@ -273,7 +263,7 @@ bool FIRFilter::loadModelFromFile( std::fstream &file ){
     //Load if the sample rate
     file >> word;
     if( word != "SampleRate:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read SampleRate header!" << std::endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read SampleRate header!" << std::endl;
         clear();
         return false;
     }
@@ -282,7 +272,7 @@ bool FIRFilter::loadModelFromFile( std::fstream &file ){
     //Load if the cutoffFrequency
     file >> word;
     if( word != "CutoffFrequency:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read CutoffFrequency header!" << std::endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read CutoffFrequency header!" << std::endl;
         clear();
         return false;
     }
@@ -291,7 +281,7 @@ bool FIRFilter::loadModelFromFile( std::fstream &file ){
     //Load if the CutoffFrequencyLower
     file >> word;
     if( word != "CutoffFrequencyLower:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read CutoffFrequencyLower header!" << std::endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read CutoffFrequencyLower header!" << std::endl;
         clear();
         return false;
     }
@@ -300,7 +290,7 @@ bool FIRFilter::loadModelFromFile( std::fstream &file ){
     //Load if the CutoffFrequencyUpper
     file >> word;
     if( word != "CutoffFrequencyUpper:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read CutoffFrequencyUpper header!" << std::endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read CutoffFrequencyUpper header!" << std::endl;
         clear();
         return false;
     }
@@ -309,7 +299,7 @@ bool FIRFilter::loadModelFromFile( std::fstream &file ){
     //Load if the Gain
     file >> word;
     if( word != "Gain:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read Gain header!" << std::endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read Gain header!" << std::endl;
         clear();
         return false;
     }
@@ -324,7 +314,7 @@ bool FIRFilter::loadModelFromFile( std::fstream &file ){
         //Load z
         file >> word;
         if( word != "FilterCoeff:" ){
-            errorLog << "loadModelFromFile(fstream &file) - Failed to read FilterCoeff header!" << std::endl;
+            errorLog << "loadModelFromFile(istream &file) - Failed to read FilterCoeff header!" << std::endl;
             clear();
             return false;
         }

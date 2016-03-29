@@ -185,13 +185,7 @@ protected:
      @param file: a reference to the file the parameters will be saved to
      @return returns true if the model was saved successfully, false otherwise
      */
-    virtual bool saveParametersToFile( std::fstream &file ) const{
-        
-        if( !file.is_open() )
-        {
-            errorLog << "saveParametersToFile(fstream &file) - File is not open!" << std::endl;
-            return false;
-        }
+    virtual bool saveParametersToFile( std::ostream &file ) const{
         
         //Save the custom DecisionTreeNode parameters
         file << "NodeSize: " << nodeSize << std::endl;
@@ -214,13 +208,7 @@ protected:
      @param file: a reference to the file the parameters will be loaded from
      @return returns true if the model was loaded successfully, false otherwise
      */
-    virtual bool loadParametersFromFile( std::fstream &file ){
-        
-        if( !file.is_open() )
-        {
-            errorLog << "loadParametersFromFile(fstream &file) - File is not open!" << std::endl;
-            return false;
-        }
+    virtual bool loadParametersFromFile( std::istream &file ){
         
         classProbabilities.clear();
         
@@ -230,14 +218,14 @@ protected:
         //Load the custom DecisionTreeNode Parameters
         file >> word;
         if( word != "NodeSize:" ){
-            errorLog << "loadParametersFromFile(fstream &file) - Failed to find NodeSize header!" << std::endl;
+            errorLog << "loadParametersFromFile(istream &file) - Failed to find NodeSize header!" << std::endl;
             return false;
         }
         file >> nodeSize;
         
         file >> word;
         if( word != "NumClasses:" ){
-            errorLog << "loadParametersFromFile(fstream &file) - Failed to find NumClasses header!" << std::endl;
+            errorLog << "loadParametersFromFile(istream &file) - Failed to find NumClasses header!" << std::endl;
             return false;
         }
         file >> numClasses;
@@ -246,7 +234,7 @@ protected:
         
         file >> word;
         if( word != "ClassProbabilities:" ){
-            errorLog << "loadParametersFromFile(fstream &file) - Failed to find ClassProbabilities header!" << std::endl;
+            errorLog << "loadParametersFromFile(istream &file) - Failed to find ClassProbabilities header!" << std::endl;
             return false;
         }
         if( numClasses > 0 ){

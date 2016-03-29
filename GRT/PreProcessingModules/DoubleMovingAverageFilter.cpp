@@ -140,12 +140,7 @@ bool DoubleMovingAverageFilter::saveModelToFile( std::string filename ) const{
     return true;
 }
     
-bool DoubleMovingAverageFilter::saveModelToFile(std::fstream &file) const{
-    
-    if( !file.is_open() ){
-        errorLog << "saveModelToFile(std::fstream &file) - The file is not open!" << std::endl;
-        return false;
-    }
+bool DoubleMovingAverageFilter::saveModelToFile(std::ostream &file) const{
     
     file << "GRT_DOUBLE_MOVING_AVERAGE_FILTER_FILE_V1.0" << std::endl;
     
@@ -172,12 +167,7 @@ bool DoubleMovingAverageFilter::loadModelFromFile( std::string filename ){
     return true;
 }
 
-bool DoubleMovingAverageFilter::loadModelFromFile( std::fstream &file ){
-    
-    if( !file.is_open() ){
-        errorLog << "loadModelFromFile(std::fstream &file) - The file is not open!" << std::endl;
-        return false;
-    }
+bool DoubleMovingAverageFilter::loadModelFromFile( std::istream &file ){
     
     std::string word;
     
@@ -185,14 +175,14 @@ bool DoubleMovingAverageFilter::loadModelFromFile( std::fstream &file ){
     file >> word;
     
     if( word != "GRT_DOUBLE_MOVING_AVERAGE_FILTER_FILE_V1.0" ){
-        errorLog << "loadModelFromFile(std::fstream &file) - Invalid file format!" << std::endl;
+        errorLog << "loadModelFromFile(std::istream &file) - Invalid file format!" << std::endl;
         return false;     
     }
     
     //Load the number of input dimensions
     file >> word;
     if( word != "NumInputDimensions:" ){
-        errorLog << "loadModelFromFile(std::fstream &file) - Failed to read NumInputDimensions header!" << std::endl;
+        errorLog << "loadModelFromFile(std::istream &file) - Failed to read NumInputDimensions header!" << std::endl;
         return false;     
     }
     file >> numInputDimensions;
@@ -200,7 +190,7 @@ bool DoubleMovingAverageFilter::loadModelFromFile( std::fstream &file ){
     //Load the number of output dimensions
     file >> word;
     if( word != "NumOutputDimensions:" ){
-        errorLog << "loadModelFromFile(std::fstream &file) - Failed to read NumOutputDimensions header!" << std::endl;
+        errorLog << "loadModelFromFile(std::istream &file) - Failed to read NumOutputDimensions header!" << std::endl;
         return false;     
     }
     file >> numOutputDimensions;
@@ -208,7 +198,7 @@ bool DoubleMovingAverageFilter::loadModelFromFile( std::fstream &file ){
     //Load the filter size
     file >> word;
     if( word != "FilterSize:" ){
-        errorLog << "loadModelFromFile(std::fstream &file) - Failed to read FilterSize header!" << std::endl;
+        errorLog << "loadModelFromFile(std::istream &file) - Failed to read FilterSize header!" << std::endl;
         return false;     
     }
     file >> filterSize;

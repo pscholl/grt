@@ -94,7 +94,7 @@ public:
      @param file: a reference to the file the Logistic Regression model will be saved to
      @return returns true if the model was saved successfully, false otherwise
      */
-    virtual bool saveModelToFile( std::fstream &file ) const;
+    virtual bool saveModelToFile( std::ostream &file ) const;
     
     /**
      This loads a trained Logistic Regression model from a file.
@@ -103,7 +103,7 @@ public:
      @param file: a reference to the file the Logistic Regression model will be loaded from
      @return returns true if the model was loaded successfully, false otherwise
      */
-    virtual bool loadModelFromFile( std::fstream &file );
+    virtual bool loadModelFromFile( std::istream &file );
     
     /**
      Gets the current maxNumIterations value, this is the maximum number of iterations that can be run during the training phase.
@@ -126,7 +126,7 @@ public:
     using MLBase::loadModelFromFile;
 
 protected:
-    bool loadLegacyModelFromFile( std::fstream &file );
+    bool loadLegacyModelFromFile( std::istream &file );
     
     Float w0;
     VectorFloat w;

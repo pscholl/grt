@@ -153,19 +153,14 @@ bool KMeansFeatures::loadModelFromFile( std::string filename ){
     return true;
 }
 
-bool KMeansFeatures::saveModelToFile( std::fstream &file ) const{
-    
-    if( !file.is_open() ){
-        errorLog << "saveModelToFile(fstream &file) - The file is not open!" << std::endl;
-        return false;
-    }
+bool KMeansFeatures::saveModelToFile( std::ostream &file ) const{
     
     //First, you should add a header (with no spaces) e.g.
     file << "KMEANS_FEATURES_FILE_V1.0" << std::endl;
 	
     //Second, you should save the base feature extraction settings to the file
     if( !saveFeatureExtractionSettingsToFile( file ) ){
-        errorLog << "saveFeatureExtractionSettingsToFile(fstream &file) - Failed to save base feature extraction settings to file!" << std::endl;
+        errorLog << "saveFeatureExtractionSettingsToFile(ostream &file) - Failed to save base feature extraction settings to file!" << std::endl;
         return false;
     }
     
@@ -203,14 +198,9 @@ bool KMeansFeatures::saveModelToFile( std::fstream &file ) const{
     return true;
 }
 
-bool KMeansFeatures::loadModelFromFile( std::fstream &file ){
+bool KMeansFeatures::loadModelFromFile( std::istream &file ){
     
     clear();
-    
-    if( !file.is_open() ){
-        errorLog << "loadModelFromFile(fstream &file) - The file is not open!" << std::endl;
-        return false;
-    }
     
     std::string word;
     UINT numLayers = 0;
@@ -220,20 +210,20 @@ bool KMeansFeatures::loadModelFromFile( std::fstream &file ){
     //First, you should read and validate the header
     file >> word;
     if( word != "KMEANS_FEATURES_FILE_V1.0" ){
-        errorLog << "loadModelFromFile(fstream &file) - Invalid file format!" << std::endl;
+        errorLog << "loadModelFromFile(istream &file) - Invalid file format!" << std::endl;
         return false;
     }
     
     //Second, you should load the base feature extraction settings to the file
     if( !loadFeatureExtractionSettingsFromFile( file ) ){
-        errorLog << "loadFeatureExtractionSettingsFromFile(fstream &file) - Failed to load base feature extraction settings from file!" << std::endl;
+        errorLog << "loadFeatureExtractionSettingsFromFile(istream &file) - Failed to load base feature extraction settings from file!" << std::endl;
         return false;
     }
     
     //Load the number of layers
     file >> word;
     if( word != "NumLayers:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read NumLayers header!" << std::endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read NumLayers header!" << std::endl;
         return false;
     }
     file >> numLayers;
@@ -242,7 +232,7 @@ bool KMeansFeatures::loadModelFromFile( std::fstream &file ){
     //Load the number clusters per layer
     file >> word;
     if( word != "NumClustersPerLayer:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read NumClustersPerLayer header!" << std::endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read NumClustersPerLayer header!" << std::endl;
         return false;
     }
     for(UINT i=0; i<numClustersPerLayer.getSize(); i++){
@@ -252,7 +242,7 @@ bool KMeansFeatures::loadModelFromFile( std::fstream &file ){
     //Load the alpha parameter
     file >> word;
     if( word != "Alpha:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read Alpha header!" << std::endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read Alpha header!" << std::endl;
         return false;
     }
     file >> alpha;
@@ -263,7 +253,7 @@ bool KMeansFeatures::loadModelFromFile( std::fstream &file ){
         //Load the Ranges
         file >> word;
         if( word != "Ranges:" ){
-            errorLog << "loadModelFromFile(fstream &file) - Failed to read Ranges header!" << std::endl;
+            errorLog << "loadModelFromFile(istream &file) - Failed to read Ranges header!" << std::endl;
             return false;
         }
         ranges.resize(numInputDimensions);
@@ -275,7 +265,7 @@ bool KMeansFeatures::loadModelFromFile( std::fstream &file ){
         //Load the Clusters
         file >> word;
         if( word != "Clusters:" ){
-            errorLog << "loadModelFromFile(fstream &file) - Failed to read Clusters header!" << std::endl;
+            errorLog << "loadModelFromFile(istream &file) - Failed to read Clusters header!" << std::endl;
             return false;
         }
         clusters.resize( numLayers );
@@ -285,7 +275,7 @@ bool KMeansFeatures::loadModelFromFile( std::fstream &file ){
             //Load the NumRows
             file >> word;
             if( word != "NumRows:" ){
-                errorLog << "loadModelFromFile(fstream &file) - Failed to read NumRows header!" << std::endl;
+                errorLog << "loadModelFromFile(istream &file) - Failed to read NumRows header!" << std::endl;
                 return false;
             }
             file >> numRows;
@@ -293,7 +283,7 @@ bool KMeansFeatures::loadModelFromFile( std::fstream &file ){
             //Load the NumCols
             file >> word;
             if( word != "NumCols:" ){
-                errorLog << "loadModelFromFile(fstream &file) - Failed to read NumCols header!" << std::endl;
+                errorLog << "loadModelFromFile(istream &file) - Failed to read NumCols header!" << std::endl;
                 return false;
             }
             file >> numCols;

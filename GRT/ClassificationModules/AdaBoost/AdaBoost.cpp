@@ -396,21 +396,15 @@ bool AdaBoost::setNullRejectionCoeff(Float nullRejectionCoeff){
     return false;
 }
     
-bool AdaBoost::saveModelToFile( std::fstream &file ) const{
+bool AdaBoost::saveModelToFile( std::ostream &file ) const{
     
-    if(!file.is_open())
-	{
-		errorLog <<"saveModelToFile(fstream &file) - The file is not open!" << std::endl;
-		return false;
-	}
-    
-	//Write the header info
-	file<<"GRT_ADABOOST_MODEL_FILE_V2.0\n";
+    //Write the header info
+    file<<"GRT_ADABOOST_MODEL_FILE_V2.0\n";
     
     //Write the classifier settings to the file
     if( !Classifier::saveBaseSettingsToFile(file) ){
-        errorLog <<"saveModelToFile(fstream &file) - Failed to save classifier base settings to file!" << std::endl;
-		return false;
+        errorLog <<"saveModelToFile(ostream &file) - Failed to save classifier base settings to file!" << std::endl;
+        return false;
     }
     
     //Write the AdaBoost settings to the file
@@ -421,8 +415,7 @@ bool AdaBoost::saveModelToFile( std::fstream &file ) const{
         file << "Models: " << std::endl;
         for(UINT i=0; i<models.size(); i++){
             if( !models[i].saveModelToFile( file ) ){
-                errorLog <<"saveModelToFile(fstream &file) - Failed to write model " << i << " to file!" << std::endl;
-                file.close();
+                errorLog <<"saveModelToFile(ostream &file) - Failed to write model " << i << " to file!" << std::endl;
                 return false;
             }
         }
@@ -431,15 +424,9 @@ bool AdaBoost::saveModelToFile( std::fstream &file ) const{
     return true;
 }
     
-bool AdaBoost::loadModelFromFile( std::fstream &file ){
+bool AdaBoost::loadModelFromFile( std::istream &file ){
     
     clear();
-    
-    if(!file.is_open())
-    {
-        errorLog << "loadModelFromFile(string filename) - Could not open file to load model!" << std::endl;
-        return false;
-    }
     
     std::string word;
     file >> word;
@@ -450,9 +437,9 @@ bool AdaBoost::loadModelFromFile( std::fstream &file ){
     }
     
     if( word != "GRT_ADABOOST_MODEL_FILE_V2.0" ){
-        errorLog <<"loadModelFromFile(fstream &file) - Failed to read file header!" << std::endl;
+        errorLog <<"loadModelFromFile(istream &file) - Failed to read file header!" << std::endl;
         errorLog << word << std::endl;
-		return false;
+        return false;
     }
     
     //Load the base settings from the file
@@ -463,15 +450,15 @@ bool AdaBoost::loadModelFromFile( std::fstream &file ){
     
     file >> word;
     if( word != "PredictionMethod:" ){
-        errorLog <<"loadModelFromFile(fstream &file) - Failed to read PredictionMethod header!" << std::endl;
-		return false;
+        errorLog <<"loadModelFromFile(istream &file) - Failed to read PredictionMethod header!" << std::endl;
+        return false;
     }
     file >> predictionMethod;
     
     if( trained ){
         file >> word;
         if( word != "Models:" ){
-            errorLog <<"loadModelFromFile(fstream &file) - Failed to read Models header!" << std::endl;
+            errorLog <<"loadModelFromFile(istream &file) - Failed to read Models header!" << std::endl;
             return false;
         }
         
@@ -479,8 +466,7 @@ bool AdaBoost::loadModelFromFile( std::fstream &file ){
         models.resize( numClasses );
         for(UINT i=0; i<models.size(); i++){
             if( !models[i].loadModelFromFile( file ) ){
-                errorLog << "loadModelFromFile(fstream &file) - Failed to load model " << i << " from file!" << std::endl;
-                file.close();
+                errorLog << "loadModelFromFile(istream &file) - Failed to load model " << i << " from file!" << std::endl;
                 return false;
             }
         }
@@ -572,34 +558,34 @@ void AdaBoost::printModel(){
     
 }
     
-bool AdaBoost::loadLegacyModelFromFile( std::fstream &file ){
+bool AdaBoost::loadLegacyModelFromFile( std::istream &file ){
     
     std::string word;
     
     file >> word;
     if( word != "NumFeatures:" ){
-        errorLog <<"loadModelFromFile(fstream &file) - Failed to read NumFeatures header!" << std::endl;
+        errorLog <<"loadModelFromFile(istream &file) - Failed to read NumFeatures header!" << std::endl;
         return false;
     }
     file >> numInputDimensions;
     
     file >> word;
     if( word != "NumClasses:" ){
-        errorLog <<"loadModelFromFile(fstream &file) - Failed to read NumClasses header!" << std::endl;
+        errorLog <<"loadModelFromFile(istream &file) - Failed to read NumClasses header!" << std::endl;
         return false;
     }
     file >> numClasses;
     
     file >> word;
     if( word != "UseScaling:" ){
-        errorLog <<"loadModelFromFile(fstream &file) - Failed to read UseScaling header!" << std::endl;
+        errorLog <<"loadModelFromFile(istream &file) - Failed to read UseScaling header!" << std::endl;
         return false;
     }
     file >> useScaling;
     
     file >> word;
     if( word != "UseNullRejection:" ){
-        errorLog <<"loadModelFromFile(fstream &file) - Failed to read UseNullRejection header!" << std::endl;
+        errorLog <<"loadModelFromFile(istream &file) - Failed to read UseNullRejection header!" << std::endl;
         return false;
     }
     file >> useNullRejection;
@@ -607,7 +593,7 @@ bool AdaBoost::loadLegacyModelFromFile( std::fstream &file ){
     if( useScaling ){
         file >> word;
         if( word != "Ranges:" ){
-            errorLog <<"loadModelFromFile(fstream &file) - Failed to read Ranges header!" << std::endl;
+            errorLog <<"loadModelFromFile(istream &file) - Failed to read Ranges header!" << std::endl;
             return false;
         }
         ranges.resize( numInputDimensions );
@@ -620,14 +606,14 @@ bool AdaBoost::loadLegacyModelFromFile( std::fstream &file ){
     
     file >> word;
     if( word != "Trained:" ){
-        errorLog <<"loadModelFromFile(fstream &file) - Failed to read Trained header!" << std::endl;
+        errorLog <<"loadModelFromFile(istream &file) - Failed to read Trained header!" << std::endl;
         return false;
     }
     file >> trained;
     
     file >> word;
     if( word != "PredictionMethod:" ){
-        errorLog <<"loadModelFromFile(fstream &file) - Failed to read PredictionMethod header!" << std::endl;
+        errorLog <<"loadModelFromFile(istream &file) - Failed to read PredictionMethod header!" << std::endl;
         return false;
     }
     file >> predictionMethod;
@@ -635,7 +621,7 @@ bool AdaBoost::loadLegacyModelFromFile( std::fstream &file ){
     if( trained ){
         file >> word;
         if( word != "Models:" ){
-            errorLog <<"loadModelFromFile(fstream &file) - Failed to read Models header!" << std::endl;
+            errorLog <<"loadModelFromFile(istream &file) - Failed to read Models header!" << std::endl;
             return false;
         }
         
@@ -644,8 +630,7 @@ bool AdaBoost::loadLegacyModelFromFile( std::fstream &file ){
         classLabels.resize( numClasses );
         for(UINT i=0; i<models.size(); i++){
             if( !models[i].loadModelFromFile( file ) ){
-                errorLog << "loadModelFromFile(fstream &file) - Failed to load model " << i << " from file!" << std::endl;
-                file.close();
+                errorLog << "loadModelFromFile(istream &file) - Failed to load model " << i << " from file!" << std::endl;
                 return false;
             }
             

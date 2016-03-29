@@ -136,13 +136,7 @@ bool Node::getModel( std::ostream &stream ) const{
     return true;
 }
 
-bool Node::saveToFile( std::fstream &file ) const{
-    
-    if(!file.is_open())
-    {
-        errorLog << "saveToFile(fstream &file) - File is not open!" << std::endl;
-        return false;
-    }
+bool Node::saveToFile( std::ostream &file ) const{
     
     file << "NodeType: " << nodeType << std::endl;
     file << "Depth: " << depth << std::endl;
@@ -155,7 +149,7 @@ bool Node::saveToFile( std::fstream &file ) const{
     if( getHasLeftChild() ){
         file << "LeftChild\n";
         if( !leftChild->saveToFile( file ) ){
-            errorLog << "saveToFile(fstream &file) - Failed to save left child at depth: " << depth << std::endl;
+            errorLog << "saveToFile(ostream &file) - Failed to save left child at depth: " << depth << std::endl;
             return false;
         }
     }
@@ -164,30 +158,24 @@ bool Node::saveToFile( std::fstream &file ) const{
     if( getHasRightChild() ){
         file << "RightChild\n";
         if( !rightChild->saveToFile( file ) ){
-            errorLog << "saveToFile(fstream &file) - Failed to save right child at depth: " << depth << std::endl;
+            errorLog << "saveToFile(ostream &file) - Failed to save right child at depth: " << depth << std::endl;
             return false;
         }
     }
     
     //Save the custom parameters to the file
     if( !saveParametersToFile( file ) ){
-        errorLog << "saveToFile(fstream &file) - Failed to save parameters to file at depth: " << depth << std::endl;
+        errorLog << "saveToFile(ostream &file) - Failed to save parameters to file at depth: " << depth << std::endl;
         return false;
     }
     
     return true;
 }
 
-bool Node::loadFromFile( std::fstream &file ){
+bool Node::loadFromFile( std::istream &file ){
     
     //Clear any previous nodes
     clear();
-    
-    if(!file.is_open())
-    {
-        errorLog << "loadFromFile(fstream &file) - File is not open!" << std::endl;
-        return false;
-    }
     
     std::string word;
     bool hasLeftChild = false;
@@ -195,42 +183,42 @@ bool Node::loadFromFile( std::fstream &file ){
     
     file >> word;
     if( word != "NodeType:" ){
-        errorLog << "loadFromFile(fstream &file) - Failed to find Node header!" << std::endl;
+        errorLog << "loadFromFile(istream &file) - Failed to find Node header!" << std::endl;
         return false;
     }
     file >> nodeType;
     
     file >> word;
     if( word != "Depth:" ){
-        errorLog << "loadFromFile(fstream &file) - Failed to find Depth header!" << std::endl;
+        errorLog << "loadFromFile(istream &file) - Failed to find Depth header!" << std::endl;
         return false;
     }
     file >> depth;
     
     file >> word;
     if( word != "NodeID:" ){
-        errorLog << "loadFromFile(fstream &file) - Failed to find NodeID header!" << std::endl;
+        errorLog << "loadFromFile(istream &file) - Failed to find NodeID header!" << std::endl;
         return false;
     }
     file >> nodeID;
     
     file >> word;
     if( word != "IsLeafNode:" ){
-        errorLog << "loadFromFile(fstream &file) - Failed to find IsLeafNode header!" << std::endl;
+        errorLog << "loadFromFile(istream &file) - Failed to find IsLeafNode header!" << std::endl;
         return false;
     }
     file >> isLeafNode;
     
     file >> word;
     if( word != "HasLeftChild:" ){
-        errorLog << "loadFromFile(fstream &file) - Failed to find HasLeftChild header!" << std::endl;
+        errorLog << "loadFromFile(istream &file) - Failed to find HasLeftChild header!" << std::endl;
         return false;
     }
     file >> hasLeftChild;
     
     file >> word;
     if( word != "HasRightChild:" ){
-        errorLog << "loadFromFile(fstream &file) - Failed to find HasRightChild header!" << std::endl;
+        errorLog << "loadFromFile(istream &file) - Failed to find HasRightChild header!" << std::endl;
         return false;
     }
     file >> hasRightChild;
@@ -238,13 +226,13 @@ bool Node::loadFromFile( std::fstream &file ){
     if( hasLeftChild ){
         file >> word;
         if( word != "LeftChild" ){
-            errorLog << "loadFromFile(fstream &file) - Failed to find LeftChild header!" << std::endl;
+            errorLog << "loadFromFile(istream &file) - Failed to find LeftChild header!" << std::endl;
             return false;
         }
         leftChild = createNewInstance();
         leftChild->setParent( this );
         if( !leftChild->loadFromFile(file) ){
-            errorLog << "loadFromFile(fstream &file) - Failed to load left child at depth: " << depth << std::endl;
+            errorLog << "loadFromFile(istream &file) - Failed to load left child at depth: " << depth << std::endl;
             return false;
         }
     }
@@ -252,20 +240,20 @@ bool Node::loadFromFile( std::fstream &file ){
     if( hasRightChild ){
         file >> word;
         if( word != "RightChild" ){
-            errorLog << "loadFromFile(fstream &file) - Failed to find RightChild header!" << std::endl;
+            errorLog << "loadFromFile(istream &file) - Failed to find RightChild header!" << std::endl;
             return false;
         }
         rightChild = createNewInstance();
         rightChild->setParent( this );
         if( !rightChild->loadFromFile( file ) ){
-            errorLog << "loadFromFile(fstream &file) - Failed to load right child at depth: " << depth << std::endl;
+            errorLog << "loadFromFile(istream &file) - Failed to load right child at depth: " << depth << std::endl;
             return false;
         }
     }
     
     //Load the custom parameters from a file
     if( !loadParametersFromFile( file ) ){
-        errorLog << "loadParametersFromFile(fstream &file) - Failed to load parameters from file at depth: " << depth << std::endl;
+        errorLog << "loadParametersFromFile(istream &file) - Failed to load parameters from file at depth: " << depth << std::endl;
         return false;
     }
     

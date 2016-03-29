@@ -198,26 +198,14 @@ bool ParticleClassifier::reset(){
     return true;
 }
     
-bool ParticleClassifier::saveModelToFile( std::fstream &file ) const{
+bool ParticleClassifier::saveModelToFile( std::ostream &file ) const{
     
-    if(!file.is_open())
-    {
-        errorLog <<"saveModelToFile(fstream &file) - The file is not open!" << std::endl;
-        return false;
-    }
-
-    return true;
+    return false;
 }
     
-bool ParticleClassifier::loadModelFromFile( std::fstream &file ){
+bool ParticleClassifier::loadModelFromFile( std::istream &file ){
     
     clear();
-    
-    if(!file.is_open())
-    {
-        errorLog << "loadModelFromFile(string filename) - Could not open file to load model" << std::endl;
-        return false;
-    }
     
     //Flag that the model is trained
     trained = true;
@@ -228,7 +216,7 @@ bool ParticleClassifier::loadModelFromFile( std::fstream &file ){
     classLikelihoods.resize(numClasses,DEFAULT_NULL_LIKELIHOOD_VALUE);
     classDistances.resize(numClasses,DEFAULT_NULL_DISTANCE_VALUE);
     
-    return true;
+    return false;
 }
     
 const Vector< ParticleClassifierGestureTemplate >& ParticleClassifier::getGestureTemplates() const{

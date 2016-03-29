@@ -52,12 +52,12 @@ public:
 
      @param useScaling: sets if the training and real-time data should be scaled between [0 1]. Default value = false
      */
-	MultidimensionalRegression(const Regressifier &regressifier = LinearRegression(),bool useScaling=false);
+    MultidimensionalRegression(const Regressifier &regressifier = LinearRegression(),bool useScaling=false);
     
     /**
      Default Destructor
      */
-	virtual ~MultidimensionalRegression(void);
+    virtual ~MultidimensionalRegression(void);
     
     /**
      Defines how the data from the rhs MultidimensionalRegression should be copied to this MultidimensionalRegression
@@ -65,7 +65,7 @@ public:
      @param rhs: another instance of a MultidimensionalRegression
      @return returns a pointer to this instance of the MultidimensionalRegression
      */
-	MultidimensionalRegression &operator=(const MultidimensionalRegression &rhs);
+    MultidimensionalRegression &operator=(const MultidimensionalRegression &rhs);
     
     /**
      This is required for the Gesture Recognition Pipeline for when the pipeline.setRegressifier(...) method is called.  
@@ -74,7 +74,7 @@ public:
      @param regressifier: a pointer to the Regressifier Base Class, this should be pointing to another Multidimensional Regression instance
      @return returns true if the clone was successfull, false otherwise
     */
-	virtual bool deepCopyFrom(const Regressifier *regressifier);
+    virtual bool deepCopyFrom(const Regressifier *regressifier);
     
     /**
      This trains the Multidimensional Regression model, using the labelled regression data.
@@ -101,7 +101,7 @@ public:
      @param file: a reference to the file the Multidimensional Regression model will be saved to
      @return returns true if the model was saved successfully, false otherwise
      */
-    virtual bool saveModelToFile( std::fstream &file ) const;
+    virtual bool saveModelToFile( std::ostream &file ) const;
     
     /**
      This loads a trained Multidimensional Regression model from a file.
@@ -110,7 +110,7 @@ public:
      @param file: a reference to the file the Logistic Regression model will be loaded from
      @return returns true if the model was loaded successfully, false otherwise
      */
-    virtual bool loadModelFromFile( std::fstream &file );
+    virtual bool loadModelFromFile( std::istream &file );
     
     /**
      This returns true if the regression module has been set. The regression module is the regression algorithm
@@ -145,11 +145,11 @@ public:
 protected:
     bool deepCopyRegressionModules( Vector< Regressifier* > &newModules ) const;
     bool deleteAll();
-	bool deleteRegressionModules();
-    bool loadLegacyModelFromFile( std::fstream &file );
-	
+    bool deleteRegressionModules();
+    bool loadLegacyModelFromFile( std::istream &file );
+    
     Regressifier *regressifier;
-	Vector< Regressifier* > regressionModules;
+    Vector< Regressifier* > regressionModules;
     static RegisterRegressifierModule< MultidimensionalRegression > registerModule;
 };
 

@@ -140,19 +140,14 @@ bool RBMQuantizer::loadModelFromFile( std::string filename ){
     return true;
 }
 
-bool RBMQuantizer::saveModelToFile( std::fstream &file ) const{
-    
-    if( !file.is_open() ){
-        errorLog << "saveModelToFile(fstream &file) - The file is not open!" << std::endl;
-        return false;
-    }
+bool RBMQuantizer::saveModelToFile( std::ostream &file ) const{
     
     //Write the header
     file << "RBM_QUANTIZER_FILE_V1.0" << std::endl;
 	
     //Save the base feature extraction settings to the file
     if( !saveFeatureExtractionSettingsToFile( file ) ){
-        errorLog << "saveFeatureExtractionSettingsToFile(fstream &file) - Failed to save base feature extraction settings to file!" << std::endl;
+        errorLog << "saveFeatureExtractionSettingsToFile(ostream &file) - Failed to save base feature extraction settings to file!" << std::endl;
         return false;
     }
     
@@ -161,7 +156,7 @@ bool RBMQuantizer::saveModelToFile( std::fstream &file ) const{
     
     if( trained ){
         if( !rbm.saveModelToFile( file ) ){
-            errorLog << "saveModelToFile(fstream &file) - Failed to save RBM settings to file!" << std::endl;
+            errorLog << "saveModelToFile(ostream &file) - Failed to save RBM settings to file!" << std::endl;
             return false;
         }
     }
@@ -169,48 +164,43 @@ bool RBMQuantizer::saveModelToFile( std::fstream &file ) const{
     return true;
 }
 
-bool RBMQuantizer::loadModelFromFile( std::fstream &file ){
+bool RBMQuantizer::loadModelFromFile( std::istream &file ){
     
     //Clear any previous model
     clear();
-    
-    if( !file.is_open() ){
-        errorLog << "loadModelFromFile(fstream &file) - The file is not open!" << std::endl;
-        return false;
-    }
     
     std::string word;
     
     //First, you should read and validate the header
     file >> word;
     if( word != "RBM_QUANTIZER_FILE_V1.0" ){
-        errorLog << "loadModelFromFile(fstream &file) - Invalid file format!" << std::endl;
+        errorLog << "loadModelFromFile(istream &file) - Invalid file format!" << std::endl;
         return false;
     }
     
     //Second, you should load the base feature extraction settings to the file
     if( !loadFeatureExtractionSettingsFromFile( file ) ){
-        errorLog << "loadFeatureExtractionSettingsFromFile(fstream &file) - Failed to load base feature extraction settings from file!" << std::endl;
+        errorLog << "loadFeatureExtractionSettingsFromFile(istream &file) - Failed to load base feature extraction settings from file!" << std::endl;
         return false;
     }
     
     file >> word;
     if( word != "QuantizerTrained:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to load QuantizerTrained!" << std::endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to load QuantizerTrained!" << std::endl;
         return false;
     }
     file >> trained;
     
     file >> word;
     if( word != "NumClusters:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to load NumClusters!" << std::endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to load NumClusters!" << std::endl;
         return false;
     }
     file >> numClusters;
     
     if( trained ){
         if( !rbm.loadModelFromFile( file ) ){
-            errorLog << "loadModelFromFile(fstream &file) - Failed to load SelfOrganizingMap settings from file!" << std::endl;
+            errorLog << "loadModelFromFile(istream &file) - Failed to load SelfOrganizingMap settings from file!" << std::endl;
             return false;
         }
         initialized = true;

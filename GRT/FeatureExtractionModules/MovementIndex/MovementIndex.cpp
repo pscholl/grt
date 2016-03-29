@@ -132,19 +132,14 @@ bool MovementIndex::loadModelFromFile( std::string filename ){
     return true;
 }
 
-bool MovementIndex::saveModelToFile( std::fstream &file ) const{
-    
-    if( !file.is_open() ){
-        errorLog << "saveModelToFile(fstream &file) - The file is not open!" << std::endl;
-        return false;
-    }
+bool MovementIndex::saveModelToFile( std::ostream &file ) const{
     
     //Write the file header
     file << "GRT_MOVEMENT_INDEX_FILE_V1.0" << std::endl;	
     
     //Save the base settings to the file
     if( !saveFeatureExtractionSettingsToFile( file ) ){
-        errorLog << "saveFeatureExtractionSettingsToFile(fstream &file) - Failed to save base feature extraction settings to file!" << std::endl;
+        errorLog << "saveFeatureExtractionSettingsToFile(ostream &file) - Failed to save base feature extraction settings to file!" << std::endl;
         return false;
     }
     
@@ -154,12 +149,7 @@ bool MovementIndex::saveModelToFile( std::fstream &file ) const{
     return true;
 }
 
-bool MovementIndex::loadModelFromFile( std::fstream &file ){
-    
-    if( !file.is_open() ){
-        errorLog << "loadModelFromFile(fstream &file) - The file is not open!" << std::endl;
-        return false;
-    }
+bool MovementIndex::loadModelFromFile( std::istream &file ){
     
     std::string word;
     
@@ -167,19 +157,19 @@ bool MovementIndex::loadModelFromFile( std::fstream &file ){
     file >> word;
     
     if( word != "GRT_MOVEMENT_INDEX_FILE_V1.0" ){
-        errorLog << "loadModelFromFile(fstream &file) - Invalid file format!" << std::endl;
+        errorLog << "loadModelFromFile(istream &file) - Invalid file format!" << std::endl;
         return false;     
     }
     
     if( !loadFeatureExtractionSettingsFromFile( file ) ){
-        errorLog << "loadFeatureExtractionSettingsFromFile(fstream &file) - Failed to load base feature extraction settings from file!" << std::endl;
+        errorLog << "loadFeatureExtractionSettingsFromFile(istream &file) - Failed to load base feature extraction settings from file!" << std::endl;
         return false;
     }
     
     //Load the BufferLength
     file >> word;
     if( word != "BufferLength:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read BufferLength header!" << std::endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read BufferLength header!" << std::endl;
         return false;     
     }
     file >> bufferLength;

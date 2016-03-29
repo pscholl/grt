@@ -139,7 +139,7 @@ bool SavitzkyGolayFilter::saveModelToFile( std::string filename ) const{
         return false;
     }
     
-    std::fstream file; 
+    std::stream file; 
     file.open(filename.c_str(), std::ios::out);
     
     if( !saveModelToFile( file ) ){
@@ -152,12 +152,7 @@ bool SavitzkyGolayFilter::saveModelToFile( std::string filename ) const{
     return true;
 }
 
-bool SavitzkyGolayFilter::saveModelToFile(std::fstream &file) const{
-    
-    if( !file.is_open() ){
-        errorLog << "saveModelToFile(std::fstream &file) - The file is not open!" << std::endl;
-        return false;
-    }
+bool SavitzkyGolayFilter::saveModelToFile(std::ostream &file) const{
     
     file << "GRT_SAVITZKY_GOLAY_FILTER_FILE_V1.0" << std::endl;
     
@@ -188,12 +183,7 @@ bool SavitzkyGolayFilter::loadModelFromFile( std::string filename ){
     return true;
 }
 
-bool SavitzkyGolayFilter::loadModelFromFile(std::fstream &file){
-    
-    if( !file.is_open() ){
-        errorLog << "loadModelFromFile(std::fstream &file) - The file is not open!" << std::endl;
-        return false;
-    }
+bool SavitzkyGolayFilter::loadModelFromFile(std::istream &file){
     
     std::string word;
     
@@ -201,14 +191,14 @@ bool SavitzkyGolayFilter::loadModelFromFile(std::fstream &file){
     file >> word;
     
     if( word != "GRT_SAVITZKY_GOLAY_FILTER_FILE_V1.0" ){
-        errorLog << "loadModelFromFile(std::fstream &file) - Invalid file format!" << std::endl;
+        errorLog << "loadModelFromFile(std::istream &file) - Invalid file format!" << std::endl;
         return false;     
     }
     
     //Load the number of input dimensions
     file >> word;
     if( word != "NumInputDimensions:" ){
-        errorLog << "loadModelFromFile(std::fstream &file) - Failed to read NumInputDimensions header!" << std::endl;
+        errorLog << "loadModelFromFile(std::istream &file) - Failed to read NumInputDimensions header!" << std::endl;
         return false;     
     }
     file >> numInputDimensions;
@@ -216,7 +206,7 @@ bool SavitzkyGolayFilter::loadModelFromFile(std::fstream &file){
     //Load the number of output dimensions
     file >> word;
     if( word != "NumOutputDimensions:" ){
-        errorLog << "loadModelFromFile(std::fstream &file) - Failed to read NumOutputDimensions header!" << std::endl;
+        errorLog << "loadModelFromFile(std::istream &file) - Failed to read NumOutputDimensions header!" << std::endl;
         return false;     
     }
     file >> numOutputDimensions;
@@ -224,7 +214,7 @@ bool SavitzkyGolayFilter::loadModelFromFile(std::fstream &file){
     //Load the numPoints
     file >> word;
     if( word != "NumPoints:" ){
-        errorLog << "loadModelFromFile(std::fstream &file) - Failed to read NumPoints header!" << std::endl;
+        errorLog << "loadModelFromFile(std::istream &file) - Failed to read NumPoints header!" << std::endl;
         return false;     
     }
     file >> numPoints;
@@ -232,7 +222,7 @@ bool SavitzkyGolayFilter::loadModelFromFile(std::fstream &file){
     //Load the NumLeftHandPoints
     file >> word;
     if( word != "NumLeftHandPoints:" ){
-        errorLog << "loadModelFromFile(std::fstream &file) - Failed to read NumLeftHandPoints header!" << std::endl;
+        errorLog << "loadModelFromFile(std::istream &file) - Failed to read NumLeftHandPoints header!" << std::endl;
         return false;     
     }
     file >> numLeftHandPoints;
@@ -240,7 +230,7 @@ bool SavitzkyGolayFilter::loadModelFromFile(std::fstream &file){
     //Load the NumRightHandPoints
     file >> word;
     if( word != "NumRightHandPoints:" ){
-        errorLog << "loadModelFromFile(std::fstream &file) - Failed to read numRightHandPoints header!" << std::endl;
+        errorLog << "loadModelFromFile(std::istream &file) - Failed to read numRightHandPoints header!" << std::endl;
         return false;     
     }
     file >> numRightHandPoints;
@@ -248,7 +238,7 @@ bool SavitzkyGolayFilter::loadModelFromFile(std::fstream &file){
     //Load the DerivativeOrder
     file >> word;
     if( word != "DerivativeOrder:" ){
-        errorLog << "loadModelFromFile(std::fstream &file) - Failed to read DerivativeOrder header!" << std::endl;
+        errorLog << "loadModelFromFile(std::istream &file) - Failed to read DerivativeOrder header!" << std::endl;
         return false;     
     }
     file >> derivativeOrder;
@@ -256,7 +246,7 @@ bool SavitzkyGolayFilter::loadModelFromFile(std::fstream &file){
     //Load the SmoothingPolynomialOrder
     file >> word;
     if( word != "SmoothingPolynomialOrder:" ){
-        errorLog << "loadModelFromFile(std::fstream &file) - Failed to read SmoothingPolynomialOrder header!" << std::endl;
+        errorLog << "loadModelFromFile(std::istream &file) - Failed to read SmoothingPolynomialOrder header!" << std::endl;
         return false;     
     }
     file >> smoothingPolynomialOrder;

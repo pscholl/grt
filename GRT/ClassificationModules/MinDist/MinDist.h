@@ -49,7 +49,7 @@ public:
      @param nullRejectionCoeff: sets the null rejection coefficient, this is a multipler controlling the null rejection threshold for each class.  This will only be used if the useNullRejection parameter is set to true.  Default value is nullRejectionCoeff = 10.0
      @param numClusters: sets how many clusters each model will try to find during the training phase.  Default value = 10
      */
-	MinDist(bool useScaling=false,bool useNullRejection=false,Float nullRejectionCoeff=10.0,UINT numClusters=10);
+    MinDist(bool useScaling=false,bool useNullRejection=false,Float nullRejectionCoeff=10.0,UINT numClusters=10);
     
     /**
      Defines the copy constructor.
@@ -61,7 +61,7 @@ public:
     /**
      Default Destructor
      */
-	virtual ~MinDist(void);
+    virtual ~MinDist(void);
     
     /**
      Defines how the data from the rhs MinDist should be copied to this MinDist
@@ -69,7 +69,7 @@ public:
      @param rhs: another instance of a MinDist
      @return returns a pointer to this instance of the MinDist
      */
-	MinDist &operator=(const MinDist &rhs);
+    MinDist &operator=(const MinDist &rhs);
     
     /**
      This is required for the Gesture Recognition Pipeline for when the pipeline.setClassifier(...) method is called.  
@@ -113,7 +113,7 @@ public:
      @param file: a reference to the file the MinDist model will be saved to
      @return returns true if the model was saved successfully, false otherwise
      */
-    virtual bool saveModelToFile( std::fstream &file ) const;
+    virtual bool saveModelToFile( std::ostream &file ) const;
     
     /**
      This loads a trained MinDist model from a file.
@@ -122,7 +122,7 @@ public:
      @param file: a reference to the file the MinDist model will be loaded from
      @return returns true if the model was loaded successfully, false otherwise
      */
-    virtual bool loadModelFromFile( std::fstream &file );
+    virtual bool loadModelFromFile( std::istream &file );
     
     /**
      This recomputes the null rejection thresholds for each of the classes in the MinDist model.
@@ -131,7 +131,7 @@ public:
      
      @return returns true if the null rejection thresholds were updated successfully, false otherwise
      */
-	virtual bool recomputeNullRejectionThresholds();
+    virtual bool recomputeNullRejectionThresholds();
     
     /**
      Returns the number of clusters in the model.
@@ -154,7 +154,7 @@ public:
      
      @return returns true if the gamma parameter was updated successfully, false otherwise
     */
-	virtual bool setNullRejectionCoeff(Float nullRejectionCoeff);
+    virtual bool setNullRejectionCoeff(Float nullRejectionCoeff);
     
     /**
      Sets the numClusters parameter.
@@ -166,10 +166,10 @@ public:
     bool setNumClusters(UINT numClusters);
 
 protected:
-    bool loadLegacyModelFromFile( std::fstream &file );
+    bool loadLegacyModelFromFile( std::istream &file );
     
-	UINT numClusters; 
-	Vector< MinDistModel > models;            //A buffer to hold all the models
+    UINT numClusters; 
+    Vector< MinDistModel > models;            //A buffer to hold all the models
     
 private:
     static RegisterClassifierModule< MinDist > registerModule;

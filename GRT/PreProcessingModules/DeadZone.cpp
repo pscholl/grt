@@ -50,12 +50,12 @@ DeadZone::~DeadZone(){
 }
 
 DeadZone& DeadZone::operator=(const DeadZone &rhs){
-	if(this!=&rhs){
+    if(this!=&rhs){
         this->lowerLimit = rhs.lowerLimit;
         this->upperLimit = rhs.upperLimit;
         copyBaseVariables( (PreProcessing*)&rhs );
-	}
-	return *this;
+    }
+    return *this;
 }
 
 bool DeadZone::deepCopyFrom(const PreProcessing *preProcessing){
@@ -107,32 +107,27 @@ bool DeadZone::saveModelToFile(std::string filename) const{
         return false;
     }
     
-	std::fstream file; 
-	file.open(filename.c_str(), std::ios::out);
+    std::fstream file; 
+    file.open(filename.c_str(), std::ios::out);
     
     if( !saveModelToFile( file ) ){
         file.close();
         return false;
     }
     
-	file.close();
+    file.close();
     
-	return true;
+    return true;
 }
 
-bool DeadZone::saveModelToFile(std::fstream &file) const{
-    
-    if( !file.is_open() ){
-        errorLog << "saveModelToFile(fstream &file) - The file is not open!" << std::endl;
-        return false;
-    }
+bool DeadZone::saveModelToFile(std::ostream &file) const{
     
     file << "GRT_DEAD_ZONE_FILE_V1.0" << std::endl;
     
     file << "NumInputDimensions: " << numInputDimensions << std::endl;
     file << "NumOutputDimensions: " << numOutputDimensions << std::endl;
     file << "LowerLimit: " << lowerLimit << std::endl;
-    file << "UpperLimit: " << upperLimit << std::endl;	
+    file << "UpperLimit: " << upperLimit << std::endl;  
     
     return true;
 }
@@ -140,7 +135,7 @@ bool DeadZone::saveModelToFile(std::fstream &file) const{
 bool DeadZone::loadModelFromFile(std::string filename){
     
     std::fstream file; 
-	file.open(filename.c_str(), std::ios::in);
+    file.open(filename.c_str(), std::ios::in);
     
     if( !loadModelFromFile( file ) ){
         file.close();
@@ -148,17 +143,12 @@ bool DeadZone::loadModelFromFile(std::string filename){
         return false;
     }
     
-	file.close();
+    file.close();
     
-	return true;
+    return true;
 }
 
-bool DeadZone::loadModelFromFile(std::fstream &file){
-    
-    if( !file.is_open() ){
-        errorLog << "loadModelFromFile(fstream &file) - The file is not open!" << std::endl;
-        return false;
-    }
+bool DeadZone::loadModelFromFile(std::istream &file){
     
     std::string word;
     
@@ -166,14 +156,14 @@ bool DeadZone::loadModelFromFile(std::fstream &file){
     file >> word;
     
     if( word != "GRT_DEAD_ZONE_FILE_V1.0" ){
-        errorLog << "loadModelFromFile(fstream &file) - Invalid file format!" << std::endl;
+        errorLog << "loadModelFromFile(istream &file) - Invalid file format!" << std::endl;
         return false;     
     }
     
     //Load the number of input dimensions
     file >> word;
     if( word != "NumInputDimensions:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read NumInputDimensions header!" << std::endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read NumInputDimensions header!" << std::endl;
         return false;     
     }
     file >> numInputDimensions;
@@ -181,7 +171,7 @@ bool DeadZone::loadModelFromFile(std::fstream &file){
     //Load the number of output dimensions
     file >> word;
     if( word != "NumOutputDimensions:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read NumOutputDimensions header!" << std::endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read NumOutputDimensions header!" << std::endl;
         return false;     
     }
     file >> numOutputDimensions;
@@ -189,14 +179,14 @@ bool DeadZone::loadModelFromFile(std::fstream &file){
     //Load the lower limit
     file >> word;
     if( word != "LowerLimit:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read LowerLimit header!" << std::endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read LowerLimit header!" << std::endl;
         return false;     
     }
     file >> lowerLimit;
     
     file >> word;
     if( word != "UpperLimit:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read UpperLimit header!" << std::endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read UpperLimit header!" << std::endl;
         return false;     
     }
     file >> upperLimit;
@@ -233,7 +223,7 @@ bool DeadZone::init(Float lowerLimit,Float upperLimit,UINT numDimensions){
 Float DeadZone::filter(const Float x){
     VectorFloat y = filter(VectorFloat(1,x));
     if( y.getSize() == 0 ) return 0;
-	return y[0];
+    return y[0];
 }
     
 VectorFloat DeadZone::filter(const VectorFloat &x){
@@ -260,13 +250,13 @@ VectorFloat DeadZone::filter(const VectorFloat &x){
 }
 
 bool DeadZone::setLowerLimit(Float lowerLimit){ 
-	this->lowerLimit = lowerLimit; 
-	return true; 
+    this->lowerLimit = lowerLimit; 
+    return true; 
 }
 
 bool DeadZone::setUpperLimit(Float upperLimit){ 
-	this->upperLimit = upperLimit; 
-	return true; 
+    this->upperLimit = upperLimit; 
+    return true; 
 }
     
 GRT_END_NAMESPACE

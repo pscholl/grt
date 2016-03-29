@@ -59,7 +59,7 @@ public:
      @param featureMode: sets how the features are added to the feature vector, shoule be either INDEPENDANT_FEATURE_MODE or COMBINED_FEATURE_MODE.  Default is featureMode = INDEPENDANT_FEATURE_MODE
      */
     ZeroCrossingCounter(UINT searchWindowSize = 20,Float deadZoneThreshold = 0.01,UINT numDimensions = 1,UINT featureMode = INDEPENDANT_FEATURE_MODE);
-	
+    
     /**
      Copy constructor, copies the ZeroCrossingCounter from the rhs instance to this instance.
      
@@ -132,7 +132,7 @@ public:
      @param file: a reference to the file to save the settings to
      @return returns true if the settings were saved successfully, false otherwise
      */
-    virtual bool saveModelToFile( std::fstream &file ) const;
+    virtual bool saveModelToFile( std::ostream &file ) const;
     
     /**
      This loads the feature extraction settings from a file.
@@ -141,7 +141,7 @@ public:
      @param file: a reference to the file to load the settings from
      @return returns true if the settings were loaded successfully, false otherwise
      */
-    virtual bool loadModelFromFile( std::fstream &file );
+    virtual bool loadModelFromFile( std::istream &file );
 
     /**
      Initializes the ZeroCrossingCounter, setting the searchWindowSize, deadZoneThreshold, and dimensionality of the data it will filter.
@@ -152,7 +152,7 @@ public:
      @param deadZoneThreshold: sets the dead zone threshold value
      @param numDimensions: the dimensionality of the input data to filter
      @param featureMode: sets how the features are added to the feature vector, shoule be either INDEPENDANT_FEATURE_MODE or COMBINED_FEATURE_MODE
-	 @return true if the filter was initiliazed, false otherwise
+     @return true if the filter was initiliazed, false otherwise
      */
     bool init(UINT searchWindowSize,Float deadZoneThreshold,UINT numDimensions,UINT featureMode);
     
@@ -160,15 +160,15 @@ public:
      Computes the ZeroCrossingCounter features from the input, this should only be called if the dimensionality of this instance was set to 1.
      
      @param x: the value to compute features from, this should only be called if the dimensionality of the filter was set to 1
-	 @return a vector containing the ZeroCrossingCounter features, an empty vector will be returned if the features were not computed
+     @return a vector containing the ZeroCrossingCounter features, an empty vector will be returned if the features were not computed
      */
-	VectorFloat update(Float x);
+    VectorFloat update(Float x);
     
     /**
      Computes the ZeroCrossingCounter features from the input, the dimensionality of x should match that of this instance.
      
      @param x: a vector containing the values to be processed, must be the same size as the numInputDimensions
-	 @return a vector containing the ZeroCrossingCounter features, an empty vector will be returned if the features were not computed
+     @return a vector containing the ZeroCrossingCounter features, an empty vector will be returned if the features were not computed
      */
     VectorFloat update(const VectorFloat &x);
     
@@ -177,7 +177,7 @@ public:
      Calling this function will reset the feature extraction.
      
      @param searchWindowSize: sets how much data should be held in memory and searched each time the update function is called
-	 @return true if the searchWindowSize value was updated, false otherwise
+     @return true if the searchWindowSize value was updated, false otherwise
      */
     bool setSearchWindowSize(UINT searchWindowSize);
 
@@ -195,7 +195,7 @@ public:
      Calling this function will reset the feature extraction.
      
      @param deadZoneThreshold: sets the dead zone threshold value
-	 @return true if the deadZoneThreshold value was updated, false otherwise
+     @return true if the deadZoneThreshold value was updated, false otherwise
      */
     bool setDeadZoneThreshold(Float deadZoneThreshold);
 

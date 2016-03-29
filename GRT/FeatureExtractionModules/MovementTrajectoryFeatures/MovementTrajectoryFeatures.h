@@ -50,7 +50,7 @@ public:
      Default Constructor.
      */
     MovementTrajectoryFeatures(UINT trajectoryLength=100,UINT numCentroids=10,UINT featureMode=CENTROID_VALUE,UINT numHistogramBins=10,UINT numDimensions = 1,bool useTrajStartAndEndValues = false,bool useWeightedMagnitudeValues = true);
-	
+    
     /**
      Copy constructor, copies the MovementTrajectoryFeatures from the rhs instance to this instance.
      
@@ -123,7 +123,7 @@ public:
      @param file: a reference to the file to save the settings to
      @return returns true if the settings were saved successfully, false otherwise
      */
-    virtual bool saveModelToFile( std::fstream &file ) const;
+    virtual bool saveModelToFile( std::ostream &file ) const;
     
     /**
      This loads the feature extraction settings from a file.
@@ -132,7 +132,7 @@ public:
      @param file: a reference to the file to load the settings from
      @return returns true if the settings were loaded successfully, false otherwise
      */
-    virtual bool loadModelFromFile( std::fstream &file );
+    virtual bool loadModelFromFile( std::istream &file );
 
     /**
      Initializes the MovementTrajectoryFeatures
@@ -143,15 +143,15 @@ public:
      Computes the features from the input, this should only be called if the dimensionality of this instance was set to 1.
      
      @param x: the value to compute features from, this should only be called if the dimensionality of the filter was set to 1
-	 @return a vector containing the features, an empty vector will be returned if the features were not computed
+     @return a vector containing the features, an empty vector will be returned if the features were not computed
      */
-	VectorFloat update(Float x);
+    VectorFloat update(Float x);
     
     /**
      Computes the features from the input, the dimensionality of x should match that of this instance.
      
      @param x: a vector containing the values to be processed, must be the same size as the numInputDimensions
-	 @return a vector containing the features, an empty vector will be returned if the features were not computed
+     @return a vector containing the features, an empty vector will be returned if the features were not computed
      */
     VectorFloat update(const VectorFloat &x);
     

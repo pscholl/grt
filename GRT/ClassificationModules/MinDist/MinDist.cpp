@@ -162,17 +162,17 @@ bool MinDist::train_(ClassificationData &trainingData){
 bool MinDist::predict_(VectorFloat &inputVector){
     
     predictedClassLabel = 0;
-	maxLikelihood = 0;
+    maxLikelihood = 0;
     
     if( !trained ){
         errorLog << "predict_(VectorFloat &inputVector) - MinDist Model Not Trained!" << std::endl;
         return false;
     }
     
-	if( inputVector.size() != numInputDimensions ){
+    if( inputVector.size() != numInputDimensions ){
         errorLog << "predict_(VectorFloat &inputVector) - The size of the input vector (" << inputVector.size() << ") does not match the num features in the model (" << numInputDimensions << std::endl;
-		return false;
-	}
+        return false;
+    }
     
     if( useScaling ){
         for(UINT n=0; n<numInputDimensions; n++){
@@ -185,15 +185,15 @@ bool MinDist::predict_(VectorFloat &inputVector){
     
     Float sum = 0;
     Float minDist = grt_numeric_limits< Float >::max();
-	for(UINT k=0; k<numClasses; k++){
+    for(UINT k=0; k<numClasses; k++){
         //Compute the distance for class k
-		classDistances[k] = models[k].predict( inputVector );
+        classDistances[k] = models[k].predict( inputVector );
 
         //Keep track of the best value
-		if( classDistances[k] < minDist ){
-			minDist = classDistances[k];
-			predictedClassLabel = k;
-		}
+        if( classDistances[k] < minDist ){
+            minDist = classDistances[k];
+            predictedClassLabel = k;
+        }
         
         //Set the class likelihoods as 1.0 / dist[k], the small number is to stop divide by zero
         classLikelihoods[k] = 1.0 / (classDistances[k] + 0.0001);
@@ -201,12 +201,12 @@ bool MinDist::predict_(VectorFloat &inputVector){
     }
     
     //Normalize the classlikelihoods
-	if( sum != 0 ){
+    if( sum != 0 ){
         for(UINT k=0; k<numClasses; k++){
-        	classLikelihoods[k] /= sum;
-    	}
+            classLikelihoods[k] /= sum;
+        }
         maxLikelihood = classLikelihoods[predictedClassLabel];
-	}else maxLikelihood = classLikelihoods[predictedClassLabel];
+    }else maxLikelihood = classLikelihoods[predictedClassLabel];
     
     if( useNullRejection ){
         //Check to see if the best result is greater than the models threshold
@@ -232,9 +232,9 @@ bool MinDist::recomputeNullRejectionThresholds(){
 
     if( trained ){
         for(UINT k=0; k<numClasses; k++) {
-			models[k].setGamma( nullRejectionCoeff );
+            models[k].setGamma( nullRejectionCoeff );
             models[k].recomputeThresholdValue();
-		}
+        }
         return true;
     }
     return false;
@@ -258,21 +258,15 @@ Vector< MinDistModel > MinDist::getModels() const {
     return models;
 }
     
-bool MinDist::saveModelToFile( std::fstream &file ) const{
+bool MinDist::saveModelToFile( std::ostream &file ) const{
     
-    if(!file.is_open())
-	{
-		errorLog <<"saveModelToFile(fstream &file) - The file is not open!" << std::endl;
-		return false;
-	}
-    
-	//Write the header info
-	file<<"GRT_MINDIST_MODEL_FILE_V2.0\n";
+    //Write the header info
+    file<<"GRT_MINDIST_MODEL_FILE_V2.0\n";
     
     //Write the classifier settings to the file
     if( !Classifier::saveBaseSettingsToFile(file) ){
-        errorLog <<"saveModelToFile(fstream &file) - Failed to save classifier base settings to file!" << std::endl;
-		return false;
+        errorLog <<"saveModelToFile(ostream &file) - Failed to save classifier base settings to file!" << std::endl;
+        return false;
     }
     
     if( trained ){
@@ -300,15 +294,9 @@ bool MinDist::saveModelToFile( std::fstream &file ) const{
     return true;
 }
     
-bool MinDist::loadModelFromFile( std::fstream &file ){
+bool MinDist::loadModelFromFile( std::istream &file ){
     
     clear();
-    
-    if(!file.is_open())
-    {
-        errorLog << "loadModelFromFile(string filename) - Could not open file to load model" << std::endl;
-        return false;
-    }
     
     std::string word;
     
@@ -430,7 +418,7 @@ bool MinDist::setNumClusters(UINT numClusters){
     return true;
 }
     
-bool MinDist::loadLegacyModelFromFile( std::fstream &file ){
+bool MinDist::loadLegacyModelFromFile( std::istream &file ){
     
     std::string word;
     

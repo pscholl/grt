@@ -114,7 +114,7 @@ public:
      @param file: a reference to the file the Node model will be saved to
      @return returns true if the model was saved successfully, false otherwise
      */
-    virtual bool saveToFile( std::fstream &file ) const;
+    virtual bool saveToFile( std::ostream &file ) const;
     
     /**
      This loads the Node from a file.
@@ -122,7 +122,7 @@ public:
      @param file: a reference to the file the Node model will be loaded from
      @return returns true if the model was loaded successfully, false otherwise
      */
-    virtual bool loadFromFile( std::fstream &file );
+    virtual bool loadFromFile( std::istream &file );
     
     /**
      This function returns a deep copy of the Node and all it's children.
@@ -238,7 +238,7 @@ protected:
      @param file: a reference to the file the parameters will be saved to
      @return returns true if the parameters were saved successfully, false otherwise
      */
-    virtual bool saveParametersToFile( std::fstream &file ) const{ return true; }
+    virtual bool saveParametersToFile( std::ostream &file ) const{ return true; }
     
     /**
      This loads the custom parameters to from file. This can be used by any class that inherits from the Node class to load
@@ -247,7 +247,7 @@ protected:
      @param file: a reference to the file the parameters will be loaded from
      @return returns true if the parameters were loaded successfully, false otherwise
      */
-    virtual bool loadParametersFromFile( std::fstream &file ){ return true; }
+    virtual bool loadParametersFromFile( std::istream &file ){ return true; }
     
     std::string nodeType;
     UINT depth;

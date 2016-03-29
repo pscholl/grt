@@ -61,7 +61,7 @@ FiniteStateMachine::~FiniteStateMachine(void)
 } 
 
 FiniteStateMachine& FiniteStateMachine::operator=(const FiniteStateMachine &rhs){
-	if( this != &rhs ){
+    if( this != &rhs ){
         
         this->clear();
         
@@ -80,8 +80,8 @@ FiniteStateMachine& FiniteStateMachine::operator=(const FiniteStateMachine &rhs)
         if( rhs.trained ){
             this->initParticles();
         }
-	}
-	return *this;
+    }
+    return *this;
 }
 
 bool FiniteStateMachine::deepCopyFrom(const Classifier *classifier){
@@ -284,12 +284,12 @@ bool FiniteStateMachine::predict_(VectorFloat &inputVector){
     }
     
     predictedClassLabel = 0;
-	maxLikelihood = -10000;
+    maxLikelihood = -10000;
     
-	if( inputVector.size() != numInputDimensions ){
+    if( inputVector.size() != numInputDimensions ){
         errorLog << "predict_(VectorFloat &inputVector) - The size of the input vector (" << inputVector.size() << ") does not match the num features in the model (" << numInputDimensions << std::endl;
-		return false;
-	}
+        return false;
+    }
     
     if( useScaling ){
         for(UINT n=0; n<numInputDimensions; n++){
@@ -387,21 +387,15 @@ bool FiniteStateMachine::print() const {
     return true;
 }
     
-bool FiniteStateMachine::saveModelToFile( std::fstream &file ) const{
+bool FiniteStateMachine::saveModelToFile( std::ostream &file ) const{
     
-    if(!file.is_open())
-	{
-		errorLog <<"saveModelToFile(fstream &file) - The file is not open!" << std::endl;
-		return false;
-	}
-    
-	//Write the header info
+    //Write the header info
     file << "GRT_FSM_MODEL_FILE_V1.0\n";
     
     //Write the classifier settings to the file
     if( !Classifier::saveBaseSettingsToFile(file) ){
-        errorLog << "saveModelToFile(fstream &file) - Failed to save classifier base settings to file!" << std::endl;
-		return false;
+        errorLog << "saveModelToFile(ostream &file) - Failed to save classifier base settings to file!" << std::endl;
+        return false;
     }
     
     file << "NumParticles: " << numParticles << std::endl;
@@ -438,16 +432,10 @@ bool FiniteStateMachine::saveModelToFile( std::fstream &file ) const{
     return true;
 }
     
-bool FiniteStateMachine::loadModelFromFile( std::fstream &file ){
+bool FiniteStateMachine::loadModelFromFile( std::istream &file ){
     
     //Clear any previous model
     clear();
-    
-    if(!file.is_open())
-    {
-        errorLog << "loadModelFromFile(string filename) - Could not open file to load model" << std::endl;
-        return false;
-    }
     
     std::string word;
     

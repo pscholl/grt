@@ -49,7 +49,7 @@ public:
      @param minChange: sets the minimum change that must be achieved between two training epochs for the training to continue. Default = 1.0e-10
      @param maxNumEpochs: sets the maximum number of iterations that can be run during the training phase. Default = 1000
      */
-	Softmax(const bool useScaling=false,const Float learningRate = 0.1,const Float minChange = 1.0e-10,const UINT maxNumEpochs = 1000);
+    Softmax(const bool useScaling=false,const Float learningRate = 0.1,const Float minChange = 1.0e-10,const UINT maxNumEpochs = 1000);
     
     /**
      Defines the copy constructor.
@@ -61,7 +61,7 @@ public:
     /**
      Default Destructor
      */
-	virtual ~Softmax(void);
+    virtual ~Softmax(void);
     
     /**
      Defines how the data from the rhs Softmax should be copied to this Softmax
@@ -69,7 +69,7 @@ public:
      @param rhs: another instance of a Softmax
      @return returns a pointer to this instance of the Softmax
      */
-	Softmax &operator=(const Softmax &rhs);
+    Softmax &operator=(const Softmax &rhs);
     
     /**
      This is required for the Gesture Recognition Pipeline for when the pipeline.setClassifier(...) method is called.  
@@ -78,7 +78,7 @@ public:
      @param classifier: a pointer to the Classifier Base Class, this should be pointing to another Softmax instance
      @return returns true if the clone was successfull, false otherwise
     */
-	virtual bool deepCopyFrom(const Classifier *classifier);
+    virtual bool deepCopyFrom(const Classifier *classifier);
     
     /**
      This trains the Softmax model, using the labelled classification data.
@@ -113,7 +113,7 @@ public:
      @param file: a reference to the file the Softmax model will be saved to
      @return returns true if the model was saved successfully, false otherwise
      */
-    virtual bool saveModelToFile( std::fstream &file ) const;
+    virtual bool saveModelToFile( std::ostream &file ) const;
     
     /**
      This loads a trained Softmax model from a file.
@@ -122,7 +122,7 @@ public:
      @param file: a reference to the file the Softmax model will be loaded from
      @return returns true if the model was loaded successfully, false otherwise
      */
-    virtual bool loadModelFromFile( std::fstream &file );
+    virtual bool loadModelFromFile( std::istream &file );
     
     /**
      Get the softmax models for each class. The Softmax class must be trained first.
@@ -137,7 +137,7 @@ public:
     
 protected:
     bool trainSoftmaxModel(UINT classLabel,SoftmaxModel &model,ClassificationData &data);
-    bool loadLegacyModelFromFile( std::fstream &file );
+    bool loadLegacyModelFromFile( std::istream &file );
     
     Vector< SoftmaxModel > models;
     

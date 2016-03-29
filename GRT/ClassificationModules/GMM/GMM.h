@@ -52,7 +52,7 @@ public:
     /**
      Default Constructor. Sets the number of mixture models to use for each model. 
      */
-	GMM(UINT numMixtureModels = 2,bool useScaling=false,bool useNullRejection=false,Float nullRejectionCoeff=1.0,UINT maxIter=100,Float minChange=1.0e-5);
+    GMM(UINT numMixtureModels = 2,bool useScaling=false,bool useNullRejection=false,Float nullRejectionCoeff=1.0,UINT maxIter=100,Float minChange=1.0e-5);
     
     /**
      Defines the copy constructor.
@@ -64,7 +64,7 @@ public:
     /**
      Default destructor.
      */
-	virtual ~GMM(void);
+    virtual ~GMM(void);
     
     /**
      Defines how the data from the rhs GMM should be copied to this GMM
@@ -72,7 +72,7 @@ public:
      @param &rhs: another instance of a GMM
      @return returns a pointer to this instance of the GMM
      */
-	GMM &operator=(const GMM &rhs);
+    GMM &operator=(const GMM &rhs);
     
     /**
      This is required for the Gesture Recognition Pipeline for when the pipeline.setClassifier method is called.  
@@ -117,7 +117,7 @@ public:
      @param file: a reference to the file the GMM model will be saved to
      @return returns true if the model was saved successfully, false otherwise
      */
-    virtual bool saveModelToFile( std::fstream &file ) const;
+    virtual bool saveModelToFile( std::ostream &file ) const;
     
     /**
      This loads a trained GMM model from a file.
@@ -126,7 +126,7 @@ public:
      @param file: a reference to the file the GMM model will be loaded from
      @return returns true if the model was loaded successfully, false otherwise
      */
-    virtual bool loadModelFromFile( std::fstream &file );
+    virtual bool loadModelFromFile( std::istream &file );
     
    /**
     This function recomputes the null rejection thresholds for each model.
@@ -141,7 +141,7 @@ public:
      
      @return returns the number of mixture models in the GMM
      */
-	UINT getNumMixtureModels();
+    UINT getNumMixtureModels();
     
     /**
      This function returns a copy of the MixtureModels estimated during the training phase. Each element in the
@@ -185,7 +185,7 @@ public:
     
 protected:
     Float computeMixtureLikelihood(const VectorFloat &x,UINT k);
-    bool loadLegacyModelFromFile( std::fstream &file );
+    bool loadLegacyModelFromFile( std::istream &file );
     
     UINT numMixtureModels;
     UINT maxIter;
@@ -197,7 +197,7 @@ protected:
     WarningLog warningLog;
     
     static RegisterClassifierModule< GMM > registerModule;
-	
+    
 };
     
 GRT_END_NAMESPACE

@@ -113,19 +113,14 @@ bool KMeansQuantizer::clear(){
     return true;
 }
 
-bool KMeansQuantizer::saveModelToFile( std::fstream &file ) const{
-    
-    if( !file.is_open() ){
-        errorLog << "saveModelToFile(fstream &file) - The file is not open!" << std::endl;
-        return false;
-    }
+bool KMeansQuantizer::saveModelToFile( std::ostream &file ) const{
     
     //Save the header
     file << "KMEANS_QUANTIZER_FILE_V1.0" << std::endl;
 	
     //Save the feature extraction base class settings
     if( !saveFeatureExtractionSettingsToFile( file ) ){
-        errorLog << "saveModelToFile(fstream &file) - Failed to save base feature extraction settings to file!" << std::endl;
+        errorLog << "saveModelToFile(ostream &file) - Failed to save base feature extraction settings to file!" << std::endl;
         return false;
     }
     
@@ -147,41 +142,36 @@ bool KMeansQuantizer::saveModelToFile( std::fstream &file ) const{
     return true;
 }
 
-bool KMeansQuantizer::loadModelFromFile( std::fstream &file ){
+bool KMeansQuantizer::loadModelFromFile( std::istream &file ){
     
     //Clear any previouly built model and settings
     clear();
-    
-    if( !file.is_open() ){
-        errorLog << "loadModelFromFile(fstream &file) - The file is not open!" << std::endl;
-        return false;
-    }
     
     std::string word;
     
     //First, you should read and validate the header
     file >> word;
     if( word != "KMEANS_QUANTIZER_FILE_V1.0" ){
-        errorLog << "loadModelFromFile(fstream &file) - Invalid file format!" << std::endl;
+        errorLog << "loadModelFromFile(istream &file) - Invalid file format!" << std::endl;
         return false;
     }
     
     //Second, you should load the base feature extraction settings to the file
     if( !loadFeatureExtractionSettingsFromFile( file ) ){
-        errorLog << "loadFeatureExtractionSettingsFromFile(fstream &file) - Failed to load base feature extraction settings from file!" << std::endl;
+        errorLog << "loadFeatureExtractionSettingsFromFile(istream &file) - Failed to load base feature extraction settings from file!" << std::endl;
         return false;
     }
     
     file >> word;
     if( word != "QuantizerTrained:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to load QuantizerTrained!" << std::endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to load QuantizerTrained!" << std::endl;
         return false;
     }
     file >> trained;
     
     file >> word;
     if( word != "NumClusters:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to load NumClusters!" << std::endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to load NumClusters!" << std::endl;
         return false;
     }
     file >> numClusters;
@@ -190,7 +180,7 @@ bool KMeansQuantizer::loadModelFromFile( std::fstream &file ){
         clusters.resize(numClusters, numInputDimensions);
         file >> word;
         if( word != "Clusters:" ){
-            errorLog << "loadModelFromFile(fstream &file) - Failed to load Clusters!" << std::endl;
+            errorLog << "loadModelFromFile(istream &file) - Failed to load Clusters!" << std::endl;
             return false;
         }
         

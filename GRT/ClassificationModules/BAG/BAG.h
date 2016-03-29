@@ -49,7 +49,7 @@ public:
 
      @param useScaling: sets if the training and real-time data should be scaled between [0 1]. Default value = false
      */
-	BAG(bool useScaling=false);
+    BAG(bool useScaling=false);
     
     /**
      Defines the copy constructor.
@@ -61,7 +61,7 @@ public:
     /**
      Default Destructor
      */
-	virtual ~BAG(void);
+    virtual ~BAG(void);
     
     /**
      Defines how the data from the rhs BAG should be copied to this BAG
@@ -69,7 +69,7 @@ public:
      @param rhs: another instance of a BAG
      @return returns a pointer to this instance of the BAG
      */
-	BAG &operator=(const BAG &rhs);
+    BAG &operator=(const BAG &rhs);
     
     /**
      This is required for the Gesture Recognition Pipeline for when the pipeline.setClassifier(...) method is called.  
@@ -78,7 +78,7 @@ public:
      @param classifier: a pointer to the Classifier Base Class, this should be pointing to another BAG instance
      @return returns true if the clone was successfull, false otherwise
     */
-	virtual bool deepCopyFrom(const Classifier *classifier);
+    virtual bool deepCopyFrom(const Classifier *classifier);
     
     /**
      This trains the BAG model, using the labelled classification data.
@@ -120,7 +120,7 @@ public:
      @param file: a reference to the file the BAG model will be saved to
      @return returns true if the model was saved successfully, false otherwise
      */
-    virtual bool saveModelToFile( std::fstream &file ) const;
+    virtual bool saveModelToFile( std::ostream &file ) const;
     
     /**
      This loads a trained BAG model from a file.
@@ -129,7 +129,7 @@ public:
      @param file: a reference to the file the BAG model will be loaded from
      @return returns true if the model was loaded successfully, false otherwise
      */
-    virtual bool loadModelFromFile( std::fstream &file );
+    virtual bool loadModelFromFile( std::istream &file );
     
     /**
      Gets the number of classifiers in the ensemble.
@@ -190,7 +190,7 @@ public:
     using MLBase::predict_;
     
 protected:
-    bool loadLegacyModelFromFile( std::fstream &file );
+    bool loadLegacyModelFromFile( std::istream &file );
     
     VectorFloat weights;
     Vector< Classifier* > ensemble;

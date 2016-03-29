@@ -104,7 +104,7 @@ public:
      @param file: a reference to the file to save the settings to
      @return returns true if the settings were saved successfully, false otherwise (the base class always returns false)
      */
-    virtual bool saveModelToFile( std::fstream &file ) const{ return false; }
+    virtual bool saveModelToFile( std::ostream &file ) const{ return false; }
     
     /**
      This loads the feature extraction settings from a file.
@@ -113,7 +113,7 @@ public:
      @param file: a reference to the file to load the settings from
      @return returns true if the settings were loaded successfully, false otherwise (the base class always returns false)
      */
-    virtual bool loadModelFromFile( std::fstream &file ){ return false; }
+    virtual bool loadModelFromFile( std::istream &file ){ return false; }
 	
     /**
      Returns the feature extraction type as a string.
@@ -186,6 +186,8 @@ public:
     
     using MLBase::saveModelToFile;
     using MLBase::loadModelFromFile;
+
+    Vector< std::string > getRegisteredFeatureExtractors();
     
 protected:
     /**
@@ -200,14 +202,14 @@ protected:
      
      @return returns true if the base settings were saved, false otherwise
      */
-    bool saveFeatureExtractionSettingsToFile( std::fstream &file ) const;
+    bool saveFeatureExtractionSettingsToFile( std::ostream &file ) const;
     
     /**
      Loads the core base settings from a file.
      
      @return returns true if the base settings were loaded, false otherwise
      */
-    bool loadFeatureExtractionSettingsFromFile( std::fstream &file );
+    bool loadFeatureExtractionSettingsFromFile( std::istream &file );
 
     std::string featureExtractionType;
     bool initialized;

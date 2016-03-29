@@ -202,20 +202,14 @@ bool MultidimensionalRegression::predict_(VectorFloat &inputVector){
     return true;
 }
     
-bool MultidimensionalRegression::saveModelToFile( std::fstream &file ) const {
-    
-    if(!file.is_open())
-	{
-        errorLog << "saveModelToFile(fstream &file) - The file is not open!" << std::endl;
-		return false;
-	}
+bool MultidimensionalRegression::saveModelToFile( std::ostream &file ) const {
     
 	//Write the header info
     file << "GRT_MULTIDIMENSIONAL_REGRESSION_MODEL_FILE_V2.0\n";
     
     //Write the regressifier settings to the file
     if( !Regressifier::saveBaseSettingsToFile(file) ){
-        errorLog <<"saveModelToFile(fstream &file) - Failed to save Regressifier base settings to file!" << std::endl;
+        errorLog <<"saveModelToFile(ostream &file) - Failed to save Regressifier base settings to file!" << std::endl;
 		return false;
     }
     
@@ -228,13 +222,13 @@ bool MultidimensionalRegression::saveModelToFile( std::fstream &file ) const {
     file << "Regressifier: " << regressifier->getRegressifierType() << std::endl;
     
     if( !regressifier->saveModelToFile( file ) ){
-        errorLog << "saveModelToFile(fstream &file) - Failed to save regressifier!" << std::endl;
+        errorLog << "saveModelToFile(ostream &file) - Failed to save regressifier!" << std::endl;
 		return false;
     }
     
     for(UINT i=0; i<regressionModules.size(); i++){
         if( !regressionModules[i]->saveModelToFile( file ) ){
-            errorLog << "saveModelToFile(fstream &file) - Failed to save regression module " << i << std::endl;
+            errorLog << "saveModelToFile(ostream &file) - Failed to save regression module " << i << std::endl;
             return false;
         }
     }
@@ -242,17 +236,11 @@ bool MultidimensionalRegression::saveModelToFile( std::fstream &file ) const {
     return true;
 }
     
-bool MultidimensionalRegression::loadModelFromFile( std::fstream &file ){
+bool MultidimensionalRegression::loadModelFromFile( std::istream &file ){
     
     trained = false;
     numInputDimensions = 0;
     deleteAll();
-    
-    if(!file.is_open())
-    {
-        errorLog << "loadModelFromFile(string filename) - Could not open file to load model" << std::endl;
-        return false;
-    }
     
     std::string word;
     
@@ -265,13 +253,13 @@ bool MultidimensionalRegression::loadModelFromFile( std::fstream &file ){
     }
     
     if( word != "GRT_MULTIDIMENSIONAL_REGRESSION_MODEL_FILE_V2.0" ){
-        errorLog << "loadModelFromFile( fstream &file ) - Could not find Model File Header" << std::endl;
+        errorLog << "loadModelFromFile( istream &file ) - Could not find Model File Header" << std::endl;
         return false;
     }
     
     //Load the regressifier settings from the file
     if( !Regressifier::loadBaseSettingsFromFile(file) ){
-        errorLog <<"loadModelFromFile( fstream &file ) - Failed to save Regressifier base settings to file!" << std::endl;
+        errorLog <<"loadModelFromFile( istream &file ) - Failed to save Regressifier base settings to file!" << std::endl;
 		return false;
     }
     
@@ -292,12 +280,12 @@ bool MultidimensionalRegression::loadModelFromFile( std::fstream &file ){
     regressifier = createInstanceFromString( regressifierType );
     
     if( regressifier == NULL ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to create regression instance from string!" << std::endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to create regression instance from string!" << std::endl;
         return false;
     }
     
     if( !regressifier->loadModelFromFile( file ) ){
-        errorLog <<"loadModelFromFile(fstream &file) - Failed to load regressifier!" << std::endl;
+        errorLog <<"loadModelFromFile(istream &file) - Failed to load regressifier!" << std::endl;
         return false;
     }
     
@@ -308,7 +296,7 @@ bool MultidimensionalRegression::loadModelFromFile( std::fstream &file ){
         for(UINT i=0; i<regressionModules.getSize(); i++){
             regressionModules[i] = createInstanceFromString( regressifierType );
             if( !regressionModules[i]->loadModelFromFile( file ) ){
-                errorLog << "loadModelFromFile(fstream &file) - Failed to load regression module " << i << std::endl;
+                errorLog << "loadModelFromFile(istream &file) - Failed to load regression module " << i << std::endl;
                 return false;
             }
         }
@@ -393,7 +381,7 @@ bool MultidimensionalRegression::deleteRegressionModules(){
 	return true;
 }
     
-bool MultidimensionalRegression::loadLegacyModelFromFile( std::fstream &file ){
+bool MultidimensionalRegression::loadLegacyModelFromFile( std::istream &file ){
     
     std::string word;
     
@@ -427,7 +415,6 @@ bool MultidimensionalRegression::loadLegacyModelFromFile( std::fstream &file ){
         //Load the ranges
         file >> word;
         if(word != "InputVectorRanges:"){
-            file.close();
             errorLog << "loadModelFromFile(string filename) - Failed to find InputVectorRanges!" << std::endl;
             return false;
         }
@@ -438,7 +425,6 @@ bool MultidimensionalRegression::loadLegacyModelFromFile( std::fstream &file ){
         
         file >> word;
         if(word != "OutputVectorRanges:"){
-            file.close();
             errorLog << "loadModelFromFile(string filename) - Failed to find OutputVectorRanges!" << std::endl;
             return false;
         }
@@ -465,12 +451,12 @@ bool MultidimensionalRegression::loadLegacyModelFromFile( std::fstream &file ){
     regressifier = createInstanceFromString( regressifierType );
     
     if( regressifier == NULL ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to create regression instance from string!" << std::endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to create regression instance from string!" << std::endl;
         return false;
     }
     
     if( !regressifier->loadModelFromFile( file ) ){
-        errorLog <<"loadModelFromFile(fstream &file) - Failed to load regressifier!" << std::endl;
+        errorLog <<"loadModelFromFile(istream &file) - Failed to load regressifier!" << std::endl;
         return false;
     }
     
@@ -481,7 +467,7 @@ bool MultidimensionalRegression::loadLegacyModelFromFile( std::fstream &file ){
         for(UINT i=0; i<regressionModules.getSize(); i++){
             regressionModules[i] = createInstanceFromString( regressifierType );
             if( !regressionModules[i]->loadModelFromFile( file ) ){
-                errorLog << "loadModelFromFile(fstream &file) - Failed to load regression module " << i << std::endl;
+                errorLog << "loadModelFromFile(istream &file) - Failed to load regression module " << i << std::endl;
                 return false;
             }
         }

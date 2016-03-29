@@ -102,8 +102,8 @@ RandomForests& RandomForests::operator=(const RandomForests &rhs){
             this->trainingMode = rhs.trainingMode;
             
         }else errorLog << "deepCopyFrom(const Classifier *classifier) - Failed to copy base variables!" << std::endl;
-	}
-	return *this;
+    }
+    return *this;
 }
 
 bool RandomForests::deepCopyFrom(const Classifier *classifier){
@@ -278,10 +278,10 @@ bool RandomForests::predict_(VectorDouble &inputVector){
         return false;
     }
     
-	if( inputVector.getSize() != numInputDimensions ){
+    if( inputVector.getSize() != numInputDimensions ){
         errorLog << "predict_(VectorDouble &inputVector) - The size of the input Vector (" << inputVector.getSize() << ") does not match the num features in the model (" << numInputDimensions << std::endl;
-		return false;
-	}
+        return false;
+    }
     
     if( useScaling ){
         for(UINT n=0; n<numInputDimensions; n++){
@@ -366,27 +366,21 @@ bool RandomForests::print() const{
     return true;
 }
 
-bool RandomForests::saveModelToFile( std::fstream &file ) const{
+bool RandomForests::saveModelToFile( std::ostream &file ) const{
     
-    if(!file.is_open())
-	{
-		errorLog <<"saveModelToFile(fstream &file) - The file is not open!" << std::endl;
-		return false;
-	}
-    
-	//Write the header info
-	file << "GRT_RANDOM_FOREST_MODEL_FILE_V1.0\n";
+    //Write the header info
+    file << "GRT_RANDOM_FOREST_MODEL_FILE_V1.0\n";
     
     //Write the classifier settings to the file
     if( !Classifier::saveBaseSettingsToFile(file) ){
-        errorLog <<"saveModelToFile(fstream &file) - Failed to save classifier base settings to file!" << std::endl;
-		return false;
+        errorLog <<"saveModelToFile(ostream &file) - Failed to save classifier base settings to file!" << std::endl;
+        return false;
     }
     
     if( decisionTreeNode != NULL ){
         file << "DecisionTreeNodeType: " << decisionTreeNode->getNodeType() << std::endl;
         if( !decisionTreeNode->saveToFile( file ) ){
-            Classifier::errorLog <<"saveModelToFile(fstream &file) - Failed to save decisionTreeNode settings to file!" << std::endl;
+            Classifier::errorLog <<"saveModelToFile(ostream &file) - Failed to save decisionTreeNode settings to file!" << std::endl;
             return false;
         }
     }else{
@@ -407,7 +401,7 @@ bool RandomForests::saveModelToFile( std::fstream &file ) const{
             file << "Tree: " << i+1 << std::endl;
             file << "TreeNodeType: " << forest[i]->getNodeType() << std::endl;
             if( !forest[i]->saveToFile( file ) ){
-                errorLog << "saveModelToFile(fstream &file) - Failed to save tree " << i << " to file!" << std::endl;
+                errorLog << "saveModelToFile(ostream &file) - Failed to save tree " << i << " to file!" << std::endl;
                 return false;
             }
         }
@@ -416,15 +410,9 @@ bool RandomForests::saveModelToFile( std::fstream &file ) const{
     return true;
 }
     
-bool RandomForests::loadModelFromFile( std::fstream &file ){
+bool RandomForests::loadModelFromFile( std::istream &file ){
     
     clear();
-    
-    if(!file.is_open())
-    {
-        errorLog << "loadModelFromFile(string filename) - Could not open file to load model" << std::endl;
-        return false;
-    }
     
     std::string word;
     std::string treeNodeType;
@@ -460,11 +448,11 @@ bool RandomForests::loadModelFromFile( std::fstream &file ){
         }
         
         if( !decisionTreeNode->loadFromFile( file ) ){
-            Classifier::errorLog <<"loadModelFromFile(fstream &file) - Failed to load decisionTreeNode settings from file!" << std::endl;
+            Classifier::errorLog <<"loadModelFromFile(istream &file) - Failed to load decisionTreeNode settings from file!" << std::endl;
             return false;
         }
     }else{
-        Classifier::errorLog <<"loadModelFromFile(fstream &file) - Failed to load decisionTreeNode! DecisionTreeNodeType is NULL!" << std::endl;
+        Classifier::errorLog <<"loadModelFromFile(istream &file) - Failed to load decisionTreeNode! DecisionTreeNodeType is NULL!" << std::endl;
         return false;
     }
     
@@ -557,14 +545,14 @@ bool RandomForests::loadModelFromFile( std::fstream &file ){
             DecisionTreeNode *tree = dynamic_cast< DecisionTreeNode* >( DecisionTreeNode::createInstanceFromString( treeNodeType ) );
             
             if( tree == NULL ){
-                errorLog << "loadModelFromFile(fstream &file) - Failed to create new Tree!" << std::endl;
+                errorLog << "loadModelFromFile(istream &file) - Failed to create new Tree!" << std::endl;
                 return false;
             }
             
             //Load the tree from the file
             tree->setParent( NULL );
             if( !tree->loadFromFile( file ) ){
-                errorLog << "loadModelFromFile(fstream &file) - Failed to load tree from file!" << std::endl;
+                errorLog << "loadModelFromFile(istream &file) - Failed to load tree from file!" << std::endl;
                 return false;
             }
             

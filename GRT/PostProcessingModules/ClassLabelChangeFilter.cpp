@@ -160,12 +160,7 @@ bool ClassLabelChangeFilter::saveModelToFile( std::string filename ) const{
     return true;
 }
 
-bool ClassLabelChangeFilter::saveModelToFile( std::fstream &file ) const{
-    
-    if( !file.is_open() ){
-        errorLog << "saveModelToFile(fstream &file) - The file is not open!" << std::endl;
-        return false;
-    }
+bool ClassLabelChangeFilter::saveModelToFile( std::ostream &file ) const{
     
     file << "GRT_CLASS_LABEL_CHANGE_FILTER_FILE_V1.0" << std::endl;
     file << "NumInputDimensions: " << numInputDimensions << std::endl;
@@ -189,12 +184,7 @@ bool ClassLabelChangeFilter::loadModelFromFile( std::string filename ){
     return true;
 }
 
-bool ClassLabelChangeFilter::loadModelFromFile( std::fstream &file ){
-    
-    if( !file.is_open() ){
-        errorLog << "loadModelFromFile(fstream &file) - The file is not open!" << std::endl;
-        return false;
-    }
+bool ClassLabelChangeFilter::loadModelFromFile( std::istream &file ){
     
     std::string word;
     
@@ -202,13 +192,13 @@ bool ClassLabelChangeFilter::loadModelFromFile( std::fstream &file ){
     file >> word;
     
     if( word != "GRT_CLASS_LABEL_CHANGE_FILTER_FILE_V1.0" ){
-        errorLog << "loadModelFromFile(fstream &file) - Invalid file format!" << std::endl;
+        errorLog << "loadModelFromFile(istream &file) - Invalid file format!" << std::endl;
         return false;     
     }
     
     file >> word;
     if( word != "NumInputDimensions:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read NumInputDimensions header!" << std::endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read NumInputDimensions header!" << std::endl;
         return false;     
     }
     file >> numInputDimensions;
@@ -216,7 +206,7 @@ bool ClassLabelChangeFilter::loadModelFromFile( std::fstream &file ){
     //Load the number of output dimensions
     file >> word;
     if( word != "NumOutputDimensions:" ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to read NumOutputDimensions header!" << std::endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to read NumOutputDimensions header!" << std::endl;
         return false;     
     }
     file >> numOutputDimensions;

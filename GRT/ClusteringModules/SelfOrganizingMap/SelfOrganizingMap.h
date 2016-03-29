@@ -116,11 +116,7 @@ public:
         return exp( - (y/(2*grt_sqr(sigma))) );
     }
     
-    bool saveNeuronToFile( std::fstream &file ) const {
-        
-        if( !file.is_open() ){
-            return false;
-        }
+    bool saveNeuronToFile( std::ostream &file ) const {
         
         if( !initialized ){
             return false;
@@ -139,12 +135,8 @@ public:
         return true;
     }
     
-    bool loadNeuronFromFile( std::fstream &file ){
+    bool loadNeuronFromFile( std::istream &file ){
         
-        if( !file.is_open() ){
-            return false;
-        }
-    
         clear();
         
         std::string word;
@@ -291,7 +283,7 @@ public:
      @param file: a reference to the file the SOM model will be saved to
      @return returns true if the model was saved successfully, false otherwise
      */
-    virtual bool saveModelToFile( std::fstream &file ) const;
+    virtual bool saveModelToFile( std::ostream &file ) const;
     
     /**
      This loads a trained SOM model from a file.
@@ -300,7 +292,7 @@ public:
      @param file: a reference to the file the SOM model will be loaded from
      @return returns true if the model was loaded successfully, false otherwise
      */
-    virtual bool loadModelFromFile( std::fstream &file );
+    virtual bool loadModelFromFile( std::istream &file );
     
     /**
      This function validates the network typology to ensure it is one of the NetworkTypology enums.

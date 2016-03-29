@@ -306,17 +306,12 @@ bool GaussianMixtureModels::predict_(VectorFloat &x){
     return true;
 }
     
-bool GaussianMixtureModels::saveModelToFile( std::fstream &file ) const{
-    
-    if( !file.is_open() ){
-        errorLog << "saveModelToFile(string filename) - Failed to open file!" << std::endl;
-        return false;
-    }
+bool GaussianMixtureModels::saveModelToFile( std::ostream &file ) const{
     
     file << "GRT_GAUSSIAN_MIXTURE_MODELS_FILE_V1.0\n";
     
     if( !saveClustererSettingsToFile( file ) ){
-        errorLog << "saveModelToFile(fstream &file) - Failed to save cluster settings to file!" << std::endl;
+        errorLog << "saveModelToFile(ostream &file) - Failed to save cluster settings to file!" << std::endl;
         return false;
     }
     
@@ -359,7 +354,7 @@ bool GaussianMixtureModels::saveModelToFile( std::fstream &file ) const{
     
 }
 
-bool GaussianMixtureModels::loadModelFromFile( std::fstream &file ){
+bool GaussianMixtureModels::loadModelFromFile( std::istream &file ){
     
     //Clear any previous model
     clear();
@@ -371,7 +366,7 @@ bool GaussianMixtureModels::loadModelFromFile( std::fstream &file ){
     }
     
     if( !loadClustererSettingsFromFile( file ) ){
-        errorLog << "loadModelFromFile(fstream &file) - Failed to load cluster settings from file!" << std::endl;
+        errorLog << "loadModelFromFile(istream &file) - Failed to load cluster settings from file!" << std::endl;
         return false;
     }
     
@@ -388,7 +383,7 @@ bool GaussianMixtureModels::loadModelFromFile( std::fstream &file ){
         file >> word;
         if( word != "Mu:" ){
             clear();
-            errorLog << "loadModelFromFile(fstream &file) - Failed to load Mu!" << std::endl;
+            errorLog << "loadModelFromFile(istream &file) - Failed to load Mu!" << std::endl;
             return false;
         }
         for(UINT k=0; k<numClusters; k++){
@@ -401,7 +396,7 @@ bool GaussianMixtureModels::loadModelFromFile( std::fstream &file ){
         file >> word;
         if( word != "Sigma:" ){
             clear();
-            errorLog << "loadModelFromFile(fstream &file) - Failed to load Sigma!" << std::endl;
+            errorLog << "loadModelFromFile(istream &file) - Failed to load Sigma!" << std::endl;
             return false;
         }
         for(UINT k=0; k<numClusters; k++){
@@ -417,7 +412,7 @@ bool GaussianMixtureModels::loadModelFromFile( std::fstream &file ){
         file >> word;
         if( word != "InvSigma:" ){
             clear();
-            errorLog << "loadModelFromFile(fstream &file) - Failed to load InvSigma!" << std::endl;
+            errorLog << "loadModelFromFile(istream &file) - Failed to load InvSigma!" << std::endl;
             return false;
         }
         for(UINT k=0; k<numClusters; k++){
@@ -433,7 +428,7 @@ bool GaussianMixtureModels::loadModelFromFile( std::fstream &file ){
         file >> word;
         if( word != "Det:" ){
             clear();
-            errorLog << "loadModelFromFile(fstream &file) - Failed to load Det!" << std::endl;
+            errorLog << "loadModelFromFile(istream &file) - Failed to load Det!" << std::endl;
             return false;
         }
         for(UINT k=0; k<numClusters; k++){

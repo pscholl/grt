@@ -30,7 +30,7 @@ DTW::DTW(bool useScaling,bool useNullRejection,Float nullRejectionCoeff,UINT rej
     this->useScaling=useScaling;
     this->useNullRejection = useNullRejection;
     this->nullRejectionCoeff = nullRejectionCoeff;
-	this->nullRejectionLikelihoodThreshold = nullRejectionLikelihoodThreshold;
+    this->nullRejectionLikelihoodThreshold = nullRejectionLikelihoodThreshold;
     this->rejectionMode = rejectionMode;
     this->constrainWarpingPath = constrainWarpingPath;
     this->radius = radius;
@@ -39,19 +39,19 @@ DTW::DTW(bool useScaling,bool useNullRejection,Float nullRejectionCoeff,UINT rej
     this->smoothingFactor = smoothingFactor;
 
     supportsNullRejection = true;
-	trained=false;
-	useZNormalisation=false;
-	constrainZNorm=false;
+    trained=false;
+    useZNormalisation=false;
+    constrainZNorm=false;
     trimTrainingData = false;
 
-	zNormConstrainThreshold=0.2;
-	trimThreshold = 0.1;
-	maximumTrimPercentage = 90;
+    zNormConstrainThreshold=0.2;
+    trimThreshold = 0.1;
+    maximumTrimPercentage = 90;
 
-	numTemplates=0;
-	distanceMethod=EUCLIDEAN_DIST;
+    numTemplates=0;
+    distanceMethod=EUCLIDEAN_DIST;
 
-	averageTemplateLength =0;
+    averageTemplateLength =0;
 
     classType = "DTW";
     classifierType = classType;
@@ -71,10 +71,10 @@ DTW::~DTW(void)
 }
 
 DTW& DTW::operator=(const DTW &rhs){
-	
-	if( this != &rhs ){
-		
-		this->templatesBuffer = rhs.templatesBuffer;
+    
+    if( this != &rhs ){
+        
+        this->templatesBuffer = rhs.templatesBuffer;
         this->distanceMatrices = rhs.distanceMatrices;
         this->warpPaths = rhs.warpPaths;
         this->continuousInputDataBuffer = rhs.continuousInputDataBuffer;
@@ -92,13 +92,13 @@ DTW& DTW::operator=(const DTW &rhs){
         this->smoothingFactor = rhs.smoothingFactor;
         this->distanceMethod = rhs.distanceMethod;
         this->rejectionMode = rhs.rejectionMode;
-		this->nullRejectionLikelihoodThreshold = rhs.nullRejectionLikelihoodThreshold;
+        this->nullRejectionLikelihoodThreshold = rhs.nullRejectionLikelihoodThreshold;
         this->averageTemplateLength = rhs.averageTemplateLength;
 
-	    //Copy the classifier variables
-		copyBaseVariables( (Classifier*)&rhs );
-	}
-	return *this;
+        //Copy the classifier variables
+        copyBaseVariables( (Classifier*)&rhs );
+    }
+    return *this;
 }
 
 bool DTW::deepCopyFrom(const Classifier *classifier){
@@ -126,11 +126,11 @@ bool DTW::deepCopyFrom(const Classifier *classifier){
         this->smoothingFactor = ptr->smoothingFactor;
         this->distanceMethod = ptr->distanceMethod;
         this->rejectionMode = ptr->rejectionMode;
-		this->nullRejectionLikelihoodThreshold = ptr->nullRejectionLikelihoodThreshold;
+        this->nullRejectionLikelihoodThreshold = ptr->nullRejectionLikelihoodThreshold;
         this->averageTemplateLength = ptr->averageTemplateLength;
         
-	    //Copy the classifier variables
-		return copyBaseVariables( classifier );
+        //Copy the classifier variables
+        return copyBaseVariables( classifier );
     }
     return false;
 }
@@ -138,12 +138,12 @@ bool DTW::deepCopyFrom(const Classifier *classifier){
 ////////////////////////// TRAINING FUNCTIONS //////////////////////////
 bool DTW::train_(TimeSeriesClassificationData &labelledTrainingData){
 
-	UINT bestIndex = 0;
+    UINT bestIndex = 0;
 
-	//Cleanup Memory
-	templatesBuffer.clear();
+    //Cleanup Memory
+    templatesBuffer.clear();
     classLabels.clear();
-	trained = false;
+    trained = false;
     continuousInputDataBuffer.clear();
 
     if( trimTrainingData ){
@@ -167,30 +167,30 @@ bool DTW::train_(TimeSeriesClassificationData &labelledTrainingData){
         return false;
     }
 
-	//Assign
+    //Assign
     numClasses = labelledTrainingData.getNumClasses();
-	numTemplates = labelledTrainingData.getNumClasses();
+    numTemplates = labelledTrainingData.getNumClasses();
     numInputDimensions = labelledTrainingData.getNumDimensions();
-	templatesBuffer.resize( numClasses );
+    templatesBuffer.resize( numClasses );
     classLabels.resize( numClasses );
-	nullRejectionThresholds.resize( numClasses );
-	averageTemplateLength = 0;
+    nullRejectionThresholds.resize( numClasses );
+    averageTemplateLength = 0;
 
-	//Need to copy the labelled training data incase we need to scale it or znorm it
-	TimeSeriesClassificationData trainingData( labelledTrainingData );
+    //Need to copy the labelled training data incase we need to scale it or znorm it
+    TimeSeriesClassificationData trainingData( labelledTrainingData );
 
-	//Perform any scaling or normalisation
+    //Perform any scaling or normalisation
     ranges = trainingData.getRanges();
-	if( useScaling ) scaleData( trainingData );
-	if( useZNormalisation ) znormData( trainingData );
+    if( useScaling ) scaleData( trainingData );
+    if( useZNormalisation ) znormData( trainingData );
 
-	//For each class, run a one-to-one DTW and find the template the best describes the data
-	for(UINT k=0; k<numTemplates; k++){
+    //For each class, run a one-to-one DTW and find the template the best describes the data
+    for(UINT k=0; k<numTemplates; k++){
         //Get the class label for the cth class
         UINT classLabel = trainingData.getClassTracker()[k].classLabel;
         TimeSeriesClassificationData classData = trainingData.getClassData( classLabel );
-		UINT numExamples = classData.getNumSamples();
-		bestIndex = 0;
+        UINT numExamples = classData.getNumSamples();
+        bestIndex = 0;
 
         //Set the class label of this template
         templatesBuffer[k].classLabel = classLabel;
@@ -200,57 +200,57 @@ bool DTW::train_(TimeSeriesClassificationData &labelledTrainingData){
         
         trainingLog << "Training Template: " << k << " Class: " << classLabel << std::endl;
 
-		//Check to make sure we actually have some training examples
-		if( numExamples < 1 ){
+        //Check to make sure we actually have some training examples
+        if( numExamples < 1 ){
             errorLog << "train_(TimeSeriesClassificationData &labelledTrainingData) - Can not train model: Num of Example is < 1! Class: " << classLabel << ". Turn off null rejection if you want to use DTW with only 1 training sample per class." << std::endl;
-			return false;
-		}
+            return false;
+        }
         
         if( numExamples == 1 && useNullRejection ){
             errorLog << "train_(TimeSeriesClassificationData &labelledTrainingData) - Can not train model as there is only 1 example in class: " << classLabel << ". Turn off null rejection if you want to use DTW with only 1 training sample per class." << std::endl;
-			return false;
-		}
+            return false;
+        }
 
-		if( numExamples == 1 ){//If we have just one training example then we have to use it as the template
+        if( numExamples == 1 ){//If we have just one training example then we have to use it as the template
             bestIndex = 0;
             nullRejectionThresholds[k] = 0.0;//TODO-We need a better way of calculating this!
-		}else{
+        }else{
             //Search for the best training example for this class
-			if( !train_NDDTW(classData,templatesBuffer[k],bestIndex) ){
+            if( !train_NDDTW(classData,templatesBuffer[k],bestIndex) ){
                 errorLog << "train_(LabelledTimeSeriesClassificationData &labelledTrainingData) - Failed to train template for class with label: " << classLabel << std::endl;
                 return false;
             }
-		}
+        }
 
-		//Add the template with the best index to the buffer
-		int trainingMethod = 0;
-		if(useSmoothing) trainingMethod = 1;
+        //Add the template with the best index to the buffer
+        int trainingMethod = 0;
+        if(useSmoothing) trainingMethod = 1;
 
-		switch (trainingMethod) {
-			case(0)://Standard Training
-				templatesBuffer[k].timeSeries = classData[bestIndex].getData();
-				break;
-			case(1)://Training using Smoothing
-				//Smooth the data, reducing its size by a factor set by smoothFactor
-				smoothData(classData[ bestIndex ].getData(),smoothingFactor,templatesBuffer[k].timeSeries);
-				break;
-			default:
-				errorLog << "Can not train model: Unknown training method "  << std::endl;
-				return false;
-				break;
-		}
+        switch (trainingMethod) {
+            case(0)://Standard Training
+                templatesBuffer[k].timeSeries = classData[bestIndex].getData();
+                break;
+            case(1)://Training using Smoothing
+                //Smooth the data, reducing its size by a factor set by smoothFactor
+                smoothData(classData[ bestIndex ].getData(),smoothingFactor,templatesBuffer[k].timeSeries);
+                break;
+            default:
+                errorLog << "Can not train model: Unknown training method "  << std::endl;
+                return false;
+                break;
+        }
         
         if( offsetUsingFirstSample ){
             offsetTimeseries( templatesBuffer[k].timeSeries );
         }
 
-		//Add the average length of the training examples for this template to the overall averageTemplateLength
-		averageTemplateLength += templatesBuffer[k].averageTemplateLength;
-	}
+        //Add the average length of the training examples for this template to the overall averageTemplateLength
+        averageTemplateLength += templatesBuffer[k].averageTemplateLength;
+    }
 
     //Flag that the models have been trained
-	trained = true;
-	averageTemplateLength = averageTemplateLength/numTemplates;
+    trained = true;
+    averageTemplateLength = averageTemplateLength/numTemplates;
 
     //Recompute the null rejection thresholds
     recomputeNullRejectionThresholds();
@@ -263,8 +263,8 @@ bool DTW::train_(TimeSeriesClassificationData &labelledTrainingData){
     predictedClassLabel = GRT_DEFAULT_NULL_CLASS_LABEL;
     maxLikelihood = DEFAULT_NULL_LIKELIHOOD_VALUE;
 
-	//Training complete
-	return true;
+    //Training complete
+    return true;
 }
 
 bool DTW::train_NDDTW(TimeSeriesClassificationData &trainingData,DTWTemplate &dtwTemplate,UINT &bestIndex){
@@ -276,52 +276,52 @@ bool DTW::train_NDDTW(TimeSeriesClassificationData &trainingData,DTWTemplate &dt
     
    for(UINT m=0; m<numExamples; m++){
        
-	   MatrixFloat templateA; //The m'th template
-	   MatrixFloat templateB; //The n'th template
-	   dtwTemplate.averageTemplateLength += trainingData[m].getLength();
+       MatrixFloat templateA; //The m'th template
+       MatrixFloat templateB; //The n'th template
+       dtwTemplate.averageTemplateLength += trainingData[m].getLength();
 
-	   //Smooth the data if required
-	   if( useSmoothing ) smoothData(trainingData[m].getData(),smoothingFactor,templateA);
-	   else templateA = trainingData[m].getData();
+       //Smooth the data if required
+       if( useSmoothing ) smoothData(trainingData[m].getData(),smoothingFactor,templateA);
+       else templateA = trainingData[m].getData();
        
        if( offsetUsingFirstSample ){
            offsetTimeseries(templateA);
        }
 
-	   for(UINT n=0; n<numExamples; n++){
-		if(m!=n){
-		    //Smooth the data if required
-		    if( useSmoothing ) smoothData(trainingData[n].getData(),smoothingFactor,templateB);
-		    else templateB = trainingData[n].getData();
+       for(UINT n=0; n<numExamples; n++){
+        if(m!=n){
+            //Smooth the data if required
+            if( useSmoothing ) smoothData(trainingData[n].getData(),smoothingFactor,templateB);
+            else templateB = trainingData[n].getData();
             
             if( offsetUsingFirstSample ){
                 offsetTimeseries(templateB);
             }
 
-			//Compute the distance between the two time series
+            //Compute the distance between the two time series
             MatrixFloat distanceMatrix(templateA.getNumRows(),templateB.getNumRows());
             Vector< IndexDist > warpPath;
-			Float dist = computeDistance(templateA,templateB,distanceMatrix,warpPath);
+            Float dist = computeDistance(templateA,templateB,distanceMatrix,warpPath);
             
             trainingLog << "Template: " << m << " Timeseries: " << n << " Dist: " << dist << std::endl;
 
-			//Update the results values
-			distanceResults[m][n] = dist;
-			results[m] += dist;
-		}else distanceResults[m][n] = 0; //The distance is zero because the two timeseries are the same
-	   }
+            //Update the results values
+            distanceResults[m][n] = dist;
+            results[m] += dist;
+        }else distanceResults[m][n] = 0; //The distance is zero because the two timeseries are the same
+       }
    }
 
-	for(UINT m=0; m<numExamples; m++) results[m]/=(numExamples-1);
-	//Find the best average result, this is the result with the minimum value
-	bestIndex = 0;
-	Float bestAverage = results[0];
-	for(UINT m=1; m<numExamples; m++){
-		if( results[m] < bestAverage ){
-			bestAverage = results[m];
-			bestIndex = m;
-		}
-	}
+    for(UINT m=0; m<numExamples; m++) results[m]/=(numExamples-1);
+    //Find the best average result, this is the result with the minimum value
+    bestIndex = 0;
+    Float bestAverage = results[0];
+    for(UINT m=1; m<numExamples; m++){
+        if( results[m] < bestAverage ){
+            bestAverage = results[m];
+            bestIndex = m;
+        }
+    }
 
     if( numExamples > 2 ){
 
@@ -341,13 +341,13 @@ bool DTW::train_NDDTW(TimeSeriesClassificationData &trainingData,DTWTemplate &dt
         dtwTemplate.trainingSigma = 0.0;
     }
 
-	//Set the average length of the training examples
-	dtwTemplate.averageTemplateLength = (UINT) (dtwTemplate.averageTemplateLength/Float(numExamples));
+    //Set the average length of the training examples
+    dtwTemplate.averageTemplateLength = (UINT) (dtwTemplate.averageTemplateLength/Float(numExamples));
     
     trainingLog << "AverageTemplateLength: " << dtwTemplate.averageTemplateLength << std::endl;
 
     //Flag that the training was successfull
-	return true;
+    return true;
 }
 
 
@@ -368,68 +368,68 @@ bool DTW::predict_(MatrixFloat &inputTimeSeries){
         classDistances[k] = DEFAULT_NULL_LIKELIHOOD_VALUE;
     }
 
-	if( numInputDimensions != inputTimeSeries.getNumCols() ){
+    if( numInputDimensions != inputTimeSeries.getNumCols() ){
         errorLog << "predict_(MatrixFloat &inputTimeSeries) - The number of features in the model (" << numInputDimensions << ") do not match that of the input time series (" << inputTimeSeries.getNumCols() << ")" << std::endl;
         return false;
     }
 
-	//Perform any preprocessing if requried
+    //Perform any preprocessing if requried
     MatrixFloat *timeSeriesPtr = &inputTimeSeries;
     MatrixFloat processedTimeSeries;
     MatrixFloat tempMatrix;
-	if(useScaling){
+    if(useScaling){
         scaleData(*timeSeriesPtr,processedTimeSeries);
         timeSeriesPtr = &processedTimeSeries;
     }
     
     //Normalize the data if needed
-	if( useZNormalisation ){
+    if( useZNormalisation ){
         znormData(*timeSeriesPtr,processedTimeSeries);
         timeSeriesPtr = &processedTimeSeries;
     }
 
-	//Smooth the data if required
-	if( useSmoothing ){
-		smoothData(*timeSeriesPtr,smoothingFactor,tempMatrix);
-		timeSeriesPtr = &tempMatrix;
-	}
+    //Smooth the data if required
+    if( useSmoothing ){
+        smoothData(*timeSeriesPtr,smoothingFactor,tempMatrix);
+        timeSeriesPtr = &tempMatrix;
+    }
     
     //Offset the timeseries if required
     if( offsetUsingFirstSample ){
         offsetTimeseries( *timeSeriesPtr );
     }
 
-	//Make the prediction by finding the closest template
+    //Make the prediction by finding the closest template
     Float sum = 0;
     if( distanceMatrices.size() != numTemplates ) distanceMatrices.resize( numTemplates );
     if( warpPaths.size() != numTemplates ) warpPaths.resize( numTemplates );
     
-	//Test the timeSeries against all the templates in the timeSeries buffer
-	for(UINT k=0; k<numTemplates; k++){
-		//Perform DTW
-		classDistances[k] = computeDistance(templatesBuffer[k].timeSeries,*timeSeriesPtr,distanceMatrices[k],warpPaths[k]);
+    //Test the timeSeries against all the templates in the timeSeries buffer
+    for(UINT k=0; k<numTemplates; k++){
+        //Perform DTW
+        classDistances[k] = computeDistance(templatesBuffer[k].timeSeries,*timeSeriesPtr,distanceMatrices[k],warpPaths[k]);
         
-		if(classDistances[k] > 1e-9)
-		{
-			classLikelihoods[k] = 1.0 / classDistances[k];
-		}
-		else
-		{
-			classLikelihoods[k] = 1e9;
-		}
+        if(classDistances[k] > 1e-9)
+        {
+            classLikelihoods[k] = 1.0 / classDistances[k];
+        }
+        else
+        {
+            classLikelihoods[k] = 1e9;
+        }
 
         sum += classLikelihoods[k];
-	}
+    }
 
-	//See which gave the min distance
-	UINT closestTemplateIndex = 0;
-	bestDistance = classDistances[0];
-	for(UINT k=1; k<numTemplates; k++){
-		if( classDistances[k] < bestDistance ){
-			bestDistance = classDistances[k];
-			closestTemplateIndex = k;
-		}
-	}
+    //See which gave the min distance
+    UINT closestTemplateIndex = 0;
+    bestDistance = classDistances[0];
+    for(UINT k=1; k<numTemplates; k++){
+        if( classDistances[k] < bestDistance ){
+            bestDistance = classDistances[k];
+            closestTemplateIndex = k;
+        }
+    }
     
     //Normalize the class likelihoods and check which class has the maximum likelihood
     UINT maxLikelihoodIndex = 0;
@@ -466,7 +466,7 @@ bool DTW::predict_(MatrixFloat &inputTimeSeries){
                 break;
         }
 
-	}else predictedClassLabel = templatesBuffer[ closestTemplateIndex ].classLabel;
+    }else predictedClassLabel = templatesBuffer[ closestTemplateIndex ].classLabel;
 
     return true;
 }
@@ -482,7 +482,7 @@ bool DTW::predict_( VectorFloat &inputVector ){
     std::fill(classLikelihoods.begin(),classLikelihoods.end(),DEFAULT_NULL_LIKELIHOOD_VALUE);
     std::fill(classDistances.begin(),classDistances.end(),0);
 
-	if( numInputDimensions != inputVector.size() ){
+    if( numInputDimensions != inputVector.size() ){
         errorLog << "predict_(VectorFloat &inputVector) - The number of features in the model " << numInputDimensions << " does not match that of the input Vector " << inputVector.size() << std::endl;
         return false;
     }
@@ -535,87 +535,87 @@ bool DTW::clear(){
 
 bool DTW::recomputeNullRejectionThresholds(){
     
-	if(!trained) return false;
+    if(!trained) return false;
 
     //Copy the null rejection thresholds into one buffer so they can easily be accessed from the base class
     nullRejectionThresholds.resize(numTemplates);
 
-	for(UINT k=0; k<numTemplates; k++){
-		//The threshold is set as the mean distance plus gamma standard deviations
-		nullRejectionThresholds[k] = templatesBuffer[k].trainingMu + (templatesBuffer[k].trainingSigma * nullRejectionCoeff);
-	}
+    for(UINT k=0; k<numTemplates; k++){
+        //The threshold is set as the mean distance plus gamma standard deviations
+        nullRejectionThresholds[k] = templatesBuffer[k].trainingMu + (templatesBuffer[k].trainingSigma * nullRejectionCoeff);
+    }
 
-	return true;
+    return true;
 }
 
 bool DTW::setModels( Vector< DTWTemplate > newTemplates ){
-	
-	if( newTemplates.size() == templatesBuffer.size() ){
-		templatesBuffer = newTemplates;
-		//Make sure the class labels have not changed
-		classLabels.resize( templatesBuffer.size() );
-		for(UINT i=0; i<templatesBuffer.size(); i++){
-			classLabels[i] = templatesBuffer[i].classLabel;
-		}
-		return true;
-	}
-	return false;
+    
+    if( newTemplates.size() == templatesBuffer.size() ){
+        templatesBuffer = newTemplates;
+        //Make sure the class labels have not changed
+        classLabels.resize( templatesBuffer.size() );
+        for(UINT i=0; i<templatesBuffer.size(); i++){
+            classLabels[i] = templatesBuffer[i].classLabel;
+        }
+        return true;
+    }
+    return false;
 }
 
 ////////////////////////// computeDistance ///////////////////////////////////////////
 
 Float DTW::computeDistance(MatrixFloat &timeSeriesA,MatrixFloat &timeSeriesB,MatrixFloat &distanceMatrix,Vector< IndexDist > &warpPath){
 
-	const int M = timeSeriesA.getNumRows();
-	const int N = timeSeriesB.getNumRows();
-	const int C = timeSeriesA.getNumCols();
-	int i,j,k,index = 0;
-	Float totalDist,v,normFactor = 0.;
+    const int M = timeSeriesA.getNumRows();
+    const int N = timeSeriesB.getNumRows();
+    const int C = timeSeriesA.getNumCols();
+    int i,j,k,index = 0;
+    Float totalDist,v,normFactor = 0.;
     
     warpPath.clear();
     if( int(distanceMatrix.getNumRows()) != M || int(distanceMatrix.getNumCols()) != N ){
         distanceMatrix.resize(M, N);
     }
 
-	switch (distanceMethod) {
-		case (ABSOLUTE_DIST):
-			for(i=0; i<M; i++){
-				for(j=0; j<N; j++){
-					distanceMatrix[i][j] = 0.0;
-					for(k=0; k< C; k++){
-					   distanceMatrix[i][j] += fabs(timeSeriesA[i][k]-timeSeriesB[j][k]);
-					}
-				}
-			}
-			break;
-		case (EUCLIDEAN_DIST):
-			//Calculate Euclidean Distance for all possible values
-			for(i=0; i<M; i++){
-				for(j=0; j<N; j++){
-					distanceMatrix[i][j] = 0.0;
-					for(k=0; k< C; k++){
-						distanceMatrix[i][j] += SQR( timeSeriesA[i][k]-timeSeriesB[j][k] );
-					}
-					distanceMatrix[i][j] = sqrt( distanceMatrix[i][j] );
-				}
-			}
-			break;
-		case (NORM_ABSOLUTE_DIST):
-			for(i=0; i<M; i++){
-				for(j=0; j<N; j++){
-					distanceMatrix[i][j] = 0.0;
-					for(k=0; k< C; k++){
-					   distanceMatrix[i][j] += fabs(timeSeriesA[i][k]-timeSeriesB[j][k]);
-					}
-					distanceMatrix[i][j]/=N;
-				}
-			}
-			break;
-		default:
-			errorLog<<"ERROR: Unknown distance method: "<<distanceMethod<< std::endl;
-			return -1;
-			break;
-	}
+    switch (distanceMethod) {
+        case (ABSOLUTE_DIST):
+            for(i=0; i<M; i++){
+                for(j=0; j<N; j++){
+                    distanceMatrix[i][j] = 0.0;
+                    for(k=0; k< C; k++){
+                       distanceMatrix[i][j] += fabs(timeSeriesA[i][k]-timeSeriesB[j][k]);
+                    }
+                }
+            }
+            break;
+        case (EUCLIDEAN_DIST):
+            //Calculate Euclidean Distance for all possible values
+            for(i=0; i<M; i++){
+                for(j=0; j<N; j++){
+                    distanceMatrix[i][j] = 0.0;
+                    for(k=0; k< C; k++){
+                        distanceMatrix[i][j] += SQR( timeSeriesA[i][k]-timeSeriesB[j][k] );
+                    }
+                    distanceMatrix[i][j] = sqrt( distanceMatrix[i][j] );
+                }
+            }
+            break;
+        case (NORM_ABSOLUTE_DIST):
+            for(i=0; i<M; i++){
+                for(j=0; j<N; j++){
+                    distanceMatrix[i][j] = 0.0;
+                    for(k=0; k< C; k++){
+                       distanceMatrix[i][j] += fabs(timeSeriesA[i][k]-timeSeriesB[j][k]);
+                    }
+                    distanceMatrix[i][j]/=N;
+                }
+            }
+            break;
+        default:
+            errorLog<<"ERROR: Unknown distance method: "<<distanceMethod<< std::endl;
+            return -1;
+            break;
+    }
 
     //Run the recursive search function to build the cost matrix
     Float distance = sqrt( d(M-1,N-1,distanceMatrix,M,N) );
@@ -634,17 +634,17 @@ Float DTW::computeDistance(MatrixFloat &timeSeriesA,MatrixFloat &timeSeriesB,Mat
         }
     }
 
-	//Now Create the Warp Path through the cost matrix, starting at the end
+    //Now Create the Warp Path through the cost matrix, starting at the end
     i=M-1;
-	j=N-1;
-	totalDist = distanceMatrix[i][j];
+    j=N-1;
+    totalDist = distanceMatrix[i][j];
     warpPath.push_back( IndexDist(i,j,distanceMatrix[i][j]) );
     
-	//Use dynamic programming to navigate through the cost matrix until [0][0] has been reached
+    //Use dynamic programming to navigate through the cost matrix until [0][0] has been reached
     normFactor = 1;
-	while( true ) {
+    while( true ) {
         if( i==0 && j==0 ) break;
-		if( i==0 ){ j--; }
+        if( i==0 ){ j--; }
         else{ 
             if( j==0 ) i--;
             else{
@@ -673,11 +673,11 @@ Float DTW::computeDistance(MatrixFloat &timeSeriesA,MatrixFloat &timeSeriesB,Mat
             }
         }
         normFactor++;
-		totalDist += distanceMatrix[i][j];
-		warpPath.push_back( IndexDist(i,j,distanceMatrix[i][j]) );
-	}
+        totalDist += distanceMatrix[i][j];
+        warpPath.push_back( IndexDist(i,j,distanceMatrix[i][j]) );
+    }
 
-	return totalDist/normFactor;
+    return totalDist/normFactor;
 }
 
 Float DTW::d(int m,int n,MatrixFloat &distanceMatrix,const int M,const int N){
@@ -755,8 +755,8 @@ Float DTW::d(int m,int n,MatrixFloat &distanceMatrix,const int M,const int N){
             Float minValue = grt_numeric_limits< Float >::max();
             int index = 0;
             if( contribDist1 < minValue ){ minValue = contribDist1; index = 1; }
-			if( contribDist2 < minValue ){ minValue = contribDist2; index = 2; }
-			if( contribDist3 < minValue ){ minValue = contribDist3; index = 3; }
+            if( contribDist2 < minValue ){ minValue = contribDist2; index = 2; }
+            if( contribDist3 < minValue ){ minValue = contribDist3; index = 3; }
 
             switch ( index ) {
                 case 1:
@@ -783,10 +783,10 @@ Float DTW::d(int m,int n,MatrixFloat &distanceMatrix,const int M,const int N){
 }
 
 inline Float DTW::MIN_(Float a,Float b, Float c){
-	Float v = a;
-	if(b<v) v = b;
-	if(c<v) v = c;
-	return v;
+    Float v = a;
+    if(b<v) v = b;
+    if(c<v) v = c;
+    return v;
 }
 
 
@@ -794,7 +794,7 @@ inline Float DTW::MIN_(Float a,Float b, Float c){
 
 void DTW::scaleData(TimeSeriesClassificationData &trainingData){
 
-	//Scale the data using the min and max values
+    //Scale the data using the min and max values
     for(UINT i=0; i<trainingData.getNumSamples(); i++){
         scaleData( trainingData[i].getData(), trainingData[i].getData() );
     }
@@ -803,17 +803,17 @@ void DTW::scaleData(TimeSeriesClassificationData &trainingData){
 
 void DTW::scaleData(MatrixFloat &data,MatrixFloat &scaledData){
 
-	const UINT R = data.getNumRows();
-	const UINT C = data.getNumCols();
+    const UINT R = data.getNumRows();
+    const UINT C = data.getNumCols();
 
     if( scaledData.getNumRows() != R || scaledData.getNumCols() != C ){
         scaledData.resize(R, C);
     }
 
-	//Scale the data using the min and max values
-	for(UINT i=0; i<R; i++)
-		for(UINT j=0; j<C; j++)
-			scaledData[i][j] = grt_scale(data[i][j],ranges[j].minValue,ranges[j].maxValue,0.0,1.0);
+    //Scale the data using the min and max values
+    for(UINT i=0; i<R; i++)
+        for(UINT j=0; j<C; j++)
+            scaledData[i][j] = grt_scale(data[i][j],ranges[j].minValue,ranges[j].maxValue,0.0,1.0);
 
 }
 
@@ -827,131 +827,126 @@ void DTW::znormData(TimeSeriesClassificationData &trainingData){
 
 void DTW::znormData(MatrixFloat &data,MatrixFloat &normData){
 
-	const UINT R = data.getNumRows();
-	const UINT C = data.getNumCols();
+    const UINT R = data.getNumRows();
+    const UINT C = data.getNumCols();
 
     if( normData.getNumRows() != R || normData.getNumCols() != C ){
         normData.resize(R,C);
     }
 
-	for(UINT j=0; j<C; j++){
-		Float mean = 0.0;
-		Float stdDev = 0.0;
+    for(UINT j=0; j<C; j++){
+        Float mean = 0.0;
+        Float stdDev = 0.0;
 
-		//Calculate Mean
-		for(UINT i=0; i<R; i++) mean += data[i][j];
-		mean /= Float(R);
+        //Calculate Mean
+        for(UINT i=0; i<R; i++) mean += data[i][j];
+        mean /= Float(R);
 
-		//Calculate Std Dev
-		for(UINT i=0; i<R; i++)
-			stdDev += grt_sqr(data[i][j]-mean);
-		stdDev = grt_sqrt( stdDev / (R - 1.0) );
+        //Calculate Std Dev
+        for(UINT i=0; i<R; i++)
+            stdDev += grt_sqr(data[i][j]-mean);
+        stdDev = grt_sqrt( stdDev / (R - 1.0) );
 
-		if(constrainZNorm && stdDev < 0.01){
-			//Normalize the data to 0 mean
-		    for(UINT i=0; i<R; i++)
-			normData[i][j] = (data[i][j] - mean);
-		}else{
-			//Normalize the data to 0 mean and standard deviation of 1
-		    for(UINT i=0; i<R; i++)
-			normData[i][j] = (data[i][j] - mean) / stdDev;
-		}
-	}
+        if(constrainZNorm && stdDev < 0.01){
+            //Normalize the data to 0 mean
+            for(UINT i=0; i<R; i++)
+            normData[i][j] = (data[i][j] - mean);
+        }else{
+            //Normalize the data to 0 mean and standard deviation of 1
+            for(UINT i=0; i<R; i++)
+            normData[i][j] = (data[i][j] - mean) / stdDev;
+        }
+    }
 }
 
 void DTW::smoothData(VectorFloat &data,UINT smoothFactor,VectorFloat &resultsData){
 
-	const UINT M = (UINT)data.size();
-	const UINT N = (UINT) floor(Float(M)/Float(smoothFactor));
-	resultsData.resize(N,0);
-	for(UINT i=0; i<N; i++) resultsData[i]=0.0;
+    const UINT M = (UINT)data.size();
+    const UINT N = (UINT) floor(Float(M)/Float(smoothFactor));
+    resultsData.resize(N,0);
+    for(UINT i=0; i<N; i++) resultsData[i]=0.0;
 
-	if(smoothFactor==1 || M<smoothFactor){
-		resultsData = data;
-		return;
-	}
+    if(smoothFactor==1 || M<smoothFactor){
+        resultsData = data;
+        return;
+    }
 
-	for(UINT i=0; i<N; i++){
-	    Float mean = 0.0;
-		UINT index = i*smoothFactor;
-		for(UINT x=0; x<smoothFactor; x++){
-			mean += data[index+x];
-		}
-		resultsData[i] = mean/smoothFactor;
-	}
-	//Add on the data that does not fit into the window
-	if(M%smoothFactor!=0.0){
-		Float mean = 0.0;
-			for(UINT i=N*smoothFactor; i<M; i++) mean += data[i];
+    for(UINT i=0; i<N; i++){
+        Float mean = 0.0;
+        UINT index = i*smoothFactor;
+        for(UINT x=0; x<smoothFactor; x++){
+            mean += data[index+x];
+        }
+        resultsData[i] = mean/smoothFactor;
+    }
+    //Add on the data that does not fit into the window
+    if(M%smoothFactor!=0.0){
+        Float mean = 0.0;
+            for(UINT i=N*smoothFactor; i<M; i++) mean += data[i];
         mean/=M-(N*smoothFactor);
-		//Add one to the end of the Vector
-		VectorFloat tempVector(N+1);
-		for(UINT i=0; i<N; i++) tempVector[i] = resultsData[i];
-		tempVector[N] = mean;
-		resultsData = tempVector;
-	}
+        //Add one to the end of the Vector
+        VectorFloat tempVector(N+1);
+        for(UINT i=0; i<N; i++) tempVector[i] = resultsData[i];
+        tempVector[N] = mean;
+        resultsData = tempVector;
+    }
 
 }
 
 void DTW::smoothData(MatrixFloat &data,UINT smoothFactor,MatrixFloat &resultsData){
 
-	const UINT M = data.getNumRows();
-	const UINT C = data.getNumCols();
-	const UINT N = (UINT) floor(Float(M)/Float(smoothFactor));
-	resultsData.resize(N,C);
+    const UINT M = data.getNumRows();
+    const UINT C = data.getNumCols();
+    const UINT N = (UINT) floor(Float(M)/Float(smoothFactor));
+    resultsData.resize(N,C);
 
-	if(smoothFactor==1 || M<smoothFactor){
-		resultsData = data;
-		return;
-	}
+    if(smoothFactor==1 || M<smoothFactor){
+        resultsData = data;
+        return;
+    }
 
-	for(UINT i=0; i<N; i++){
-		for(UINT j=0; j<C; j++){
-	     Float mean = 0.0;
-		 int index = i*smoothFactor;
-		 for(UINT x=0; x<smoothFactor; x++){
-			mean += data[index+x][j];
-		 }
-		 resultsData[i][j] = mean/smoothFactor;
-		}
-	}
+    for(UINT i=0; i<N; i++){
+        for(UINT j=0; j<C; j++){
+         Float mean = 0.0;
+         int index = i*smoothFactor;
+         for(UINT x=0; x<smoothFactor; x++){
+            mean += data[index+x][j];
+         }
+         resultsData[i][j] = mean/smoothFactor;
+        }
+    }
 
-	//Add on the data that does not fit into the window
-	if(M%smoothFactor!=0.0){
-		VectorFloat mean(C,0.0);
-		for(UINT j=0; j<C; j++){
-		 for(UINT i=N*smoothFactor; i<M; i++) mean[j] += data[i][j];
-		 mean[j]/=M-(N*smoothFactor);
-		}
+    //Add on the data that does not fit into the window
+    if(M%smoothFactor!=0.0){
+        VectorFloat mean(C,0.0);
+        for(UINT j=0; j<C; j++){
+         for(UINT i=N*smoothFactor; i<M; i++) mean[j] += data[i][j];
+         mean[j]/=M-(N*smoothFactor);
+        }
 
-		//Add one row to the end of the Matrix
-		MatrixFloat tempMatrix(N+1,C);
+        //Add one row to the end of the Matrix
+        MatrixFloat tempMatrix(N+1,C);
 
-		for(UINT i=0; i<N; i++)
-			for(UINT j=0; j<C; j++)
-				tempMatrix[i][j] = resultsData[i][j];
+        for(UINT i=0; i<N; i++)
+            for(UINT j=0; j<C; j++)
+                tempMatrix[i][j] = resultsData[i][j];
 
         for(UINT j=0; j<C; j++) tempMatrix[N][j] = mean[j];
-		resultsData = tempMatrix;
-	}
+        resultsData = tempMatrix;
+    }
 
 }
 
 ////////////////////////////// SAVE & LOAD FUNCTIONS ////////////////////////////////
     
-bool DTW::saveModelToFile( std::fstream &file ) const{
-    
-    if(!file.is_open()){
-        errorLog << "saveModelToFile( string fileName ) - Could not open file to save data" << std::endl;
-        return false;
-    }
+bool DTW::saveModelToFile( std::ostream &file ) const{
     
     file << "GRT_DTW_Model_File_V2.0" << std::endl;
     
     //Write the classifier settings to the file
     if( !Classifier::saveBaseSettingsToFile(file) ){
-        errorLog <<"saveModelToFile(fstream &file) - Failed to save classifier base settings to file!" << std::endl;
-		return false;
+        errorLog <<"saveModelToFile(ostream &file) - Failed to save classifier base settings to file!" << std::endl;
+        return false;
     }
     
     file << "DistanceMethod: ";
@@ -1000,17 +995,11 @@ bool DTW::saveModelToFile( std::fstream &file ) const{
     return true;
 }
 
-bool DTW::loadModelFromFile( std::fstream &file ){
+bool DTW::loadModelFromFile( std::istream &file ){
     
     std::string word;
     UINT timeSeriesLength;
     UINT ts;
-    
-    if(!file.is_open())
-    {
-        errorLog << "loadDTWModelFromFile( string fileName ) - Failed to open file!" << std::endl;
-        return false;
-    }
     
     file >> word;
     
@@ -1235,8 +1224,8 @@ bool DTW::setRejectionMode(UINT rejectionMode){
 
 bool DTW::setNullRejectionThreshold(Float nullRejectionLikelihoodThreshold)
 {
-	this->nullRejectionLikelihoodThreshold = nullRejectionLikelihoodThreshold;
-	return true;
+    this->nullRejectionLikelihoodThreshold = nullRejectionLikelihoodThreshold;
+    return true;
 }
     
 bool DTW::setOffsetTimeseriesUsingFirstSample(bool offsetUsingFirstSample){
@@ -1255,26 +1244,26 @@ bool DTW::setWarpingRadius(Float radius){
 }
 
 bool DTW::enableZNormalization(bool useZNormalisation,bool constrainZNorm){ 
-	this->useZNormalisation = useZNormalisation; 
-	this->constrainZNorm = constrainZNorm;
-	return true; 
+    this->useZNormalisation = useZNormalisation; 
+    this->constrainZNorm = constrainZNorm;
+    return true; 
 }
 
 bool DTW::enableTrimTrainingData(bool trimTrainingData,Float trimThreshold,Float maximumTrimPercentage){
-	
-	if( trimThreshold < 0 || trimThreshold > 1 ){
-		warningLog << "Failed to set trimTrainingData.  The trimThreshold must be in the range of [0 1]" << std::endl;
-		return false;
-	}
-	if( maximumTrimPercentage < 0 || maximumTrimPercentage > 100 ){
-		warningLog << "Failed to set trimTrainingData.  The maximumTrimPercentage must be a valid percentage in the range of [0 100]" << std::endl;
-		return false;
-	}
-	
-	this->trimTrainingData = trimTrainingData;
-	this->trimThreshold = trimThreshold;
-	this->maximumTrimPercentage = maximumTrimPercentage;
-	return true;
+    
+    if( trimThreshold < 0 || trimThreshold > 1 ){
+        warningLog << "Failed to set trimTrainingData.  The trimThreshold must be in the range of [0 1]" << std::endl;
+        return false;
+    }
+    if( maximumTrimPercentage < 0 || maximumTrimPercentage > 100 ){
+        warningLog << "Failed to set trimTrainingData.  The maximumTrimPercentage must be a valid percentage in the range of [0 100]" << std::endl;
+        return false;
+    }
+    
+    this->trimTrainingData = trimTrainingData;
+    this->trimThreshold = trimThreshold;
+    this->maximumTrimPercentage = maximumTrimPercentage;
+    return true;
 }
     
 void DTW::offsetTimeseries(MatrixFloat &timeseries){
@@ -1286,7 +1275,7 @@ void DTW::offsetTimeseries(MatrixFloat &timeseries){
     }
 }
     
-bool DTW::loadLegacyModelFromFile( std::fstream &file ){
+bool DTW::loadLegacyModelFromFile( std::istream &file ){
     
     std::string word;
     UINT timeSeriesLength;
