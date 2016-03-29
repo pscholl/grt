@@ -34,13 +34,13 @@ HMM::HMM(const UINT hmmType,const UINT modelType,const UINT delta,const bool use
     this->useNullRejection = useNullRejection;
     
     //Default discrete setup
-	numStates = 10;
-	numSymbols = 20;
-	maxNumEpochs = 1000;
-	minChange = 1.0e-5;
-	
+    numStates = 10;
+    numSymbols = 20;
+    maxNumEpochs = 1000;
+    minChange = 1.0e-5;
+    
     //Default continuous setup
-	downsampleFactor = 5;
+    downsampleFactor = 5;
     committeeSize = 5;
     sigma = 10.0;
     autoEstimateSigma = true;
@@ -135,7 +135,7 @@ bool HMM::train_(TimeSeriesClassificationData &trainingData){
     
     errorLog << "train_(TimeSeriesClassificationData &trainingData) - Failed to train model, unknown HMM type!" << std::endl;
 
-	return false;
+    return false;
 }
     
 bool HMM::train_discrete(TimeSeriesClassificationData &trainingData){
@@ -151,33 +151,44 @@ bool HMM::train_discrete(TimeSeriesClassificationData &trainingData){
         errorLog << "train_discrete(TimeSeriesClassificationData &trainingData) - The number of dimensions in the training data must be 1. If your training data is not 1 dimensional then you must quantize the training data using one of the GRT quantization algorithms" << std::endl;
         return false;
     }
-    
+
     //Reset the HMM
     numInputDimensions = trainingData.getNumDimensions();
     numClasses = trainingData.getNumClasses();
     discreteModels.resize( numClasses );
     classLabels.resize( numClasses );
-    
+
     //Init the models
     for(UINT k=0; k<numClasses; k++){
         discreteModels[k].resetModel(numStates,numSymbols,modelType,delta);
         discreteModels[k].setMaxNumEpochs( maxNumEpochs );
         discreteModels[k].setMinChange( minChange );
     }
-    
+
     //Train each of the models
     for(UINT k=0; k<numClasses; k++){
         //Get the class ID of this gesture
         UINT classID = trainingData.getClassTracker()[k].classLabel;
         classLabels[k] = classID;
-        
+
+        if (classID == 0 )
+          continue; // ingore the NULL class
+
         //Convert this classes training data into a list of observation sequences
         TimeSeriesClassificationData classData = trainingData.getClassData( classID );
         Vector< Vector< UINT > > observationSequences;
         if( !convertDataToObservationSequence( classData, observationSequences ) ){
             return false;
         }
-        
+
+        for (UINT i=0; i<observationSequences.size(); i++) {
+          Vector< UINT > &obs = observationSequences[i];
+          if ( obs.size() < numStates ) {
+            errorLog << "sample to small (" << obs.size() << "). Must be at least " << numStates << " long" << std::endl;
+            return false;
+          }
+        }
+
         //Train the model
         if( !discreteModels[k].train( observationSequences ) ){
             errorLog << "train_discrete(TimeSeriesClassificationData &trainingData) - Failed to train HMM for class " << classID << std::endl;
@@ -187,8 +198,35 @@ bool HMM::train_discrete(TimeSeriesClassificationData &trainingData){
     
     //Compute the rejection thresholds
     nullRejectionThresholds.resize(numClasses);
-    
+    trained = true;
+
+    if (!useNullRejection)
+      return true;
+
+    int NULLclassID=-1;
+    UINT NULLidx=0;
+    for (NULLidx=0; NULLidx<numClasses; NULLidx++)
+      if ( trainingData.getClassTracker()[NULLidx].classLabel == 0) {
+        NULLclassID = trainingData.getClassTracker()[NULLidx].classLabel;
+        break;
+      }
+
+    TimeSeriesClassificationData NULLdata;
+    Vector< Vector< UINT > > NULLsequences;
+    if (NULLclassID != -1) {
+        NULLdata = trainingData.getClassData( NULLclassID );
+        if( !convertDataToObservationSequence( NULLdata, NULLsequences ) )
+            return false;
+    }
+
+    // We do a two-pass null-rejection;
+    //  1. calculate the minimum probability for each class
+    //  2. calculate the maximum probability of NULL-labeled data for each class
+    // Set the null-rejection treshold to mean of those two.
     for(UINT k=0; k<numClasses; k++){
+        if ( trainingData.getClassTracker()[k].classLabel == 0)
+          continue; // ignore the NULL class
+
         //Get the class ID of this gesture
         UINT classID = trainingData.getClassTracker()[k].classLabel;
         classLabels[k] = classID;
@@ -202,13 +240,33 @@ bool HMM::train_discrete(TimeSeriesClassificationData &trainingData){
         
         //Test the model
         Float loglikelihood = 0;
+        Float minLoglikelihood = 0;
         Float avgLoglikelihood = 0;
         for(UINT i=0; i<observationSequences.size(); i++){
             loglikelihood = discreteModels[k].predict( observationSequences[i] );
-            avgLoglikelihood += fabs( loglikelihood );
+             loglikelihood /= observationSequences[i].size(); // normalize
+             if (minLoglikelihood > loglikelihood)
+               minLoglikelihood = loglikelihood;
         }
-        nullRejectionThresholds[k] = -( avgLoglikelihood / Float( observationSequences.size() ) );
+        nullRejectionThresholds[k] = minLoglikelihood;
+
+        // if there is NULL data, we test those also 
+        for(UINT i=0; i<NULLsequences.size(); i++){
+            loglikelihood = discreteModels[k].predict( NULLsequences[i] );
+            loglikelihood /= NULLsequences[i].size(); // normalize
+            if (loglikelihood >= nullRejectionThresholds[k])
+                nullRejectionThresholds[k] = (nullRejectionThresholds[k] + loglikelihood) / 2.;
+        }
     }
+
+    // remove the NULL class from the training set
+    if (NULLclassID != -1) {
+      nullRejectionThresholds.erase(nullRejectionThresholds.begin() + NULLidx);
+      discreteModels.erase(discreteModels.begin() + NULLidx);
+      classLabels.erase(classLabels.begin() + NULLidx);
+      numClasses--;
+    }
+
     
     //Flag that the model has been trained
     trained = true;
@@ -292,23 +350,23 @@ bool HMM::predict_(VectorFloat &inputVector){
     
     errorLog << "predict_(VectorFloat &inputVector) - Failed to predict, unknown HMM type!" << std::endl;
     
-	return false;
+    return false;
 }
     
 bool HMM::predict_discrete( VectorFloat &inputVector ){
     
     predictedClassLabel = 0;
-	maxLikelihood = -10000;
+    maxLikelihood = -10000;
     
     if( !trained ){
         errorLog << "predict_(VectorFloat &inputVector) - The HMM classifier has not been trained!" << std::endl;
         return false;
     }
     
-	if( inputVector.size() != numInputDimensions ){
+    if( inputVector.size() != numInputDimensions ){
         errorLog << "predict_(VectorFloat &inputVector) - The size of the input vector (" << inputVector.size() << ") does not match the num features in the model (" << numInputDimensions << std::endl;
-		return false;
-	}
+        return false;
+    }
     
     if( classLikelihoods.size() != numClasses ) classLikelihoods.resize(numClasses,0);
     if( classDistances.size() != numClasses ) classDistances.resize(numClasses,0);
@@ -323,32 +381,27 @@ bool HMM::predict_discrete( VectorFloat &inputVector ){
         return false;
     }
     
-	for(UINT k=0; k<numClasses; k++){
-		classDistances[k] = discreteModels[k].predict( newObservation );
+    for(UINT k=0; k<numClasses; k++){
+        classDistances[k] = discreteModels[k].predict( newObservation );
         
         //Set the class likelihood as the antilog of the class distances
         classLikelihoods[k] = grt_antilog( classDistances[k] );
         
         //The loglikelihood values are negative so we want the values closest to 0
-		if( classDistances[k] > bestDistance ){
-			bestDistance = classDistances[k];
-			bestIndex = k;
-		}
-        
-        sum += classLikelihoods[k];
+        if( classDistances[k] > bestDistance ){
+            bestDistance = classDistances[k];
+            bestIndex = k;
+        }
     }
     
-    //Turn the class distances into proper likelihoods
-    for(UINT k=0; k<numClasses; k++){
-		classLikelihoods[k] /= sum;
-    }
-    
-    maxLikelihood = classLikelihoods[ bestIndex ];
+    // see HMM.cpp:222
+    maxLikelihood = classLikelihoods[ bestIndex ] / inputVector.size();
     predictedClassLabel = classLabels[ bestIndex ];
     
     if( useNullRejection ){
-        if( maxLikelihood > nullRejectionThresholds[ bestIndex ] ){
-            predictedClassLabel = classLabels[ bestIndex ];
+        // use approximate comparison since serialization of
+        // nullRejectionThresholds cuts off
+        if( maxLikelihood - nullRejectionThresholds[ bestIndex ] > -.00001 ){
         }else predictedClassLabel = GRT_DEFAULT_NULL_CLASS_LABEL;
     }
     
@@ -362,10 +415,10 @@ bool HMM::predict_continuous( VectorFloat &inputVector ){
         return false;
     }
     
-	if( inputVector.size() != numInputDimensions ){
+    if( inputVector.size() != numInputDimensions ){
         errorLog << "predict_(VectorFloat &inputVector) - The size of the input vector (" << inputVector.size() << ") does not match the num features in the model (" << numInputDimensions << std::endl;
-		return false;
-	}
+        return false;
+    }
     
     //Scale the input vector if needed
     if( useScaling ){
@@ -445,7 +498,7 @@ bool HMM::predict_continuous( VectorFloat &inputVector ){
     }else{
         //If the sum is not greater than 1, then no class is close to any model
         maxLikelihood = 0;
-        predictedClassLabel = 0;
+        predictedClassLabel = GRT_DEFAULT_NULL_CLASS_LABEL;
     }
     
     return true;
@@ -464,7 +517,7 @@ bool HMM::predict_(MatrixFloat &timeseries){
     
     errorLog << "predict_(MatrixFloat &timeseries) - Failed to predict, unknown HMM type!" << std::endl;
     
-	return false;
+    return false;
     
 }
     
@@ -499,31 +552,25 @@ bool HMM::predict_discrete(MatrixFloat &timeseries){
     bestDistance = -99e+99;
     UINT bestIndex = 0;
     Float sum = 0;
-	for(UINT k=0; k<numClasses; k++){
-		classDistances[k] = discreteModels[k].predict( observationSequence );
+    for(UINT k=0; k<numClasses; k++){
+        classDistances[k] = discreteModels[k].predict( observationSequence );
         
         //Set the class likelihood as the antilog of the class distances
         classLikelihoods[k] = grt_antilog( classDistances[k] );
         
         //The loglikelihood values are negative so we want the values closest to 0
-		if( classDistances[k] > bestDistance ){
-			bestDistance = classDistances[k];
-			bestIndex = k;
-		}
-        
-        sum += classLikelihoods[k];
+        if( classDistances[k] > bestDistance ){
+            bestDistance = classDistances[k];
+            bestIndex = k;
+        }
     }
     
-    //Turn the class distances into proper likelihoods
-    for(UINT k=0; k<numClasses; k++){
-		classLikelihoods[k] /= sum;
-    }
-    
-    maxLikelihood = classLikelihoods[ bestIndex ];
+    // see HMM.cpp: 222
+    maxLikelihood = classDistances[ bestIndex ] / M;
     predictedClassLabel = classLabels[ bestIndex ];
     
     if( useNullRejection ){
-        if( maxLikelihood > nullRejectionThresholds[ bestIndex ] ){
+        if( maxLikelihood - nullRejectionThresholds[ bestIndex ] > -.0001 ){
             predictedClassLabel = classLabels[ bestIndex ];
         }else predictedClassLabel = GRT_DEFAULT_NULL_CLASS_LABEL;
     }
@@ -539,10 +586,10 @@ bool HMM::predict_continuous(MatrixFloat &timeseries){
         return false;
     }
     
-	if( timeseries.getNumCols() != numInputDimensions ){
+    if( timeseries.getNumCols() != numInputDimensions ){
         errorLog << "predict_continuous(MatrixFloat &timeseries) - The number of columns in the input matrix (" << timeseries.getNumCols() << ") does not match the num features in the model (" << numInputDimensions << std::endl;
-		return false;
-	}
+        return false;
+    }
     
     //Scale the input vector if needed
     if( useScaling ){
@@ -699,21 +746,15 @@ bool HMM::print() const{
     return true;
 }
 
-bool HMM::saveModelToFile( std::fstream &file ) const{
-	
-	if(!file.is_open())
-	{
-		errorLog << "saveModelToFile( fstream &file ) - File is not open!" << std::endl;
-		return false;
-	}
-
-	//Write the header info
-	file << "HMM_MODEL_FILE_V2.0\n";
+bool HMM::saveModelToFile( std::ostream &file ) const{
+    
+    //Write the header info
+    file << "HMM_MODEL_FILE_V2.0\n";
     
     //Write the classifier settings to the file
     if( !Classifier::saveBaseSettingsToFile(file) ){
-        errorLog <<"saveModelToFile(fstream &file) - Failed to save classifier base settings to file!" << std::endl;
-		return false;
+        errorLog <<"saveModelToFile(ostream &file) - Failed to save classifier base settings to file!" << std::endl;
+        return false;
     }
     
     //Write the generic hmm data
@@ -731,7 +772,7 @@ bool HMM::saveModelToFile( std::fstream &file ) const{
             file << "DiscreteModels: " << std::endl;
             for(size_t i=0; i<discreteModels.size(); i++){
                 if( !discreteModels[i].saveModelToFile( file ) ){
-                    errorLog <<"saveModelToFile(fstream &file) - Failed to save discrete model " << i << " to file!" << std::endl;
+                    errorLog <<"saveModelToFile(ostream &file) - Failed to save discrete model " << i << " to file!" << std::endl;
                     return false;
                 }
             }
@@ -744,36 +785,30 @@ bool HMM::saveModelToFile( std::fstream &file ) const{
             file << "ContinuousModels: " << std::endl;
             for(size_t i=0; i<continuousModels.size(); i++){
                 if( !continuousModels[i].saveModelToFile( file ) ){
-                    errorLog <<"saveModelToFile(fstream &file) - Failed to save continuous model " << i << " to file!" << std::endl;
+                    errorLog <<"saveModelToFile(ostream &file) - Failed to save continuous model " << i << " to file!" << std::endl;
                     return false;
                 }
             }
             break;
     }
 
-	return true;
+    return true;
 }
 
-bool HMM::loadModelFromFile( std::fstream &file ){
+bool HMM::loadModelFromFile( std::istream &file ){
 
     clear();
-	
-	if(!file.is_open())
-	{
-		errorLog << "loadModelFromFile( fstream &file ) - File is not open!" << std::endl;
-		return false;
-	}
-
-	std::string word;
+    
+    std::string word;
     UINT numModels = 0;
     
     file >> word;
     
-	//Find the file type header
-	if(word != "HMM_MODEL_FILE_V2.0"){
-		errorLog << "loadModelFromFile( fstream &file ) - Could not find Model File Header!" << std::endl;
-		return false;
-	}
+    //Find the file type header
+    if(word != "HMM_MODEL_FILE_V2.0"){
+        errorLog << "loadModelFromFile( istream &file ) - Could not find Model File Header!" << std::endl;
+        return false;
+    }
     
     //Load the base settings from the file
     if( !Classifier::loadBaseSettingsFromFile(file) ){
@@ -784,21 +819,21 @@ bool HMM::loadModelFromFile( std::fstream &file ){
     //Load the generic hmm data
     file >> word;
     if(word != "HmmType:"){
-        errorLog << "loadModelFromFile( fstream &file ) - Could not find HmmType." << std::endl;
+        errorLog << "loadModelFromFile( istream &file ) - Could not find HmmType." << std::endl;
         return false;
     }
     file >> hmmType;
     
     file >> word;
     if(word != "ModelType:"){
-        errorLog << "loadModelFromFile( fstream &file ) - Could not find ModelType." << std::endl;
+        errorLog << "loadModelFromFile( istream &file ) - Could not find ModelType." << std::endl;
         return false;
     }
     file >> modelType;
     
     file >> word;
     if(word != "Delta:"){
-        errorLog << "loadModelFromFile( fstream &file ) - Could not find Delta." << std::endl;
+        errorLog << "loadModelFromFile( istream &file ) - Could not find Delta." << std::endl;
         return false;
     }
     file >> delta;
@@ -809,35 +844,35 @@ bool HMM::loadModelFromFile( std::fstream &file ){
             
             file >> word;
             if(word != "NumStates:"){
-                errorLog << "loadModelFromFile( fstream &file ) - Could not find NumStates." << std::endl;
+                errorLog << "loadModelFromFile( istream &file ) - Could not find NumStates." << std::endl;
                 return false;
             }
             file >> numStates;
             
             file >> word;
             if(word != "NumSymbols:"){
-                errorLog << "loadModelFromFile( fstream &file ) - Could not find NumSymbols." << std::endl;
+                errorLog << "loadModelFromFile( istream &file ) - Could not find NumSymbols." << std::endl;
                 return false;
             }
             file >> numSymbols;
             
             file >> word;
             if(word != "NumRandomTrainingIterations:"){
-                errorLog << "loadModelFromFile( fstream &file ) - Could not find NumRandomTrainingIterations." << std::endl;
+                errorLog << "loadModelFromFile( istream &file ) - Could not find NumRandomTrainingIterations." << std::endl;
                 return false;
             }
             file >> numRandomTrainingIterations;
             
             file >> word;
             if(word != "NumDiscreteModels:"){
-                errorLog << "loadModelFromFile( fstream &file ) - Could not find NumDiscreteModels." << std::endl;
+                errorLog << "loadModelFromFile( istream &file ) - Could not find NumDiscreteModels." << std::endl;
                 return false;
             }
             file >> numModels;
             
             file >> word;
             if(word != "DiscreteModels:"){
-                errorLog << "loadModelFromFile( fstream &file ) - Could not find DiscreteModels." << std::endl;
+                errorLog << "loadModelFromFile( istream &file ) - Could not find DiscreteModels." << std::endl;
                 return false;
             }
         
@@ -845,7 +880,7 @@ bool HMM::loadModelFromFile( std::fstream &file ){
                 discreteModels.resize(numModels);
                 for(size_t i=0; i<discreteModels.size(); i++){
                     if( !discreteModels[i].loadModelFromFile( file ) ){
-                        errorLog <<"loadModelFromFile(fstream &file) - Failed to load discrete model " << i << " from file!" << std::endl;
+                        errorLog <<"loadModelFromFile(istream &file) - Failed to load discrete model " << i << " from file!" << std::endl;
                         return false;
                     }
                 }
@@ -855,35 +890,35 @@ bool HMM::loadModelFromFile( std::fstream &file ){
             
             file >> word;
             if(word != "DownsampleFactor:"){
-                errorLog << "loadModelFromFile( fstream &file ) - Could not find DownsampleFactor." << std::endl;
+                errorLog << "loadModelFromFile( istream &file ) - Could not find DownsampleFactor." << std::endl;
                 return false;
             }
             file >> downsampleFactor;
             
             file >> word;
             if(word != "CommitteeSize:"){
-                errorLog << "loadModelFromFile( fstream &file ) - Could not find CommitteeSize." << std::endl;
+                errorLog << "loadModelFromFile( istream &file ) - Could not find CommitteeSize." << std::endl;
                 return false;
             }
             file >> committeeSize;
             
             file >> word;
             if(word != "Sigma:"){
-                errorLog << "loadModelFromFile( fstream &file ) - Could not find Sigma." << std::endl;
+                errorLog << "loadModelFromFile( istream &file ) - Could not find Sigma." << std::endl;
                 return false;
             }
             file >> sigma;
             
             file >> word;
             if(word != "NumContinuousModels:"){
-                errorLog << "loadModelFromFile( fstream &file ) - Could not find NumContinuousModels." << std::endl;
+                errorLog << "loadModelFromFile( istream &file ) - Could not find NumContinuousModels." << std::endl;
                 return false;
             }
             file >> numModels;
             
             file >> word;
             if(word != "ContinuousModels:"){
-                errorLog << "loadModelFromFile( fstream &file ) - Could not find ContinuousModels." << std::endl;
+                errorLog << "loadModelFromFile( istream &file ) - Could not find ContinuousModels." << std::endl;
                 return false;
             }
             
@@ -891,7 +926,7 @@ bool HMM::loadModelFromFile( std::fstream &file ){
                 continuousModels.resize(numModels);
                 for(size_t i=0; i<continuousModels.size(); i++){
                     if( !continuousModels[i].loadModelFromFile( file ) ){
-                        errorLog <<"loadModelFromFile(fstream &file) - Failed to load continuous model " << i << " from file!" << std::endl;
+                        errorLog <<"loadModelFromFile(istream &file) - Failed to load continuous model " << i << " from file!" << std::endl;
                         return false;
                     }
                 }
@@ -899,7 +934,7 @@ bool HMM::loadModelFromFile( std::fstream &file ){
             break;
     }
     
-	return true;
+    return true;
 
 }
     
@@ -1074,3 +1109,4 @@ bool HMM::setAutoEstimateSigma(const bool autoEstimateSigma){
 
 GRT_END_NAMESPACE
 
+>>>>>>> Stashed changes
