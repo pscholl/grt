@@ -25,6 +25,18 @@ GRT_BEGIN_NAMESPACE
 //Register the SVM module with the Classifier base class
 RegisterClassifierModule< SVM > SVM::registerModule("SVM");
 
+
+void print_to_training(const char *s) {
+    static TrainingLog c_trainlog("[TRAINING SVM]");
+      c_trainlog << s;
+}
+
+void print_to_debug(const char *s) {
+    static DebugLog c_log("[DEBUG SVM]");
+      c_log << s;
+}
+
+
 SVM::SVM(UINT kernelType,UINT svmType,bool useScaling,bool useNullRejection,bool useAutoGamma,Float gamma,UINT degree,Float coef0,Float nu,Float C,bool useCrossValidation,UINT kFoldValue){
     
     //Setup the default SVM parameters
