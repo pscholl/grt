@@ -25,7 +25,7 @@ GRT_BEGIN_NAMESPACE
 //Register the DTW module with the Classifier base class
 RegisterClassifierModule< KNN > KNN::registerModule("KNN");
 
-KNN::KNN(unsigned int K,bool useScaling,bool useNullRejection,Float nullRejectionCoeff,bool searchForBestKValue,UINT minKSearchValue,UINT maxKSearchValue){
+KNN::KNN(unsigned int K,bool useScaling,bool useNullRejection,Float nullRejectionCoeff,bool searchForBestKValue,UINT minKSearchValue,UINT maxKSearchValue, UINT distanceMethod){
     this->K = K;
     this->distanceMethod = EUCLIDEAN_DISTANCE;
     this->useScaling = useScaling;
@@ -38,7 +38,7 @@ KNN::KNN(unsigned int K,bool useScaling,bool useNullRejection,Float nullRejectio
     classType = "KNN";
     classifierType = classType;
     classifierMode = STANDARD_CLASSIFIER_MODE;
-    distanceMethod = EUCLIDEAN_DISTANCE;
+    distanceMethod = distanceMethod;
     debugLog.setProceedingText("[DEBUG KNN]");
     errorLog.setProceedingText("[ERROR KNN]");
     trainingLog.setProceedingText("[TRAINING KNN]");

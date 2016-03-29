@@ -62,7 +62,7 @@ public:
      @param minKSearchValue: sets the minimum K value to use when searching for the best K value.  Default value is minKSearchValue = 1
      @param maxKSearchValue: sets the maximum K value to use when searching for the best K value.  Default value is maxKSearchValue = 1
     */
-	KNN(UINT K=10,bool useScaling=false,bool useNullRejection=false,Float nullRejectionCoeff=10.0,bool searchForBestKValue = false,UINT minKSearchValue = 1,UINT maxKSearchValue = 10);
+	KNN(UINT K=10,bool useScaling=false,bool useNullRejection=false,Float nullRejectionCoeff=10.0,bool searchForBestKValue = false,UINT minKSearchValue = 1,UINT maxKSearchValue = 10, UINT distanceMethod = EUCLIDEAN_DISTANCE);
     
     /**
      Defines the copy constructor.
