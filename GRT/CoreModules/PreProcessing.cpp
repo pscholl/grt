@@ -198,8 +198,8 @@ VectorFloat PreProcessing::getProcessedData() const{
     return processedData; 
 }
 
-vector< string > PreProcessing::getRegisteredPreprocessors(){
-    vector< string > registeredPreprocessors;
+Vector< std::string > PreProcessing::getRegisteredPreprocessors(){
+    Vector< std::string > registeredPreprocessors;
 
     StringPreProcessingMap::iterator iter = getMap()->begin();
     while( iter != getMap()->end() ){

@@ -165,6 +165,34 @@ bool TimeSeriesClassificationData::addSample(const UINT classLabel,const MatrixF
     return true;
 }
 
+bool TimeSeriesClassificationData::addClass(const UINT classLabel,const std::string className){
+    
+    //Check to make sure the class label does not exist
+    for(size_t i=0; i<classTracker.getSize(); i++){
+        if( classTracker[i].classLabel == classLabel ){
+            warningLog << "addClass(const UINT classLabel,const std::string className) - Failed to add class, it already exists! Class label: " << classLabel << std::endl;
+            return false;
+        }
+    }
+    
+    //Add the class label to the class tracker
+    classTracker.push_back( ClassTracker(classLabel,0,className) );
+    
+    //Sort the class labels
+    sortClassLabels();
+    
+    return true;
+}
+
+
+bool TimeSeriesClassificationData::sortClassLabels(){
+    
+    sort(classTracker.begin(),classTracker.end(),ClassTracker::sortByClassLabelAscending);
+
+    return true;
+}
+
+
 UINT TimeSeriesClassificationData::eraseAllSamplesWithClassLabel(const UINT classLabel){
 	UINT numExamplesRemoved = 0;
 	UINT numExamplesToRemove = 0;
@@ -823,20 +851,25 @@ bool TimeSeriesClassificationData::merge(const TimeSeriesClassificationData &lab
     return true;
 }
 
-bool TimeSeriesClassificationData::spiltDataIntoKFolds(const UINT K,const bool useStratifiedSampling){
+bool TimeSeriesClassificationData::splitDataIntoKFolds(const UINT K,const bool useStratifiedSampling, const bool shuffle){
 
     crossValidationSetup = false;
     crossValidationIndexs.clear();
 
+    if( !shuffle && useStratifiedSampling ) {
+      errorLog << "can only stratify split if shuffling is enabled" << std::endl;
+      return false;
+    }
+
     //K can not be zero
-    if( K > totalNumSamples ){
-        errorLog << "spiltDataIntoKFolds(UINT K) - K can not be zero!" << std::endl;
+    if( K <= 1 ){
+        errorLog << "splitDataIntoKFolds(UINT K) - K must be greater than one!" << std::endl;
         return false;
     }
 
     //K can not be larger than the number of examples
     if( K > totalNumSamples ){
-        errorLog << "spiltDataIntoKFolds(UINT K,bool useStratifiedSampling) - K can not be larger than the total number of samples in the dataset!" << std::endl;
+        errorLog << "splitDataIntoKFolds(UINT K,bool useStratifiedSampling) - K can not be larger than the total number of samples in the dataset!" << std::endl;
         return false;
     }
 
@@ -844,7 +877,7 @@ bool TimeSeriesClassificationData::spiltDataIntoKFolds(const UINT K,const bool u
     if( useStratifiedSampling ){
         for(UINT c=0; c<classTracker.size(); c++){
             if( K > classTracker[c].counter ){
-                errorLog << "spiltDataIntoKFolds(UINT K,bool useStratifiedSampling) - K can not be larger than the number of samples in any given class!" << std::endl;
+                errorLog << "splitDataIntoKFolds(UINT K,bool useStratifiedSampling) - K can not be larger than the number of samples in any given class!" << std::endl;
                 return false;
             }
         }
@@ -899,14 +932,16 @@ bool TimeSeriesClassificationData::spiltDataIntoKFolds(const UINT K,const bool u
         }
 
     }else{
-        //Randomize the order of the data
         for(UINT i=0; i<totalNumSamples; i++) indexs[i] = i;
-        for(UINT x=0; x<totalNumSamples; x++){
-            //Pick a random index
-            randomIndex = random.getRandomNumberInt(0,totalNumSamples);
+        //Randomize the order of the data
+        if (shuffle) {
+          for(UINT x=0; x<totalNumSamples; x++){
+              //Pick a random index
+              randomIndex = random.getRandomNumberInt(0,totalNumSamples);
 
-            //Swap the indexs
-            SWAP( indexs[ x ] , indexs[ randomIndex ] );
+              //Swap the indexs
+              SWAP( indexs[ x ] , indexs[ randomIndex ] );
+          }
         }
 
         UINT counter = 0;
@@ -933,13 +968,18 @@ TimeSeriesClassificationData TimeSeriesClassificationData::getTrainingFoldData(c
     TimeSeriesClassificationData trainingData;
 
     if( !crossValidationSetup ){
-        errorLog << "getTrainingFoldData(UINT foldIndex) - Cross Validation has not been setup! You need to call the spiltDataIntoKFolds(UINT K,bool useStratifiedSampling) function first before calling this function!" << std::endl;
+        errorLog << "getTrainingFoldData(UINT foldIndex) - Cross Validation has not been setup! You need to call the splitDataIntoKFolds(UINT K,bool useStratifiedSampling) function first before calling this function!" << std::endl;
         return trainingData;
     }
 
     if( foldIndex >= kFoldValue ) return trainingData;
 
     trainingData.setNumDimensions( numDimensions );
+
+    //Add the class labels to make sure they all exist
+    for(UINT k=0; k<getNumClasses(); k++){
+        trainingData.addClass( classTracker[k].classLabel, classTracker[k].className );
+    }
 
     //Add the data to the training set, this will consist of all the data that is NOT in the foldIndex
     UINT index = 0;
@@ -965,6 +1005,13 @@ TimeSeriesClassificationData TimeSeriesClassificationData::getTestFoldData(const
 
     //Add the data to the training
     testData.setNumDimensions( numDimensions );
+    testData.setAllowNullGestureClass( allowNullGestureClass );
+
+
+    //Add the class labels to make sure they all exist
+    for(UINT k=0; k<getNumClasses(); k++){
+        testData.addClass( classTracker[k].classLabel, classTracker[k].className );
+    }
 
     UINT index = 0;
     for(UINT i=0; i<crossValidationIndexs[ foldIndex ].size(); i++){

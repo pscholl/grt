@@ -187,7 +187,7 @@ public:
     using MLBase::saveModelToFile;
     using MLBase::loadModelFromFile;
 
-    Vector< std::string > getRegisteredFeatureExtractors();
+    static Vector< std::string > getRegisteredFeatureExtractors();
     
 protected:
     /**

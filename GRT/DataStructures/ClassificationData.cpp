@@ -838,20 +838,25 @@ bool ClassificationData::merge(const ClassificationData &labelledData){
     return true;
 }
 
-bool ClassificationData::spiltDataIntoKFolds(const UINT K,const bool useStratifiedSampling){
+bool ClassificationData::splitDataIntoKFolds(const UINT K,const bool useStratifiedSampling, bool shuffle){
 
     crossValidationSetup = false;
     crossValidationIndexs.clear();
 
+    if( !shuffle && useStratifiedSampling ) {
+      errorLog << "can only stratify split if shuffling is enabled" << std::endl;
+      return false;
+    }
+
     //K can not be zero
-    if( K > totalNumSamples ){
-        errorLog << "spiltDataIntoKFolds(const UINT K,const bool useStratifiedSampling) - K can not be zero!" << std::endl;
+   if( K <= 1 ){
+        errorLog << "splitDataIntoKFolds(const UINT K,const bool useStratifiedSampling) - K must be greater than one!" << std::endl;
         return false;
     }
 
     //K can not be larger than the number of examples
     if( K > totalNumSamples ){
-        errorLog << "spiltDataIntoKFolds(const UINT K,const bool useStratifiedSampling) - K can not be larger than the total number of samples in the dataset!" << std::endl;
+        errorLog << "splitDataIntoKFolds(const UINT K,const bool useStratifiedSampling) - K can not be larger than the total number of samples in the dataset!" << std::endl;
         return false;
     }
 
@@ -859,7 +864,7 @@ bool ClassificationData::spiltDataIntoKFolds(const UINT K,const bool useStratifi
     if( useStratifiedSampling ){
         for(UINT c=0; c<classTracker.size(); c++){
             if( K > classTracker[c].counter ){
-                errorLog << "spiltDataIntoKFolds(const UINT K,const bool useStratifiedSampling) - K can not be larger than the number of samples in any given class!" << std::endl;
+                errorLog << "splitDataIntoKFolds(const UINT K,const bool useStratifiedSampling) - K can not be larger than the number of samples in any given class!" << std::endl;
                 return false;
             }
         }
@@ -914,14 +919,17 @@ bool ClassificationData::spiltDataIntoKFolds(const UINT K,const bool useStratifi
         }
 
     }else{
-        //Randomize the order of the data
         for(UINT i=0; i<totalNumSamples; i++) indexs[i] = i;
-        for(UINT x=0; x<totalNumSamples; x++){
+
+        //Randomize the order of the data
+        if (shuffle) {
+          for(UINT x=0; x<totalNumSamples; x++){
             //Pick a random index
             randomIndex = random.getRandomNumberInt(0,totalNumSamples);
 
             //Swap the indexs
             SWAP(indexs[ x ] , indexs[ randomIndex ]);
+          }
         }
 
         UINT counter = 0;
@@ -950,7 +958,7 @@ ClassificationData ClassificationData::getTrainingFoldData(const UINT foldIndex)
     trainingData.setAllowNullGestureClass( allowNullGestureClass );
 
     if( !crossValidationSetup ){
-        errorLog << "getTrainingFoldData(const UINT foldIndex) - Cross Validation has not been setup! You need to call the spiltDataIntoKFolds(UINT K,bool useStratifiedSampling) function first before calling this function!" << std::endl;
+        errorLog << "getTrainingFoldData(const UINT foldIndex) - Cross Validation has not been setup! You need to call the splitDataIntoKFolds(UINT K,bool useStratifiedSampling) function first before calling this function!" << std::endl;
        return trainingData;
     }
 

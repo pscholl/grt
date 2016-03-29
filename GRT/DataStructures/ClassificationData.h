@@ -341,34 +341,35 @@ public:
 	 a testing/validation dataset (which is returned as a new instance of a ClassificationData).
      
      @param partitionPercentage: sets the percentage of data which remains in this instance, the remaining percentage of data is then returned as the testing/validation dataset
-     @param useStratifiedSampling: sets if the dataset should be broken into homogeneous groups first before randomly being spilt, default value is false
+     @param useStratifiedSampling: sets if the dataset should be broken into homogeneous groups first before randomly being split, default value is false
      @return a new ClassificationData instance, containing the remaining data not kept but this instance
      */
     ClassificationData partition(const UINT partitionPercentage,const bool useStratifiedSampling = false);
     
     /**
-     This function prepares the dataset for k-fold cross validation and should be called prior to calling the getTrainingFold(UINT foldIndex) or getTestingFold(UINT foldIndex) functions.  It will spilt the dataset into K-folds, as long as K < M, where M is the number of samples in the dataset.
+     This function prepares the dataset for k-fold cross validation and should be called prior to calling the getTrainingFold(UINT foldIndex) or getTestingFold(UINT foldIndex) functions.  It will split the dataset into K-folds, as long as K < M, where M is the number of samples in the dataset.
      
      @param K: the number of folds the dataset will be split into, K should be less than the number of samples in the dataset
-     @param useStratifiedSampling: sets if the dataset should be broken into homogeneous groups first before randomly being spilt, default value is false
+     @param useStratifiedSampling: sets if the dataset should be broken into homogeneous groups first before randomly being split, default value is false
+     @param shuffle: randomly shuffle data before splitting
      @return returns true if the dataset was split correctly, false otherwise
     */
-    bool spiltDataIntoKFolds(const UINT K,const bool useStratifiedSampling = false);
+    bool splitDataIntoKFolds(const UINT K,const bool useStratifiedSampling = false, const bool shuffle = true);
     
     /**
-     Returns the training dataset for the k-th fold for cross validation.  The spiltDataIntoKFolds(UINT K) function should have been called once before using this function.
-     The foldIndex should be in the range [0 K-1], where K is the number of folds the data was spilt into.
+     Returns the training dataset for the k-th fold for cross validation.  The splitDataIntoKFolds(UINT K) function should have been called once before using this function.
+     The foldIndex should be in the range [0 K-1], where K is the number of folds the data was split into.
      
-     @param foldIndex: the index of the fold you want the training data for, this should be in the range [0 K-1], where K is the number of folds the data was spilt into 
+     @param foldIndex: the index of the fold you want the training data for, this should be in the range [0 K-1], where K is the number of folds the data was split into 
      @return returns a training dataset
     */
     ClassificationData getTrainingFoldData(const UINT foldIndex) const;
     
     /**
-     Returns the test dataset for the k-th fold for cross validation.  The spiltDataIntoKFolds(UINT K) function should have been called once before using this function.
-     The foldIndex should be in the range [0 K-1], where K is the number of folds the data was spilt into.
+     Returns the test dataset for the k-th fold for cross validation.  The splitDataIntoKFolds(UINT K) function should have been called once before using this function.
+     The foldIndex should be in the range [0 K-1], where K is the number of folds the data was split into.
      
-     @param foldIndex: the index of the fold you want the test data for, this should be in the range [0 K-1], where K is the number of folds the data was spilt into 
+     @param foldIndex: the index of the fold you want the test data for, this should be in the range [0 K-1], where K is the number of folds the data was split into 
      @return returns a test dataset
     */
     ClassificationData getTestFoldData(const UINT foldIndex) const;
@@ -623,7 +624,7 @@ private:
     std::string infoText;                                   ///< Some infoText about the dataset
 	UINT numDimensions;										///< The number of dimensions in the dataset
 	UINT totalNumSamples;                                   ///< The total number of samples in the dataset
-    UINT kFoldValue;                                        ///< The number of folds the dataset has been spilt into for cross valiation
+    UINT kFoldValue;                                        ///< The number of folds the dataset has been split into for cross valiation
     bool crossValidationSetup;                              ///< A flag to show if the dataset is ready for cross validation
     bool useExternalRanges;                                 ///< A flag to show if the dataset should be scaled using the externalRanges values
     bool allowNullGestureClass;                             ///< A flag that enables/disables a user from adding new samples with a class label matching the default null gesture label

@@ -286,13 +286,13 @@ bool GestureRecognitionPipeline::train(const ClassificationData &trainingData,co
     Timer timer;
     timer.start();
 	
-	//Get a copy of the data so we can spilt it
+	//Get a copy of the data so we can split it
 	ClassificationData data = trainingData;
 
     //Spilt the data into K folds
-    bool spiltResult = data.spiltDataIntoKFolds(kFoldValue, useStratifiedSampling);
+    bool splitResult = data.splitDataIntoKFolds(kFoldValue, useStratifiedSampling);
     
-    if( !spiltResult ){
+    if( !splitResult ){
         return false;
     }
     
@@ -557,7 +557,7 @@ bool GestureRecognitionPipeline::train(const TimeSeriesClassificationData &train
 	TimeSeriesClassificationData data = trainingData;
     
     //Spilt the data into K folds
-    if( !data.spiltDataIntoKFolds(kFoldValue, useStratifiedSampling) ){
+    if( !data.splitDataIntoKFolds(kFoldValue, useStratifiedSampling) ){
         errorLog << "train(const TimeSeriesClassificationData &trainingData,const UINT kFoldValue,const bool useStratifiedSampling) - Failed To Spilt Dataset into KFolds!" << std::endl;
         return false;
     }
@@ -826,9 +826,9 @@ bool GestureRecognitionPipeline::train(const RegressionData &trainingData,const 
 	RegressionData data = trainingData;
 
     //Spilt the data into K folds
-    bool spiltResult = data.spiltDataIntoKFolds(kFoldValue);
+    bool splitResult = data.splitDataIntoKFolds(kFoldValue);
     
-    if( !spiltResult ){
+    if( !splitResult ){
         return false;
     }
     

@@ -324,20 +324,26 @@ bool RegressionData::merge(const RegressionData &regressionData){
     return true;
 }
 
-bool RegressionData::spiltDataIntoKFolds(const UINT K){
+bool RegressionData::splitDataIntoKFolds(const UINT K, bool shuffle){
 
     crossValidationSetup = false;
     crossValidationIndexs.clear();
 
+    if ( !shuffle ) {
+      errorLog << "shuffle == false not implemented" << std::endl;
+      return false;
+    }
+
+
     //K can not be zero
     if( K > totalNumSamples ){
-        errorLog << "spiltDataIntoKFolds(UINT K) - K can not be zero!" << std::endl;
+        errorLog << "splitDataIntoKFolds(UINT K) - K can not be zero!" << std::endl;
         return false;
     }
 
     //K can not be larger than the number of examples
     if( K > totalNumSamples ){
-        errorLog << "spiltDataIntoKFolds(UINT K) - K can not be larger than the total number of samples in the dataset!" << std::endl;
+        errorLog << "splitDataIntoKFolds(UINT K) - K can not be larger than the total number of samples in the dataset!" << std::endl;
         return false;
     }
 
@@ -387,7 +393,7 @@ RegressionData RegressionData::getTrainingFoldData(const UINT foldIndex) const{
     RegressionData trainingData;
 
     if( !crossValidationSetup ){
-        errorLog << "getTrainingFoldData(UINT foldIndex) - Cross Validation has not been setup! You need to call the spiltDataIntoKFolds(UINT K,bool useStratifiedSampling) function first before calling this function!" << std::endl;
+        errorLog << "getTrainingFoldData(UINT foldIndex) - Cross Validation has not been setup! You need to call the splitDataIntoKFolds(UINT K,bool useStratifiedSampling) function first before calling this function!" << std::endl;
         return trainingData;
     }
 

@@ -272,27 +272,28 @@ public:
     RegressionData partition(const UINT trainingSizePercentage);
     
     /**
-     This function prepares the dataset for k-fold cross validation and should be called prior to calling the getTrainingFold(UINT foldIndex) or getTestingFold(UINT foldIndex) functions.  It will spilt the dataset into K-folds, as long as K < M, where M is the number of samples in the dataset.
+     This function prepares the dataset for k-fold cross validation and should be called prior to calling the getTrainingFold(UINT foldIndex) or getTestingFold(UINT foldIndex) functions.  It will split the dataset into K-folds, as long as K < M, where M is the number of samples in the dataset.
      
      @param K: the number of folds the dataset will be split into, K should be less than the number of samples in the dataset
+     @param shuffle: shuffle data prior to splitting
 	 @return returns true if the dataset was split correctly, false otherwise
      */
-    bool spiltDataIntoKFolds(const UINT K);
+    bool splitDataIntoKFolds(const UINT K, bool shuffle = true);
     
     /**
-     Returns the training dataset for the k-th fold for cross validation.  The spiltDataIntoKFolds(UINT K) function should have been called once before using this function.
-     The foldIndex should be in the range [0 K-1], where K is the number of folds the data was spilt into.
+     Returns the training dataset for the k-th fold for cross validation.  The splitDataIntoKFolds(UINT K) function should have been called once before using this function.
+     The foldIndex should be in the range [0 K-1], where K is the number of folds the data was split into.
      
-	 @param foldIndex: the index of the fold you want the training data for, this should be in the range [0 K-1], where K is the number of folds the data was spilt into 
+	 @param foldIndex: the index of the fold you want the training data for, this should be in the range [0 K-1], where K is the number of folds the data was split into 
 	 @return returns a training dataset
      */
     RegressionData getTrainingFoldData(const UINT foldIndex) const;
     
     /**
-     Returns the test dataset for the k-th fold for cross validation.  The spiltDataIntoKFolds(UINT K) function should have been called once before using this function.
-     The foldIndex should be in the range [0 K-1], where K is the number of folds the data was spilt into.
+     Returns the test dataset for the k-th fold for cross validation.  The splitDataIntoKFolds(UINT K) function should have been called once before using this function.
+     The foldIndex should be in the range [0 K-1], where K is the number of folds the data was split into.
      
-	 @param foldIndex: the index of the fold you want the test data for, this should be in the range [0 K-1], where K is the number of folds the data was spilt into 
+	 @param foldIndex: the index of the fold you want the test data for, this should be in the range [0 K-1], where K is the number of folds the data was split into 
 	 @return returns a test dataset
      */
     RegressionData getTestFoldData(const UINT foldIndex) const;
@@ -363,7 +364,7 @@ private:
 	UINT numInputDimensions;                                ///< The number of input dimensions in the dataset
 	UINT numTargetDimensions;                               ///< The number of target dimensions in the dataset
 	UINT totalNumSamples;                                   ///< The total number of training samples in the dataset
-    UINT kFoldValue;                                        ///< The number of folds the dataset has been spilt into for cross valiation
+    UINT kFoldValue;                                        ///< The number of folds the dataset has been split into for cross valiation
     bool crossValidationSetup;                              ///< A flag to show if the dataset is ready for cross validation
     bool useExternalRanges;                                 ///< A flag to show if the dataset should be scaled using the externalRanges values
     Vector< MinMax > externalInputRanges;                   ///< A Vector containing a set of externalRanges set by the user
