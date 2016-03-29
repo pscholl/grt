@@ -44,12 +44,12 @@ public:
     /**
      Default Classifier Constructor
      */
-	Classifier(void);
+    Classifier(void);
     
     /**
      Default Classifier Destructor
      */
-	virtual ~Classifier(void);
+    virtual ~Classifier(void);
     
     /**
      This is the base deep copy function for the Classifier modules. This function should be overwritten by the derived class.
@@ -131,7 +131,7 @@ public:
     Float getBestDistance() const;
     
     /**
-	 This function returns the estimated gesture phase from the most recent prediction.  This value is only relevant if the classifier supports timeseries classification.
+     This function returns the estimated gesture phase from the most recent prediction.  This value is only relevant if the classifier supports timeseries classification.
      
      @return Float representing the gesture phase value from the most likely class from the most recent prediction
      */
@@ -217,15 +217,15 @@ public:
      */
     virtual bool setNullRejectionCoeff(Float nullRejectionCoeff);
 
-	/**
+    /**
      Manually sets the nullRejectionThresholds, these are the thresholds used for null rejection for each class.
-	 This needs to be called after the model has been trained. Calling the #setNullRejectionCoeff or #recomputeNullRejectionThresholds
-	 functions will override these values. The size of the newRejectionThresholds Vector must match the number of classes in the model.
+     This needs to be called after the model has been trained. Calling the #setNullRejectionCoeff or #recomputeNullRejectionThresholds
+     functions will override these values. The size of the newRejectionThresholds Vector must match the number of classes in the model.
      
-	 @param newRejectionThresholds: the new rejection thresholds
+     @param newRejectionThresholds: the new rejection thresholds
      @return returns true if nullRejectionThresholds were updated successfully, false otherwise
      */
-	virtual bool setNullRejectionThresholds(VectorFloat newRejectionThresholds);
+    virtual bool setNullRejectionThresholds(VectorFloat newRejectionThresholds);
     
     /**
      Recomputes the null rejection thresholds for each model.
@@ -290,7 +290,21 @@ public:
      
      @return Vector< string >: a Vector containing the names of the classifiers that have been registered with the base classifier
     */
-	static Vector< std::string > getRegisteredClassifiers();
+    static Vector< std::string > getRegisteredClassifiers();
+
+
+    /**
+     set the string value for a class label
+     @return true, if the label could be set
+     */
+    bool setClassNameForLabel(UINT label, std::string name);
+
+    /**
+     get the string name for a class label
+     @return label name or empty string
+    */
+    std::string getClassNameForLabel(UINT label);
+
     
 protected:
     /**
@@ -298,14 +312,14 @@ protected:
      
      @return returns true if the base settings were saved, false otherwise
      */
-    bool saveBaseSettingsToFile( std::fstream &file ) const;
+    bool saveBaseSettingsToFile( std::ostream &file ) const;
     
     /**
      Loads the core base settings from a file.
      
      @return returns true if the base settings were loaded, false otherwise
      */
-    bool loadBaseSettingsFromFile( std::fstream &file );
+    bool loadBaseSettingsFromFile( std::istream &file );
 
     std::string classifierType;
     bool supportsNullRejection;
@@ -321,6 +335,7 @@ protected:
     VectorFloat classDistances;
     VectorFloat nullRejectionThresholds;
     Vector< UINT > classLabels;
+    Vector< std::string > classNames;
     Vector< MinMax > ranges;
     
     static StringClassifierMap *getMap() {
@@ -350,4 +365,3 @@ public:
 GRT_END_NAMESPACE
 
 #endif //GRT_CLASSIFIER_HEADER
-

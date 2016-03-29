@@ -41,12 +41,12 @@ public:
     /**
      Default Constructor
      */
-	PreProcessing(void);
-	
+    PreProcessing(void);
+    
     /**
      Default Destructor
      */
-	virtual ~PreProcessing(void);
+    virtual ~PreProcessing(void);
     
     /**
      This is the base deepCopyFrom function for the PreProcessing modules. This function should be overwritten by the derived class.
@@ -112,7 +112,7 @@ public:
      @param file: a reference to the file to save the settings to
      @return returns true if the settings were saved successfully, false otherwise (the base class always returns false)
      */
-    virtual bool saveModelToFile(std::fstream &file) const{ return false; }
+    virtual bool saveModelToFile(std::ostream &file) const{ return false; }
     
     /**
      This loads the preprocessing settings from a file.
@@ -121,12 +121,12 @@ public:
      @param file: a reference to the file to load the settings from
      @return returns true if the settings were loaded successfully, false otherwise (the base class always returns false)
      */
-    virtual bool loadModelFromFile(std::fstream &file){ return false; }
-	
+    virtual bool loadModelFromFile(std::istream &file){ return false; }
+    
     /**
      @return returns the pre processing type as a string, e.g. LowPassFilter
      */
-	std::string getPreProcessingType() const;
+    std::string getPreProcessingType() const;
     
     /**
      Returns the size of the input vector expected by the pre processing module.
@@ -152,12 +152,12 @@ public:
     /**
      @return returns a VectorFloat containing the most recent processed data
      */
-	VectorFloat getProcessedData() const;
+    VectorFloat getProcessedData() const;
     
     /**
      This typedef defines a map between a string and a PreProcessing pointer.
      */
-	typedef std::map< std::string, PreProcessing*(*)() > StringPreProcessingMap;
+    typedef std::map< std::string, PreProcessing*(*)() > StringPreProcessingMap;
     
     /**
      This static function will dynamically create a new PreProcessing instance from a string.
@@ -171,6 +171,12 @@ public:
      This static function will dynamically create a new PreProcessing instance based on the type of this instance
     */
     PreProcessing* createNewInstance() const;
+
+
+    /**
+     This static fucntion will return a list of all available preprocessing modules
+     */
+    static Vector< std::string > getRegisteredPreprocessors();
     
 protected:
     /**
@@ -186,20 +192,20 @@ protected:
      
      @return returns true if the base settings were saved, false otherwise
      */
-    bool savePreProcessingSettingsToFile(std::fstream &file) const;
+    bool savePreProcessingSettingsToFile(std::ostream &file) const;
     
     /**
      Loads the core preprocessing settings from a file.
      
      @return returns true if the base settings were loaded, false otherwise
      */
-    bool loadPreProcessingSettingsFromFile(std::fstream &file);
+    bool loadPreProcessingSettingsFromFile(std::istream &file);
 
     std::string preProcessingType;
     bool initialized;
     VectorFloat processedData;
 
-	static StringPreProcessingMap *getMap() {
+    static StringPreProcessingMap *getMap() {
         if( !stringPreProcessingMap ){ stringPreProcessingMap = new StringPreProcessingMap; } 
         return stringPreProcessingMap; 
     }

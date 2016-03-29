@@ -52,7 +52,7 @@ public:
      @param useScaling: sets if the training/input data should be scaled to the range [0 1]. Default: false
      @param useNullRejection: sets if the algorithm should use null rejection (i.e., automatically gesture spotting). Default: false
      */
-	HMM(const UINT hmmType=HMM_CONTINUOUS,const UINT modelType=HMM_LEFTRIGHT,const UINT delta=1,const bool useScaling = false,const bool useNullRejection = false);
+    HMM(const UINT hmmType=HMM_CONTINUOUS,const UINT modelType=HMM_LEFTRIGHT,const UINT delta=1,const bool useScaling = false,const bool useNullRejection = false);
     
     /**
      Default Constructor.
@@ -66,7 +66,7 @@ public:
     /**
      Default Destructor.
      */
-	virtual ~HMM(void);
+    virtual ~HMM(void);
     
     /**
      Custom Equals Operator.
@@ -148,7 +148,7 @@ public:
      @param file: a reference to the file the HMM model will be saved to
      @return returns true if the model was saved successfully, false otherwise
      */
-    virtual bool saveModelToFile( std::fstream &file ) const;
+    virtual bool saveModelToFile( std::ostream &file ) const;
     
     /**
      This loads a trained HMM model from a file.
@@ -157,7 +157,7 @@ public:
      @param file: a reference to the file the HMM model will be loaded from
      @return returns true if the model was loaded successfully, false otherwise
      */
-    virtual bool loadModelFromFile( std::fstream &file );
+    virtual bool loadModelFromFile( std::istream &file );
     
     /**
      This function gets the HMM type.  This will be either HMM_DISCRETE or HMM_CONTINUOUS.
@@ -345,13 +345,13 @@ protected:
     bool convertDataToObservationSequence( TimeSeriesClassificationData &classData, Vector< Vector< UINT > > &observationSequences );
     bool loadLegacyModelFromFile( std::fstream &file );
 
-	UINT hmmType;           ///<Controls if this is a HMM_DISCRETE or a HMM_CONTINUOUS
+    UINT hmmType;           ///<Controls if this is a HMM_DISCRETE or a HMM_CONTINUOUS
     UINT modelType;         //Set if the model is ERGODIC or LEFTRIGHT
-	UINT delta;				//The number of states a model can move to in a LeftRight model
+    UINT delta;             //The number of states a model can move to in a LeftRight model
     
     //Discrete HMM variables
-	UINT numStates;			//The number of states for each model
-	UINT numSymbols;		//The number of symbols for each model
+    UINT numStates;         //The number of states for each model
+    UINT numSymbols;        //The number of symbols for each model
     UINT numRandomTrainingIterations;
     Vector< DiscreteHiddenMarkovModel > discreteModels;
     

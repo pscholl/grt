@@ -24,15 +24,15 @@ GRT_BEGIN_NAMESPACE
 
 //Default constructor
 DiscreteHiddenMarkovModel::DiscreteHiddenMarkovModel(){
-	numStates = 0;
-	numSymbols = 0;
-	delta = 1;
-	numRandomTrainingIterations = 5;
-	maxNumEpochs = 100;
-	cThreshold = -1000;
-	modelType = HMM_LEFTRIGHT;
-	logLikelihood = 0.0;
-	minChange = 1.0e-5;
+    numStates = 0;
+    numSymbols = 0;
+    delta = 1;
+    numRandomTrainingIterations = 5;
+    maxNumEpochs = 100;
+    cThreshold = -1000;
+    modelType = HMM_LEFTRIGHT;
+    logLikelihood = 0.0;
+    minChange = 1.0e-5;
     
     debugLog.setProceedingText("[DEBUG DiscreteHiddenMarkovModel]");
     errorLog.setProceedingText("[ERROR DiscreteHiddenMarkovModel]");
@@ -44,19 +44,19 @@ DiscreteHiddenMarkovModel::DiscreteHiddenMarkovModel(){
 DiscreteHiddenMarkovModel::DiscreteHiddenMarkovModel(const UINT numStates,const UINT numSymbols,const UINT modelType,const UINT delta){
     this->numStates = numStates;
     this->numSymbols = numSymbols;
-	this->modelType = modelType;
-	this->delta = delta;
-	logLikelihood = 0.0;
-	numRandomTrainingIterations = 5;
-	cThreshold = -1000;
-	logLikelihood = 0.0;
+    this->modelType = modelType;
+    this->delta = delta;
+    logLikelihood = 0.0;
+    numRandomTrainingIterations = 5;
+    cThreshold = -1000;
+    logLikelihood = 0.0;
     
     debugLog.setProceedingText("[DEBUG DiscreteHiddenMarkovModel]");
     errorLog.setProceedingText("[ERROR DiscreteHiddenMarkovModel]");
     warningLog.setProceedingText("[WARNING DiscreteHiddenMarkovModel]");
     trainingLog.setProceedingText("[TRAINING DiscreteHiddenMarkovModel]");
     
-	randomizeMatrices(numStates,numSymbols);
+    randomizeMatrices(numStates,numSymbols);
 }
 
 //Init the model with a pre-trained a, b, and pi matrices
@@ -65,10 +65,10 @@ DiscreteHiddenMarkovModel::DiscreteHiddenMarkovModel(const MatrixFloat &a,const 
     numStates = 0;
     numSymbols = 0;
     numRandomTrainingIterations = 5;
-	maxNumEpochs = 100;
-	cThreshold = -1000;
-	logLikelihood = 0.0;
-	minChange = 1.0e-5;
+    maxNumEpochs = 100;
+    cThreshold = -1000;
+    logLikelihood = 0.0;
+    minChange = 1.0e-5;
     
     debugLog.setProceedingText("[DEBUG DiscreteHiddenMarkovModel]");
     errorLog.setProceedingText("[ERROR DiscreteHiddenMarkovModel]");
@@ -91,15 +91,15 @@ DiscreteHiddenMarkovModel::DiscreteHiddenMarkovModel(const MatrixFloat &a,const 
     
 DiscreteHiddenMarkovModel::DiscreteHiddenMarkovModel(const DiscreteHiddenMarkovModel &rhs){
     this->numStates = rhs.numStates;
-	this->numSymbols = rhs.numSymbols;
-	this->delta = rhs.delta;
-	this->numRandomTrainingIterations = rhs.numRandomTrainingIterations;
-	this->cThreshold = rhs.cThreshold;
-	this->modelType = rhs.modelType;
-	this->logLikelihood = rhs.logLikelihood;
-	this->a = rhs.a;
-	this->b = rhs.b;
-	this->pi = rhs.pi;
+    this->numSymbols = rhs.numSymbols;
+    this->delta = rhs.delta;
+    this->numRandomTrainingIterations = rhs.numRandomTrainingIterations;
+    this->cThreshold = rhs.cThreshold;
+    this->modelType = rhs.modelType;
+    this->logLikelihood = rhs.logLikelihood;
+    this->a = rhs.a;
+    this->b = rhs.b;
+    this->pi = rhs.pi;
     this->trainingLog = rhs.trainingLog;
 
     debugLog.setProceedingText("[DEBUG DiscreteHiddenMarkovModel]");
@@ -328,46 +328,46 @@ Float DiscreteHiddenMarkovModel::predictLogLikelihood(const Vector<UINT> &obs){
 */
 bool DiscreteHiddenMarkovModel::forwardBackward(HMMTrainingObject &hmm,const Vector<UINT> &obs){
 
-	const int N = (int)numStates;
-	const int T = (int)obs.size();
-	int t,i,j = 0;
+    const int N = (int)numStates;
+    const int T = (int)obs.size();
+    int t,i,j = 0;
 
-	////////////////// Run the forward algorithm ////////////////////////
-	//Step 1: Init at t=0
-	t = 0;
-	hmm.c[t] = 0.0;
-	for(i=0; i<N; i++){
-		hmm.alpha[t][i] = pi[i]*b[i][ obs[t] ];
-		hmm.c[t] += hmm.alpha[t][i];
-	}
+    ////////////////// Run the forward algorithm ////////////////////////
+    //Step 1: Init at t=0
+    t = 0;
+    hmm.c[t] = 0.0;
+    for(i=0; i<N; i++){
+        hmm.alpha[t][i] = pi[i]*b[i][ obs[t] ];
+        hmm.c[t] += hmm.alpha[t][i];
+    }
 
-	//Set the inital scaling coeff
-	hmm.c[t] = 1.0/hmm.c[t];
+    //Set the inital scaling coeff
+    hmm.c[t] = 1.0/hmm.c[t];
 
-	//Scale alpha
+    //Scale alpha
     for(i=0; i<N; i++) hmm.alpha[t][i] *= hmm.c[t];
     
-	//Step 2: Induction
-	for(t=1; t<T; t++){
-		hmm.c[t] = 0.0;
-		for(j=0; j<N; j++){
-			hmm.alpha[t][j] = 0.0;
-			for(i=0; i<N; i++){
-				hmm.alpha[t][j] +=  hmm.alpha[t-1][i] * a[i][j];
-			}
+    //Step 2: Induction
+    for(t=1; t<T; t++){
+        hmm.c[t] = 0.0;
+        for(j=0; j<N; j++){
+            hmm.alpha[t][j] = 0.0;
+            for(i=0; i<N; i++){
+                hmm.alpha[t][j] +=  hmm.alpha[t-1][i] * a[i][j];
+            }
             hmm.alpha[t][j] *= b[j][obs[t]];
             hmm.c[t] += hmm.alpha[t][j];
-		}
+        }
 
-		//Set the scaling coeff
-		hmm.c[t] = 1.0/hmm.c[t];
+        //Set the scaling coeff
+        hmm.c[t] = 1.0/hmm.c[t];
 
-		//Scale Alpha
+        //Scale Alpha
         for(j=0; j<N; j++) hmm.alpha[t][j] *= hmm.c[t];
-	}
+    }
 
-	//Termination
-	hmm.pk = 0.0;
+    //Termination
+    hmm.pk = 0.0;
     for(t=0; t<T; t++) hmm.pk += log( hmm.c[t] );
     //hmm.pk = - hmm.pk; //We don't really need to minus here
     
@@ -375,26 +375,26 @@ bool DiscreteHiddenMarkovModel::forwardBackward(HMMTrainingObject &hmm,const Vec
         return false;
     }
     
-	////////////////// Run the backward algorithm ////////////////////////
-	//Step 1: Init at time t=T (T-1 as everything is zero based)
-	t = T-1;
-	for(i=0; i<N; i++) hmm.beta[t][i] = 1.0;
+    ////////////////// Run the backward algorithm ////////////////////////
+    //Step 1: Init at time t=T (T-1 as everything is zero based)
+    t = T-1;
+    for(i=0; i<N; i++) hmm.beta[t][i] = 1.0;
     
-	//Scale beta, using the same coeff as A
+    //Scale beta, using the same coeff as A
     for(i=0; i<N; i++) hmm.beta[t][i] *= hmm.c[t];
 
-	//Step 2: Induction, from T-1 until 1 (T-2 until 0 as everything is zero based)
-	for(t=T-2; t>=0; t--){
-		for(i=0; i<N; i++){
-			//Calculate the backward step for t, using the scaled beta
-			hmm.beta[t][i]=0.0;
-			for(j=0; j<N; j++)
-				hmm.beta[t][i] += a[i][j] * b[j][ obs[t+1] ] * hmm.beta[t+1][j];
+    //Step 2: Induction, from T-1 until 1 (T-2 until 0 as everything is zero based)
+    for(t=T-2; t>=0; t--){
+        for(i=0; i<N; i++){
+            //Calculate the backward step for t, using the scaled beta
+            hmm.beta[t][i]=0.0;
+            for(j=0; j<N; j++)
+                hmm.beta[t][i] += a[i][j] * b[j][ obs[t+1] ] * hmm.beta[t+1][j];
 
             //Scale B using the same coeff as A
             hmm.beta[t][i] *= hmm.c[t];
-		}
-	}
+        }
+    }
     
     return true;
 }
@@ -453,19 +453,19 @@ bool DiscreteHiddenMarkovModel::train(const Vector< Vector<UINT> > &trainingData
         randomizeMatrices(numStates,numSymbols);
     }
 
-	//Perform the actual training
+    //Perform the actual training
     if( !train_(trainingData,maxNumEpochs,currentIter,newLoglikelihood) ){
         return false;
     }
 
-	//Calculate the observationSequence buffer length
-	const UINT numObs = (unsigned int)trainingData.size();
-	UINT k = 0;
+    //Calculate the observationSequence buffer length
+    const UINT numObs = (unsigned int)trainingData.size();
+    UINT k = 0;
     UINT averageObsLength = 0;
-	for(k=0; k<numObs; k++){
-		const UINT T = (unsigned int)trainingData[k].size();
-		averageObsLength += T;
-	}
+    for(k=0; k<numObs; k++){
+        const UINT T = (unsigned int)trainingData[k].size();
+        averageObsLength += T;
+    }
     
     averageObsLength = (UINT)floor( averageObsLength/Float(numObs) );
     observationSequence.resize( averageObsLength );
@@ -474,7 +474,7 @@ bool DiscreteHiddenMarkovModel::train(const Vector< Vector<UINT> > &trainingData
     //Finally, flag that the model was trained
     trained = true;
 
-	return true;
+    return true;
 }
 
 bool DiscreteHiddenMarkovModel::train_(const Vector< Vector<UINT> > &obs,const UINT maxIter, UINT &currentIter,Float &newLoglikelihood){
@@ -669,20 +669,14 @@ bool DiscreteHiddenMarkovModel::reset(){
     return true;
 }
     
-bool DiscreteHiddenMarkovModel::saveModelToFile( std::fstream &file ) const{
-    
-    if(!file.is_open())
-    {
-        errorLog << "saveModelToFile( fstream &file ) - File is not open!" << std::endl;
-        return false;
-    }
+bool DiscreteHiddenMarkovModel::saveModelToFile( std::ostream &file ) const{
     
     //Write the header info
     file << "DISCRETE_HMM_MODEL_FILE_V1.0\n";
     
     //Write the base settings to the file
     if( !MLBase::saveBaseSettingsToFile(file) ){
-        errorLog <<"saveModelToFile(fstream &file) - Failed to save classifier base settings to file!" << std::endl;
+        errorLog <<"saveModelToFile(ostream &file) - Failed to save classifier base settings to file!" << std::endl;
         return false;
     }
     
@@ -719,15 +713,9 @@ bool DiscreteHiddenMarkovModel::saveModelToFile( std::fstream &file ) const{
     return true;
 }
 
-bool DiscreteHiddenMarkovModel::loadModelFromFile( std::fstream &file ){
+bool DiscreteHiddenMarkovModel::loadModelFromFile( std::istream &file ){
     
     clear();
-    
-    if(!file.is_open())
-    {
-        errorLog << "loadModelFromFile( fstream &file ) - File is not open!" << std::endl;
-        return false;
-    }
     
     std::string word;
     
@@ -735,7 +723,7 @@ bool DiscreteHiddenMarkovModel::loadModelFromFile( std::fstream &file ){
     
     //Find the file type header
     if(word != "DISCRETE_HMM_MODEL_FILE_V1.0"){
-        errorLog << "loadModelFromFile( fstream &file ) - Could not find Model File Header!" << std::endl;
+        errorLog << "loadModelFromFile( istream &file ) - Could not find Model File Header!" << std::endl;
         return false;
     }
     
@@ -747,42 +735,42 @@ bool DiscreteHiddenMarkovModel::loadModelFromFile( std::fstream &file ){
     
     file >> word;
     if(word != "NumStates:"){
-        errorLog << "loadModelFromFile( fstream &file ) - Could not find the NumStates header." << std::endl;
+        errorLog << "loadModelFromFile( istream &file ) - Could not find the NumStates header." << std::endl;
         return false;
     }
     file >> numStates;
     
     file >> word;
     if(word != "NumSymbols:"){
-        errorLog << "loadModelFromFile( fstream &file ) - Could not find the NumSymbols header." << std::endl;
+        errorLog << "loadModelFromFile( istream &file ) - Could not find the NumSymbols header." << std::endl;
         return false;
     }
     file >> numSymbols;
     
     file >> word;
     if(word != "ModelType:"){
-        errorLog << "loadModelFromFile( fstream &file ) - Could not find the modelType for the header." << std::endl;
+        errorLog << "loadModelFromFile( istream &file ) - Could not find the modelType for the header." << std::endl;
         return false;
     }
     file >> modelType;
     
     file >> word;
     if(word != "Delta:"){
-        errorLog << "loadModelFromFile( fstream &file ) - Could not find the Delta for the header." << std::endl;
+        errorLog << "loadModelFromFile( istream &file ) - Could not find the Delta for the header." << std::endl;
         return false;
     }
     file >> delta;
     
     file >> word;
     if(word != "Threshold:"){
-        errorLog << "loadModelFromFile( fstream &file ) - Could not find the Threshold for the header." << std::endl;
+        errorLog << "loadModelFromFile( istream &file ) - Could not find the Threshold for the header." << std::endl;
         return false;
     }
     file >> cThreshold;
     
     file >> word;
     if(word != "NumRandomTrainingIterations:"){
-        errorLog << "loadModelFromFile( fstream &file ) - Could not find the numRandomTrainingIterations header." << std::endl;
+        errorLog << "loadModelFromFile( istream &file ) - Could not find the numRandomTrainingIterations header." << std::endl;
         return false;
     }
     file >> numRandomTrainingIterations;
@@ -794,7 +782,7 @@ bool DiscreteHiddenMarkovModel::loadModelFromFile( std::fstream &file ){
     //Load the A, B and Pi matrices
     file >> word;
     if(word != "A:"){
-        errorLog << "loadModelFromFile( fstream &file ) - Could not find the A matrix header." << std::endl;
+        errorLog << "loadModelFromFile( istream &file ) - Could not find the A matrix header." << std::endl;
         return false;
     }
     
@@ -807,7 +795,7 @@ bool DiscreteHiddenMarkovModel::loadModelFromFile( std::fstream &file ){
     
     file >> word;
     if(word != "B:"){
-        errorLog << "loadModelFromFile( fstream &file ) - Could not find the B matrix header." << std::endl;
+        errorLog << "loadModelFromFile( istream &file ) - Could not find the B matrix header." << std::endl;
         return false;
     }
     
@@ -820,7 +808,7 @@ bool DiscreteHiddenMarkovModel::loadModelFromFile( std::fstream &file ){
     
     file >> word;
     if(word != "Pi:"){
-        errorLog << "loadModelFromFile( fstream &file ) - Could not find the Pi matrix header." << std::endl;
+        errorLog << "loadModelFromFile( istream &file ) - Could not find the Pi matrix header." << std::endl;
         return false;
     }
     

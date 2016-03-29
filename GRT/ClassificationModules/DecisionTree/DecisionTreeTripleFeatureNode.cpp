@@ -1,4 +1,3 @@
-
 #include "DecisionTreeTripleFeatureNode.h"
 
 GRT_BEGIN_NAMESPACE
@@ -281,5 +280,4 @@ bool DecisionTreeTripleFeatureNode::loadParametersFromFile( std::istream &file )
 }
 
 GRT_END_NAMESPACE
-
 

@@ -126,7 +126,7 @@ public:
      @param file: a reference to the file the KNN model will be saved to
      @return returns true if the model was saved successfully, false otherwise
      */
-    virtual bool saveModelToFile( std::fstream &file ) const;
+    virtual bool saveModelToFile( std::ostream &file ) const;
     
     /**
      This loads a trained KNN model from a file.
@@ -135,7 +135,7 @@ public:
      @param file: a reference to the file the KNN model will be loaded from
      @return returns true if the model was loaded successfully, false otherwise
      */
-    virtual bool loadModelFromFile( std::fstream &file );
+    virtual bool loadModelFromFile( std::istream &file );
     
     /**
      This recomputes the null rejection thresholds for each of the classes in the KNN model.
@@ -224,7 +224,7 @@ public:
 protected:
     bool train_(const ClassificationData &trainingData,const UINT K);
     bool predict(const VectorFloat &inputVector,const UINT K);
-    bool loadLegacyModelFromFile( std::fstream &file );
+    bool loadLegacyModelFromFile( std::istream &file );
     Float computeEuclideanDistance(const VectorFloat &a,const VectorFloat &b);
     Float computeCosineDistance(const VectorFloat &a,const VectorFloat &b);
     Float computeManhattanDistance(const VectorFloat &a,const VectorFloat &b);

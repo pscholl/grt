@@ -132,7 +132,7 @@ bool PostProcessing::savePostProcessingSettingsToFile(std::ostream &file) const{
 
 bool PostProcessing::loadPostProcessingSettingsFromFile(std::istream &file){
     
-    /Try and load the base settings from the file
+    //Try and load the base settings from the file
     if( !MLBase::loadBaseSettingsFromFile( file ) ){
         return false;
     }
@@ -216,3 +216,7 @@ vector< string > PostProcessing::getRegisteredPostProcessors() {
 }
 
 GRT_END_NAMESPACE
+<<<<<<< HEAD
+=======
+
+>>>>>>> 58eef0e... remove whitespace and dos CRLF

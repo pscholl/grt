@@ -180,7 +180,7 @@ bool MLBase::loadModelFromFile(std::string filename){
     return true;
 }
 
-bool MLBase::loadModelFromFile(std::fstream &file){ return false; }
+bool MLBase::loadModelFromFile(std::istream &file){ return false; }
     
 bool MLBase::getModel(std::ostream &stream) const { return true; }
     
@@ -367,12 +367,7 @@ Vector< TrainingResult > MLBase::getTrainingResults() const{
     return trainingResults;
 }
 
-bool MLBase::saveBaseSettingsToFile( std::fstream &file ) const{
-    
-    if( !file.is_open() ){
-        errorLog << "saveBaseSettingsToFile(fstream &file) - The file is not open!" << std::endl;
-        return false;
-    }
+bool MLBase::saveBaseSettingsToFile( std::ostream &file ) const{
     
     file << "Trained: " << trained << std::endl;
     file << "UseScaling: " << useScaling << std::endl;
@@ -390,22 +385,17 @@ bool MLBase::saveBaseSettingsToFile( std::fstream &file ) const{
     return true;
 }
 
-bool MLBase::loadBaseSettingsFromFile( std::fstream &file ){
+bool MLBase::loadBaseSettingsFromFile( std::ostream &file ){
     
     //Clear any previous setup
     clear();
-    
-    if( !file.is_open() ){
-        errorLog << "loadBaseSettingsFromFile(fstream &file) - The file is not open!" << std::endl;
-        return false;
-    }
     
     std::string word;
     
     //Load the trained state
     file >> word;
     if( word != "Trained:" ){
-        errorLog << "loadBaseSettingsFromFile(fstream &file) - Failed to read Trained header!" << std::endl;
+        errorLog << "loadBaseSettingsFromFile(istream &file) - Failed to read Trained header!" << std::endl;
         return false;
     }
     file >> trained;
@@ -413,7 +403,7 @@ bool MLBase::loadBaseSettingsFromFile( std::fstream &file ){
     //Load the scaling state
     file >> word;
     if( word != "UseScaling:" ){
-        errorLog << "loadBaseSettingsFromFile(fstream &file) - Failed to read UseScaling header!" << std::endl;
+        errorLog << "loadBaseSettingsFromFile(istream &file) - Failed to read UseScaling header!" << std::endl;
         return false;
     }
     file >> useScaling;
@@ -421,7 +411,7 @@ bool MLBase::loadBaseSettingsFromFile( std::fstream &file ){
     //Load the NumInputDimensions
     file >> word;
     if( word != "NumInputDimensions:" ){
-        errorLog << "loadBaseSettingsFromFile(fstream &file) - Failed to read NumInputDimensions header!" << std::endl;
+        errorLog << "loadBaseSettingsFromFile(istream &file) - Failed to read NumInputDimensions header!" << std::endl;
         return false;
     }
     file >> numInputDimensions;
@@ -429,7 +419,7 @@ bool MLBase::loadBaseSettingsFromFile( std::fstream &file ){
     //Load the NumOutputDimensions
     file >> word;
     if( word != "NumOutputDimensions:" ){
-        errorLog << "loadBaseSettingsFromFile(fstream &file) - Failed to read NumOutputDimensions header!" << std::endl;
+        errorLog << "loadBaseSettingsFromFile(istream &file) - Failed to read NumOutputDimensions header!" << std::endl;
         return false;
     }
     file >> numOutputDimensions;
@@ -437,7 +427,7 @@ bool MLBase::loadBaseSettingsFromFile( std::fstream &file ){
     //Load the numTrainingIterationsToConverge
     file >> word;
     if( word != "NumTrainingIterationsToConverge:" ){
-        errorLog << "loadBaseSettingsFromFile(fstream &file) - Failed to read NumTrainingIterationsToConverge header!" << std::endl;
+        errorLog << "loadBaseSettingsFromFile(istream &file) - Failed to read NumTrainingIterationsToConverge header!" << std::endl;
         return false;
     }
     file >> numTrainingIterationsToConverge;
@@ -445,7 +435,7 @@ bool MLBase::loadBaseSettingsFromFile( std::fstream &file ){
     //Load the MinNumEpochs
     file >> word;
     if( word != "MinNumEpochs:" ){
-        errorLog << "loadBaseSettingsFromFile(fstream &file) - Failed to read MinNumEpochs header!" << std::endl;
+        errorLog << "loadBaseSettingsFromFile(istream &file) - Failed to read MinNumEpochs header!" << std::endl;
         return false;
     }
     file >> minNumEpochs;
@@ -453,7 +443,7 @@ bool MLBase::loadBaseSettingsFromFile( std::fstream &file ){
     //Load the maxNumEpochs
     file >> word;
     if( word != "MaxNumEpochs:" ){
-        errorLog << "loadBaseSettingsFromFile(fstream &file) - Failed to read MaxNumEpochs header!" << std::endl;
+        errorLog << "loadBaseSettingsFromFile(istream &file) - Failed to read MaxNumEpochs header!" << std::endl;
         return false;
     }
     file >> maxNumEpochs;
@@ -461,7 +451,7 @@ bool MLBase::loadBaseSettingsFromFile( std::fstream &file ){
     //Load the ValidationSetSize
     file >> word;
     if( word != "ValidationSetSize:" ){
-        errorLog << "loadBaseSettingsFromFile(fstream &file) - Failed to read ValidationSetSize header!" << std::endl;
+        errorLog << "loadBaseSettingsFromFile(istream &file) - Failed to read ValidationSetSize header!" << std::endl;
         return false;
     }
     file >> validationSetSize;
@@ -469,7 +459,7 @@ bool MLBase::loadBaseSettingsFromFile( std::fstream &file ){
     //Load the LearningRate
     file >> word;
     if( word != "LearningRate:" ){
-        errorLog << "loadBaseSettingsFromFile(fstream &file) - Failed to read LearningRate header!" << std::endl;
+        errorLog << "loadBaseSettingsFromFile(istream &file) - Failed to read LearningRate header!" << std::endl;
         return false;
     }
     file >> learningRate;
@@ -477,7 +467,7 @@ bool MLBase::loadBaseSettingsFromFile( std::fstream &file ){
     //Load the MinChange
     file >> word;
     if( word != "MinChange:" ){
-        errorLog << "loadBaseSettingsFromFile(fstream &file) - Failed to read MinChange header!" << std::endl;
+        errorLog << "loadBaseSettingsFromFile(istream &file) - Failed to read MinChange header!" << std::endl;
         return false;
     }
     file >> minChange;
@@ -485,7 +475,7 @@ bool MLBase::loadBaseSettingsFromFile( std::fstream &file ){
     //Load the UseValidationSet
     file >> word;
     if( word != "UseValidationSet:" ){
-        errorLog << "loadBaseSettingsFromFile(fstream &file) - Failed to read UseValidationSet header!" << std::endl;
+        errorLog << "loadBaseSettingsFromFile(istream &file) - Failed to read UseValidationSet header!" << std::endl;
         return false;
     }
     file >> useValidationSet;
@@ -493,7 +483,7 @@ bool MLBase::loadBaseSettingsFromFile( std::fstream &file ){
     //Load the RandomiseTrainingOrder
     file >> word;
     if( word != "RandomiseTrainingOrder:" ){
-        errorLog << "loadBaseSettingsFromFile(fstream &file) - Failed to read RandomiseTrainingOrder header!" << std::endl;
+        errorLog << "loadBaseSettingsFromFile(istream &file) - Failed to read RandomiseTrainingOrder header!" << std::endl;
         return false;
     }
     file >> randomiseTrainingOrder;

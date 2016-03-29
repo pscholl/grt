@@ -652,4 +652,3 @@ bool AdaBoost::loadLegacyModelFromFile( std::istream &file ){
 }
 
 GRT_END_NAMESPACE
-

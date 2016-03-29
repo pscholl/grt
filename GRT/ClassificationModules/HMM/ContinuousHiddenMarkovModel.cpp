@@ -727,4 +727,3 @@ bool ContinuousHiddenMarkovModel::loadModelFromFile( std::istream &file ){
 
 GRT_END_NAMESPACE
 
->>>>>>> Stashed changes

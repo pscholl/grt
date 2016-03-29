@@ -2453,6 +2453,7 @@ bool GestureRecognitionPipeline::loadPipelineFromFile(const std::string &filenam
 				file.close();
 		        return false;
 			}
+            initialized = true;
             break;
         case REGRESSION_MODE:
 			file >> word;
@@ -2471,6 +2472,7 @@ bool GestureRecognitionPipeline::loadPipelineFromFile(const std::string &filenam
 				file.close();
 		        return false;
 			}
+            initialized = true;
             break;
         case CLUSTER_MODE:
             file >> word;
@@ -2489,6 +2491,7 @@ bool GestureRecognitionPipeline::loadPipelineFromFile(const std::string &filenam
 				file.close();
 		        return false;
 			}
+            initialized = true;
             break;
         default:
             break;

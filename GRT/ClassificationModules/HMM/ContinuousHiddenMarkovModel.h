@@ -39,7 +39,7 @@ GRT_BEGIN_NAMESPACE
 
 class ContinuousHiddenMarkovModel : public MLBase {
 public:
-	ContinuousHiddenMarkovModel(const UINT downsampleFactor = 5,const UINT delta = 1,const bool autoEstimateSigma = true,const Float sigma = 10.0);
+    ContinuousHiddenMarkovModel(const UINT downsampleFactor = 5,const UINT delta = 1,const bool autoEstimateSigma = true,const Float sigma = 10.0);
     
     ContinuousHiddenMarkovModel(const ContinuousHiddenMarkovModel &rhs);
     
@@ -75,7 +75,7 @@ public:
      @param file: a reference to the file the model will be saved to
      @return returns true if the model was saved successfully, false otherwise
      */
-    virtual bool saveModelToFile( std::fstream &file ) const;
+    virtual bool saveModelToFile( std::ostream &file ) const;
     
     /**
      This loads a trained model from a file.
@@ -83,7 +83,7 @@ public:
      @param file: a reference to the file the model will be loaded from
      @return returns true if the model was loaded successfully, false otherwise
      */
-    virtual bool loadModelFromFile( std::fstream &file );
+    virtual bool loadModelFromFile( std::istream &file );
     
     virtual bool print() const;
     
@@ -134,15 +134,15 @@ protected:
     Float gauss( const MatrixFloat &x, const MatrixFloat &y, const MatrixFloat &sigma, const unsigned int i,const unsigned int j,const unsigned int N );
     
     UINT downsampleFactor;
-	UINT numStates;             ///<The number of states for this model
+    UINT numStates;             ///<The number of states for this model
     UINT classLabel;            ///<The class label associated with this model
     UINT timeseriesLength;      ///<The length of the training timeseries
     bool autoEstimateSigma;
     Float sigma;
     Float phase;
-	MatrixFloat a;             ///<The transitions probability matrix
-	MatrixFloat b;             ///<The emissions probability matrix
-	VectorFloat pi;            ///<The state start probability vector
+    MatrixFloat a;             ///<The transitions probability matrix
+    MatrixFloat b;             ///<The emissions probability matrix
+    VectorFloat pi;            ///<The state start probability vector
     MatrixFloat alpha;
     VectorFloat c;
     CircularBuffer< VectorFloat > observationSequence; ///<A buffer to store data for realtime prediction
@@ -150,10 +150,10 @@ protected:
     Vector< UINT > estimatedStates; ///<The estimated states for prediction
     MatrixFloat sigmaStates; ///<The sigma value for each state
 
-	UINT modelType;         ///<The model type (LEFTRIGHT, or ERGODIC)
-	UINT delta;				///<The number of states a model can move to in a LEFTRIGHT model
-	Float loglikelihood;	///<The log likelihood of an observation sequence given the modal, calculated by the forward method
-	Float cThreshold;		///<The classification threshold for this model
+    UINT modelType;         ///<The model type (LEFTRIGHT, or ERGODIC)
+    UINT delta;             ///<The number of states a model can move to in a LEFTRIGHT model
+    Float loglikelihood;    ///<The log likelihood of an observation sequence given the modal, calculated by the forward method
+    Float cThreshold;       ///<The classification threshold for this model
     
 };
 

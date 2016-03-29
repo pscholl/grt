@@ -458,4 +458,3 @@ bool BAG::loadLegacyModelFromFile( std::istream &file ){
 }
 
 GRT_END_NAMESPACE
-

@@ -1109,4 +1109,3 @@ bool HMM::setAutoEstimateSigma(const bool autoEstimateSigma){
 
 GRT_END_NAMESPACE
 
->>>>>>> Stashed changes

@@ -116,12 +116,7 @@ bool FeatureExtraction::clear(){
     return true;
 }
     
-bool FeatureExtraction::saveFeatureExtractionSettingsToFile( std::fstream &file ) const{
-    
-    if( !file.is_open() ){
-        errorLog << "saveFeatureExtractionSettingsToFile(fstream &file) - The file is not open!" << std::endl;
-        return false;
-    }
+bool FeatureExtraction::saveFeatureExtractionSettingsToFile( std::ostream &file ) const{
     
     if( !MLBase::saveBaseSettingsToFile( file ) ) return false;
     
@@ -130,12 +125,7 @@ bool FeatureExtraction::saveFeatureExtractionSettingsToFile( std::fstream &file 
     return true;
 }
 
-bool FeatureExtraction::loadFeatureExtractionSettingsFromFile( std::fstream &file ){
-    
-    if( !file.is_open() ){
-        errorLog << "loadFeatureExtractionSettingsFromFile(fstream &file) - The file is not open!" << std::endl;
-        return false;
-    }
+bool FeatureExtraction::loadFeatureExtractionSettingsFromFile( std::istream &file ){
     
     //Try and load the base settings from the file
     if( !MLBase::loadBaseSettingsFromFile( file ) ){
@@ -147,7 +137,7 @@ bool FeatureExtraction::loadFeatureExtractionSettingsFromFile( std::fstream &fil
     //Load if the filter has been initialized
     file >> word;
     if( word != "Initialized:" ){
-        errorLog << "loadPreProcessingSettingsFromFile(fstream &file) - Failed to read Initialized header!" << std::endl;
+        errorLog << "loadPreProcessingSettingsFromFile(istream &file) - Failed to read Initialized header!" << std::endl;
         clear();
         return false;
     }
@@ -175,6 +165,19 @@ UINT FeatureExtraction::getNumOutputDimensions() const{
 
 bool FeatureExtraction::getInitialized() const{ 
     return initialized; 
+}
+
+
+vector< string > FeatureExtraction::getRegisteredFeatureExtractors() { 
+	vector< string > registeredFeatureExtractors;
+	
+  StringFeatureExtractionMap::iterator iter = getMap()->begin();
+	while( iter != getMap()->end() ){
+		registeredFeatureExtractors.push_back( iter->first );
+		iter++;
+	}
+	return registeredFeatureExtractors;
+
 }
     
 bool FeatureExtraction::getFeatureDataReady() const{

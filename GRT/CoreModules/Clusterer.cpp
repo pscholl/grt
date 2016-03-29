@@ -153,13 +153,8 @@ bool Clusterer::clear(){
     return true;
 }
     
-bool Clusterer::saveClustererSettingsToFile( std::fstream &file ) const{
+bool Clusterer::saveClustererSettingsToFile( std::ostream &file ) const{
 	
-    if( !file.is_open() ){
-        errorLog << "saveClustererSettingsToFile(fstream &file) - The file is not open!" << std::endl;
-        return false;
-    }
-    
     if( !MLBase::saveBaseSettingsToFile( file ) ) return false;
     
     file << "NumClusters: " << numClusters << std::endl;
@@ -175,12 +170,7 @@ bool Clusterer::saveClustererSettingsToFile( std::fstream &file ) const{
     return true;
 }
 
-bool Clusterer::loadClustererSettingsFromFile( std::fstream &file ){
-    
-    if( !file.is_open() ){
-        errorLog << "loadClustererSettingsFromFile(fstream &file) - The file is not open!" << std::endl;
-        return false;
-    }
+bool Clusterer::loadClustererSettingsFromFile( std::istream &file ){
     
     //Try and load the base settings from the file
     if( !MLBase::loadBaseSettingsFromFile( file ) ){
@@ -192,7 +182,7 @@ bool Clusterer::loadClustererSettingsFromFile( std::fstream &file ){
     //Load if the number of clusters
     file >> word;
     if( word != "NumClusters:" ){
-        errorLog << "loadClustererSettingsFromFile(fstream &file) - Failed to read NumClusters header!" << std::endl;
+        errorLog << "loadClustererSettingsFromFile(istream &file) - Failed to read NumClusters header!" << std::endl;
         clear();
         return false;
     }
@@ -202,7 +192,7 @@ bool Clusterer::loadClustererSettingsFromFile( std::fstream &file ){
 	if( trained ){
     	file >> word;
     	if( word != "Ranges:" ){
-        	errorLog << "loadClustererSettingsFromFile(fstream &file) - Failed to read Ranges header!" << std::endl;
+        	errorLog << "loadClustererSettingsFromFile(istream &file) - Failed to read Ranges header!" << std::endl;
         	clear();
         	return false;
     	}

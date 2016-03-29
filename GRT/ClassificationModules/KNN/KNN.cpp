@@ -473,20 +473,14 @@ bool KNN::clear(){
     return true;
 }
 
-bool KNN::saveModelToFile( std::fstream &file ) const{
-    
-    if(!file.is_open())
-    {
-        errorLog << "saveModelToFile(fstream &file) - Could not open file to save model!" << std::endl;
-        return false;
-    }
+bool KNN::saveModelToFile( std::ostream &file ) const{
     
     //Write the header info
     file << "GRT_KNN_MODEL_FILE_V2.0\n";
     
     //Write the classifier settings to the file
     if( !Classifier::saveBaseSettingsToFile(file) ){
-        errorLog <<"saveModelToFile(fstream &file) - Failed to save classifier base settings to file!" << std::endl;
+        errorLog <<"saveModelToFile(ostream &file) - Failed to save classifier base settings to file!" << std::endl;
 		return false;
     }
     
@@ -526,13 +520,7 @@ bool KNN::saveModelToFile( std::fstream &file ) const{
     return true;
 }
     
-bool KNN::loadModelFromFile( std::fstream &file ){
-    
-    if(!file.is_open())
-    {
-        errorLog << "loadModelFromFile(fstream &file) - Could not open file to load model!" << std::endl;
-        return false;
-    }
+bool KNN::loadModelFromFile( std::istream &file ){
     
     std::string word;
     
@@ -545,7 +533,7 @@ bool KNN::loadModelFromFile( std::fstream &file ){
     
     //Find the file type header
     if(word != "GRT_KNN_MODEL_FILE_V2.0"){
-        errorLog << "loadModelFromFile(fstream &file) - Could not find Model File Header!" << std::endl;
+        errorLog << "loadModelFromFile(istream &file) - Could not find Model File Header!" << std::endl;
         return false;
     }
     
@@ -557,35 +545,35 @@ bool KNN::loadModelFromFile( std::fstream &file ){
     
     file >> word;
     if(word != "K:"){
-        errorLog << "loadModelFromFile(fstream &file) - Could not find K!" << std::endl;
+        errorLog << "loadModelFromFile(istream &file) - Could not find K!" << std::endl;
         return false;
     }
     file >> K;
     
     file >> word;
     if(word != "DistanceMethod:"){
-        errorLog << "loadModelFromFile(fstream &file) - Could not find DistanceMethod!" << std::endl;
+        errorLog << "loadModelFromFile(istream &file) - Could not find DistanceMethod!" << std::endl;
         return false;
     }
     file >> distanceMethod;
     
     file >> word;
     if(word != "SearchForBestKValue:"){
-        errorLog << "loadModelFromFile(fstream &file) - Could not find SearchForBestKValue!" << std::endl;
+        errorLog << "loadModelFromFile(istream &file) - Could not find SearchForBestKValue!" << std::endl;
         return false;
     }
     file >> searchForBestKValue;
     
     file >> word;
     if(word != "MinKSearchValue:"){
-        errorLog << "loadModelFromFile(fstream &file) - Could not find MinKSearchValue!" << std::endl;
+        errorLog << "loadModelFromFile(istream &file) - Could not find MinKSearchValue!" << std::endl;
         return false;
     }
     file >> minKSearchValue;
     
     file >> word;
     if(word != "MaxKSearchValue:"){
-        errorLog << "loadModelFromFile(fstream &file) - Could not find MaxKSearchValue!" << std::endl;
+        errorLog << "loadModelFromFile(istream &file) - Could not find MaxKSearchValue!" << std::endl;
         return false;
     }
     file >> maxKSearchValue;
@@ -599,7 +587,7 @@ bool KNN::loadModelFromFile( std::fstream &file ){
         if( useNullRejection ){
             file >> word;
             if(word != "TrainingMu:"){
-                errorLog << "loadModelFromFile(fstream &file) - Could not find TrainingMu!" << std::endl;
+                errorLog << "loadModelFromFile(istream &file) - Could not find TrainingMu!" << std::endl;
                 return false;
             }
             
@@ -610,7 +598,7 @@ bool KNN::loadModelFromFile( std::fstream &file ){
             
             file >> word;
             if(word != "TrainingSigma:"){
-                errorLog << "loadModelFromFile(fstream &file) - Could not find TrainingSigma!" << std::endl;
+                errorLog << "loadModelFromFile(istream &file) - Could not find TrainingSigma!" << std::endl;
                 return false;
             }
         
@@ -622,7 +610,7 @@ bool KNN::loadModelFromFile( std::fstream &file ){
         
         file >> word;
         if(word != "NumTrainingSamples:"){
-            errorLog << "loadModelFromFile(fstream &file) - Could not find NumTrainingSamples!" << std::endl;
+            errorLog << "loadModelFromFile(istream &file) - Could not find NumTrainingSamples!" << std::endl;
             return false;
         }
         unsigned int numTrainingSamples = 0;
@@ -630,7 +618,7 @@ bool KNN::loadModelFromFile( std::fstream &file ){
         
         file >> word;
         if(word != "TrainingData:"){
-            errorLog << "loadModelFromFile(fstream &file) - Could not find TrainingData!" << std::endl;
+            errorLog << "loadModelFromFile(istream &file) - Could not find TrainingData!" << std::endl;
             return false;
         }
         
@@ -755,7 +743,7 @@ Float KNN::computeManhattanDistance(const VectorFloat &a,const VectorFloat &b){
     return dist;
 }
     
-bool KNN::loadLegacyModelFromFile( std::fstream &file ){
+bool KNN::loadLegacyModelFromFile( std::istream &file ){
     
     std::string word;
     

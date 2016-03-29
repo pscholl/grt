@@ -46,12 +46,12 @@ public:
     /**
      Default Regressifier Destructor
      */
-	Regressifier(void);
+    Regressifier(void);
     
     /**
      Default Regressifier Destructor
      */
-	virtual ~Regressifier(void);
+    virtual ~Regressifier(void);
     
     /**
      This is the base deep copy function for the Regressifier modules. This function should be overwritten by the derived class.
@@ -62,7 +62,7 @@ public:
      */
     virtual bool deepCopyFrom(const Regressifier *regressifier){ return false; }
     
-	/**
+    /**
      This copies the Regressifier variables from the regressifier pointer to this instance.
      
      @param regressifier: a pointer to a regressifier from which the values will be copied to this instance
@@ -104,14 +104,14 @@ public:
      
      @return returns a Vector of MinMax values representing the ranges of the input data
      */
-	Vector< MinMax > getInputRanges() const;
+    Vector< MinMax > getInputRanges() const;
     
     /**
      Returns the ranges of the output (i.e. target) data.
      
      @return returns a Vector of MinMax values representing the ranges of the target data
      */
-	Vector< MinMax > getOutputRanges() const;
+    Vector< MinMax > getOutputRanges() const;
     
     /**
      Defines a map between a string (which will contain the name of the regressifier, such as LinearRegression) and a function returns a new instance of that regressifier
@@ -154,9 +154,9 @@ public:
      
      @return Vector< string >: a Vector containing the names of the regressifiers that have been registered with the base regressifier
      */
-	static Vector< std::string > getRegisteredRegressifiers();
-	
-	//Tell the compiler we are explicitly using the following classes from the base class (this stops hidden overloaded virtual function warnings)
+    static Vector< std::string > getRegisteredRegressifiers();
+    
+    //Tell the compiler we are explicitly using the following classes from the base class (this stops hidden overloaded virtual function warnings)
     using MLBase::train;
     
 protected:
@@ -165,19 +165,19 @@ protected:
      
      @return returns true if the base settings were saved, false otherwise
      */
-    bool saveBaseSettingsToFile( std::fstream &file ) const;
+    bool saveBaseSettingsToFile( std::ostream &file ) const;
     
     /**
      Loads the core base settings from a file.
      
      @return returns true if the base settings were loaded, false otherwise
      */
-    bool loadBaseSettingsFromFile( std::fstream &file );
+    bool loadBaseSettingsFromFile( std::istream &file );
 
     std::string regressifierType;
     VectorFloat regressionData;
     Vector< MinMax > inputVectorRanges;
-	Vector< MinMax > targetVectorRanges;
+    Vector< MinMax > targetVectorRanges;
     
     static StringRegressifierMap *getMap() {
         if( !stringRegressifierMap ){ stringRegressifierMap = new StringRegressifierMap; } 

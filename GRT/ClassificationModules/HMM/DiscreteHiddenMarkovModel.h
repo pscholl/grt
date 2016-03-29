@@ -40,24 +40,24 @@ GRT_BEGIN_NAMESPACE
 //This class is used for the HMM batch training
 class HMMTrainingObject{
 public:
-	HMMTrainingObject(){
-		pk = 0.0;
-	}
-	~HMMTrainingObject(){}
-	MatrixFloat alpha;     //The forward estimate matrix
-	MatrixFloat beta;      //The backward estimate matrix
-	VectorFloat c;         //The scaling coefficient Vector
-	Float pk;				//P( O | Model )
+    HMMTrainingObject(){
+        pk = 0.0;
+    }
+    ~HMMTrainingObject(){}
+    MatrixFloat alpha;     //The forward estimate matrix
+    MatrixFloat beta;      //The backward estimate matrix
+    VectorFloat c;         //The scaling coefficient Vector
+    Float pk;               //P( O | Model )
 };
 
 class DiscreteHiddenMarkovModel : public MLBase {
 
 public:
-	DiscreteHiddenMarkovModel();
+    DiscreteHiddenMarkovModel();
 
-	DiscreteHiddenMarkovModel(const UINT numStates,const UINT numSymbols,const UINT modelType,const UINT delta);
+    DiscreteHiddenMarkovModel(const UINT numStates,const UINT numSymbols,const UINT modelType,const UINT delta);
     
-	DiscreteHiddenMarkovModel(const MatrixFloat &a,const MatrixFloat &b,const VectorFloat &pi,const UINT modelType,const UINT delta);
+    DiscreteHiddenMarkovModel(const MatrixFloat &a,const MatrixFloat &b,const VectorFloat &pi,const UINT modelType,const UINT delta);
     
     DiscreteHiddenMarkovModel(const DiscreteHiddenMarkovModel &rhs);
     
@@ -77,7 +77,7 @@ public:
      @param file: a reference to the file the model will be saved to
      @return returns true if the model was saved successfully, false otherwise
      */
-    virtual bool saveModelToFile( std::fstream &file ) const;
+    virtual bool saveModelToFile( std::ostream &file ) const;
     
     /**
      This loads a trained model from a file.
@@ -85,28 +85,28 @@ public:
      @param file: a reference to the file the model will be loaded from
      @return returns true if the model was loaded successfully, false otherwise
      */
-    virtual bool loadModelFromFile( std::fstream &file );
+    virtual bool loadModelFromFile( std::istream &file );
 
     bool randomizeMatrices(const UINT numStates,const UINT numSymbols);
-	Float predictLogLikelihood(const Vector<UINT> &obs);
-	bool forwardBackward(HMMTrainingObject &trainingObject,const Vector<UINT> &obs);
+    Float predictLogLikelihood(const Vector<UINT> &obs);
+    bool forwardBackward(HMMTrainingObject &trainingObject,const Vector<UINT> &obs);
     bool train_(const Vector< Vector<UINT> > &obs,const UINT maxIter, UINT &currentIter,Float &newLoglikelihood);
     virtual bool print() const;
     
     VectorFloat getTrainingIterationLog() const;
     
-	UINT numStates;             //The number of states for this model
-	UINT numSymbols;            //The number of symbols for this model
-	MatrixFloat a;             //The transitions probability matrix
-	MatrixFloat b;             //The emissions probability matrix
-	VectorFloat pi;            //The state start probability Vector
+    UINT numStates;             //The number of states for this model
+    UINT numSymbols;            //The number of symbols for this model
+    MatrixFloat a;             //The transitions probability matrix
+    MatrixFloat b;             //The emissions probability matrix
+    VectorFloat pi;            //The state start probability Vector
     VectorFloat trainingIterationLog;   //Stores the loglikelihood at each iteration the BaumWelch algorithm
 
-	UINT modelType;
-	UINT delta;				//The number of states a model can move to in a LeftRight model
-	UINT numRandomTrainingIterations;		//The number of training loops to find the best starting values
-	Float logLikelihood;	//The log likelihood of an observation sequence given the modal, calculated by the forward method
-	Float cThreshold;		//The classification threshold for this model
+    UINT modelType;
+    UINT delta;             //The number of states a model can move to in a LeftRight model
+    UINT numRandomTrainingIterations;       //The number of training loops to find the best starting values
+    Float logLikelihood;    //The log likelihood of an observation sequence given the modal, calculated by the forward method
+    Float cThreshold;       //The classification threshold for this model
     CircularBuffer<UINT> observationSequence;
     Vector< UINT > estimatedStates;
 };

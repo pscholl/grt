@@ -135,15 +135,10 @@ bool PreProcessing::loadModelFromFile( std::string filename ){
     return true;
 }
     
-bool PreProcessing::savePreProcessingSettingsToFile(std::fstream &file) const{
-    
-    if( !file.is_open() ){
-        errorLog << "savePreProcessingSettingsToFile(fstream &file) - The file is not open!" << std::endl;
-        return false;
-    }
+bool PreProcessing::savePreProcessingSettingsToFile(std::ostream &file) const{
     
     if( !MLBase::saveBaseSettingsToFile( file ) ){
-        errorLog << "savePreProcessingSettingsToFile(fstream &file) - Failed to save base settings to file!" << std::endl;
+        errorLog << "savePreProcessingSettingsToFile(ostream &file) - Failed to save base settings to file!" << std::endl;
         return false;
     }
     
@@ -152,16 +147,11 @@ bool PreProcessing::savePreProcessingSettingsToFile(std::fstream &file) const{
     return true;
 }
     
-bool PreProcessing::loadPreProcessingSettingsFromFile(std::fstream &file){
-    
-    if( !file.is_open() ){
-        errorLog << "loadPreProcessingSettingsFromFile(fstream &file) - The file is not open!" << std::endl;
-        return false;
-    }
+bool PreProcessing::loadPreProcessingSettingsFromFile(std::istream &file){
     
     //Try and load the base settings from the file
     if( !MLBase::loadBaseSettingsFromFile( file ) ){
-        errorLog << "loadPreProcessingSettingsFromFile(fstream &file) - Failed to load base settings from file!" << std::endl;
+        errorLog << "loadPreProcessingSettingsFromFile(istream &file) - Failed to load base settings from file!" << std::endl;
         return false;
     }
     
@@ -170,7 +160,7 @@ bool PreProcessing::loadPreProcessingSettingsFromFile(std::fstream &file){
     //Load if the filter has been initialized
     file >> word;
     if( word != "Initialized:" ){
-        errorLog << "loadPreProcessingSettingsFromFile(fstream &file) - Failed to read Initialized header!" << std::endl;
+        errorLog << "loadPreProcessingSettingsFromFile(istream &file) - Failed to read Initialized header!" << std::endl;
         clear();
         return false;
     }
@@ -207,5 +197,17 @@ bool PreProcessing::getInitialized() const{
 VectorFloat PreProcessing::getProcessedData() const{ 
     return processedData; 
 }
+
+vector< string > PreProcessing::getRegisteredPreprocessors(){
+    vector< string > registeredPreprocessors;
+
+    StringPreProcessingMap::iterator iter = getMap()->begin();
+    while( iter != getMap()->end() ){
+        registeredPreprocessors.push_back( iter->first );
+        iter++;
+    }
+    return registeredPreprocessors;
+}
+
 
 GRT_END_NAMESPACE

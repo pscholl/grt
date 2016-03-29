@@ -73,12 +73,12 @@ public:
     /**
      Default MLBase Constructor
      */
-	MLBase(void);
+    MLBase(void);
 
     /**
      Default MLBase Destructor
      */
-	virtual ~MLBase(void);
+    virtual ~MLBase(void);
 
     /**
      This copies all the MLBase variables from the instance mlBaseA to the instance mlBaseA.
@@ -283,7 +283,7 @@ public:
     virtual bool load(const std::string filename);
     
     /**
-     This saves the trained model to a file, it calls the saveModelToFile(fstream &file) function unless it is overwritten by the derived class.
+     This saves the trained model to a file, it calls the saveModelToFile(ostream &file) function unless it is overwritten by the derived class.
      
      @param the name of the file to save the model to
      @return returns true if the model was saved successfully, false otherwise
@@ -297,10 +297,10 @@ public:
      @param file: a reference to the file the model will be saved to
      @return returns true if the model was saved successfully, false otherwise
      */
-    virtual bool saveModelToFile(std::fstream &file) const;
+    virtual bool saveModelToFile(std::ostream &file) const;
     
     /**
-     This loads a trained model from a file, it calls the loadModelFromFile(fstream &file) function unless it is overwritten by the derived class.
+     This loads a trained model from a file, it calls the loadModelFromFile(istream &file) function unless it is overwritten by the derived class.
      
      @param filename: the name of the file to load the model from
      @return returns true if the model was loaded successfully, false otherwise
@@ -314,7 +314,7 @@ public:
      @param file: a reference to the file the model will be loaded from
      @return returns true if the model was loaded successfully, false otherwise
      */
-    virtual bool loadModelFromFile(std::fstream &file);
+    virtual bool loadModelFromFile(std::istream &file);
     
     /**
      This function adds the current model to the formatted stream.
@@ -401,7 +401,7 @@ public:
      
      @return returns the minimum number of epochs
      */
-	UINT getMinNumEpochs() const;
+    UINT getMinNumEpochs() const;
     
     /**
      Gets the maximum number of epochs. This value controls the maximum number of epochs that can be used by the training algorithm.
@@ -409,7 +409,7 @@ public:
      
      @return returns the maximum number of epochs
      */
-	UINT getMaxNumEpochs() const;
+    UINT getMaxNumEpochs() const;
     
     /**
      Gets the size (as a percentage) of the validation set (if one should be used). If this value returned 20 this would mean that
@@ -418,7 +418,7 @@ public:
      
      @return returns the size of the validation set
      */
-	UINT getValidationSetSize() const;
+    UINT getValidationSetSize() const;
     
     /**
      Gets the number of training iterations that were required for the algorithm to converge.
@@ -432,7 +432,7 @@ public:
      
      @return returns the minimum change value
      */
-	Float getMinChange() const;
+    Float getMinChange() const;
     
     /**
      Gets the current learningRate value, this is value used to update the weights at each step of a learning algorithm such as stochastic gradient descent.
@@ -485,7 +485,7 @@ public:
      
      @return returns true if a validation set should be used for training, false otherwise
      */
-	bool getUseValidationSet() const;
+    bool getUseValidationSet() const;
     
     /**
      Returns true if the order of the training dataset should be randomized at each epoch of training. 
@@ -493,9 +493,9 @@ public:
      
      @return returns true if the order of the training dataset should be randomized, false otherwise
      */
-	bool getRandomiseTrainingOrder() const;
+    bool getRandomiseTrainingOrder() const;
     
-	/**
+    /**
      Gets if the model for the derived class has been succesfully trained.
      
      @return returns true if the model for the derived class has been succesfully trained, false otherwise
@@ -680,14 +680,14 @@ public:
     bool notifyTestResultsObservers( const TestInstanceResult &data );
     
     /**
-	 This functions returns a pointer to the current instance.
+     This functions returns a pointer to the current instance.
      
      @return returns a MLBase pointer to the current instance.
      */
     MLBase* getMLBasePointer();
     
     /**
-	 This functions returns a const pointer to the current instance.
+     This functions returns a const pointer to the current instance.
      
      @return returns a const MLBase pointer to the current instance.
      */
@@ -700,6 +700,12 @@ public:
      */
     Vector< TrainingResult > getTrainingResults() const;
 
+    /**
+     *
+     * set the number of input deminesions
+     */
+    void setNumInputDimensions(UINT dim) { this->numInputDimensions = dim; };
+
 protected:
     
     /**
@@ -707,14 +713,14 @@ protected:
      
      @return returns true if the base settings were saved, false otherwise
      */
-    bool saveBaseSettingsToFile( std::fstream &file ) const;
+    bool saveBaseSettingsToFile( std::ostream &file ) const;
     
     /**
      Loads the core base settings from a file.
      
      @return returns true if the base settings were loaded, false otherwise
      */
-    bool loadBaseSettingsFromFile( std::fstream &file );
+    bool loadBaseSettingsFromFile( std::istream &file );
     
     bool trained;
     bool useScaling;

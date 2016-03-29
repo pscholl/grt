@@ -41,12 +41,12 @@ public:
     /**
      Default Constructor
      */
-	PostProcessing(void);
-	
+    PostProcessing(void);
+    
     /**
      Default Destructor
      */
-	virtual ~PostProcessing(void);
+    virtual ~PostProcessing(void);
     
     /**
      This is the base deepCopyFrom function for the PostProcessing modules. This function should be overwritten by the derived class.
@@ -54,7 +54,7 @@ public:
      @param postProcessing: a pointer to the PostProcessing base class, this should be pointing to another instance of a matching derived class
      @return returns true if the deep copy was successfull, false otherwise (the PostProcessing base class will always return flase)
      */
-	virtual bool deepCopyFrom(const PostProcessing *postProcessing){ return false; }
+    virtual bool deepCopyFrom(const PostProcessing *postProcessing){ return false; }
     
     /**
      This copies the PostProcessing variables from postProcessingModule to the instance that calls the function.
@@ -62,7 +62,7 @@ public:
      @param postProcessingModule: a pointer to a post processing module from which the values will be copied
      @return returns true if the copy was successfull, false otherwise
      */
-	bool copyBaseVariables(const PostProcessing *postProcessingModule);
+    bool copyBaseVariables(const PostProcessing *postProcessingModule);
 
     /**
      This is the main processing interface for all the post processing modules and should be overwritten by the inheriting class.
@@ -105,7 +105,7 @@ public:
      @param file: a reference to the file to save the settings to
      @return returns true if the settings were saved successfully, false otherwise (the base class always returns false)
      */
-    virtual bool saveModelToFile(std::fstream &file) const{ return false; }
+    virtual bool saveModelToFile(std::ostream &file) const{ return false; }
     
     /**
      This loads the post processing settings from a file.
@@ -114,22 +114,22 @@ public:
      @param file: a reference to the file to load the settings from
      @return returns true if the settings were loaded successfully, false otherwise (the base class always returns false)
      */
-    virtual bool loadModelFromFile(std::fstream &file){ return false; }
-	
+    virtual bool loadModelFromFile(std::istream &file){ return false; }
+    
     /**
      @return returns the post processing type as a string, e.g. ClassLabelTimeoutFilter
      */
-	std::string getPostProcessingType() const;
+    std::string getPostProcessingType() const;
     
     /**
      @return returns the post processing input mode, this will be one of the PostprocessingInputModes enums
      */
-	UINT getPostProcessingInputMode() const;
+    UINT getPostProcessingInputMode() const;
     
     /**
      @return returns the post processing output mode, this will be one of the PostprocessingOutputModes enums
      */
-	UINT getPostProcessingOutputMode() const;
+    UINT getPostProcessingOutputMode() const;
     
     /**
      Returns the size of the input vector expected by the post processing module.
@@ -155,32 +155,32 @@ public:
     /**
      @return returns true if input mode is INPUT_MODE_PREDICTED_CLASS_LABEL, false otherwise
      */
-	bool getIsPostProcessingInputModePredictedClassLabel() const;
+    bool getIsPostProcessingInputModePredictedClassLabel() const;
     
     /**
      @return returns true if input mode is INPUT_MODE_CLASS_LIKELIHOODS, false otherwise
      */
-	bool getIsPostProcessingInputModeClassLikelihoods() const;
+    bool getIsPostProcessingInputModeClassLikelihoods() const;
     
     /**
      @return returns true if input mode is OUTPUT_MODE_PREDICTED_CLASS_LABEL, false otherwise
      */
-	bool getIsPostProcessingOutputModePredictedClassLabel() const;
+    bool getIsPostProcessingOutputModePredictedClassLabel() const;
     
     /**
      @return returns true if input mode is OUTPUT_MODE_CLASS_LIKELIHOODS, false otherwise
      */
-	bool getIsPostProcessingOutputModeClassLikelihoods() const;
+    bool getIsPostProcessingOutputModeClassLikelihoods() const;
     
     /**
      @return returns a VectorFloat containing the most recent processed data
      */
-	VectorFloat getProcessedData() const;
+    VectorFloat getProcessedData() const;
     
     /**
      This typedef defines a map between a string and a PostProcessing pointer.
      */
-	typedef std::map< std::string, PostProcessing*(*)() > StringPostProcessingMap;
+    typedef std::map< std::string, PostProcessing*(*)() > StringPostProcessingMap;
     
     /**
      This static function will dynamically create a new PostProcessing instance from a string.
@@ -212,14 +212,14 @@ protected:
      
      @return returns true if the base settings were saved, false otherwise
      */
-    bool savePostProcessingSettingsToFile(std::fstream &file) const;
+    bool savePostProcessingSettingsToFile(std::ostream &file) const;
     
     /**
      Loads the core postprocessing settings from a file.
      
      @return returns true if the base settings were loaded, false otherwise
      */
-    bool loadPostProcessingSettingsFromFile(std::fstream &file);
+    bool loadPostProcessingSettingsFromFile(std::istream &file);
 
     std::string postProcessingType;
     bool initialized;
@@ -231,6 +231,11 @@ protected:
         if( !stringPostProcessingMap ){ stringPostProcessingMap = new StringPostProcessingMap; } 
         return stringPostProcessingMap; 
     }
+
+    /**
+      returns all available post processors
+      */
+    static vector< string > getRegisteredPostProcessors();
 
 private:
     static StringPostProcessingMap *stringPostProcessingMap;

@@ -133,38 +133,28 @@ const Regressifier& Regressifier::getBaseRegressifier() const{
 }
     
     
-bool Regressifier::saveBaseSettingsToFile( std::fstream &file ) const{
-    
-    if( !file.is_open() ){
-        errorLog << "saveBaseSettingsToFile(fstream &file) - The file is not open!" << std::endl;
-        return false;
-    }
+bool Regressifier::saveBaseSettingsToFile( std::ostream &file ) const{
     
     if( !MLBase::saveBaseSettingsToFile( file ) ) return false;
     
     //Write the ranges to the file
     if( useScaling ){
-		file << "InputVectorRanges: \n";
-		for(UINT j=0; j<numInputDimensions; j++){
-			file << inputVectorRanges[j].minValue << "\t" << inputVectorRanges[j].maxValue << std::endl;
-		}
+        file << "InputVectorRanges: \n";
+        for(UINT j=0; j<numInputDimensions; j++){
+            file << inputVectorRanges[j].minValue << "\t" << inputVectorRanges[j].maxValue << std::endl;
+        }
         
-		file << "OutputVectorRanges: \n";
-		for(UINT j=0; j<numOutputDimensions; j++){
-			file << targetVectorRanges[j].minValue << "\t" << targetVectorRanges[j].maxValue << std::endl;
-		}
+        file << "OutputVectorRanges: \n";
+        for(UINT j=0; j<numOutputDimensions; j++){
+            file << targetVectorRanges[j].minValue << "\t" << targetVectorRanges[j].maxValue << std::endl;
+        }
     }
     
     return true;
 }
 
 
-bool Regressifier::loadBaseSettingsFromFile( std::fstream &file ){
-    
-    if( !file.is_open() ){
-        errorLog << "loadBaseSettingsFromFile(fstream &file) - The file is not open!" << std::endl;
-        return false;
-    }
+bool Regressifier::loadBaseSettingsFromFile( std::istream &file ){
     
     //Try and load the base settings from the file
     if( !MLBase::loadBaseSettingsFromFile( file ) ){
@@ -177,25 +167,25 @@ bool Regressifier::loadBaseSettingsFromFile( std::fstream &file ){
         //Load the ranges
         file >> word;
         if( word != "InputVectorRanges:" ){
-            errorLog << "loadBaseSettingsFromFile(fstream &file) - Failed to read InputVectorRanges header!" << std::endl;
+            errorLog << "loadBaseSettingsFromFile(istream &file) - Failed to read InputVectorRanges header!" << std::endl;
             return false;
         }
         inputVectorRanges.resize(numInputDimensions);
         for(UINT j=0; j<numInputDimensions; j++){
-			file >> inputVectorRanges[j].minValue;
+            file >> inputVectorRanges[j].minValue;
             file >> inputVectorRanges[j].maxValue;
-		}
+        }
         
         file >> word;
         if( word != "OutputVectorRanges:" ){
-            errorLog << "loadBaseSettingsFromFile(fstream &file) - Failed to read OutputVectorRanges header!" << std::endl;
+            errorLog << "loadBaseSettingsFromFile(istream &file) - Failed to read OutputVectorRanges header!" << std::endl;
             return false;
         }
         targetVectorRanges.resize(numOutputDimensions);
         for(UINT j=0; j<numOutputDimensions; j++){
-			file >> targetVectorRanges[j].minValue;
+            file >> targetVectorRanges[j].minValue;
             file >> targetVectorRanges[j].maxValue;
-		}
+        }
     }
     
     if( trained ){
