@@ -168,8 +168,8 @@ bool FeatureExtraction::getInitialized() const{
 }
 
 
-vector< string > FeatureExtraction::getRegisteredFeatureExtractors() { 
-	vector< string > registeredFeatureExtractors;
+Vector< std::string > FeatureExtraction::getRegisteredFeatureExtractors() { 
+	Vector< std::string > registeredFeatureExtractors;
 	
   StringFeatureExtractionMap::iterator iter = getMap()->begin();
 	while( iter != getMap()->end() ){

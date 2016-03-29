@@ -235,7 +235,7 @@ protected:
     /**
       returns all available post processors
       */
-    static vector< string > getRegisteredPostProcessors();
+    static Vector< std::string > getRegisteredPostProcessors();
 
 private:
     static StringPostProcessingMap *stringPostProcessingMap;

@@ -204,8 +204,8 @@ VectorFloat PostProcessing::getProcessedData() const{
     return processedData; 
 }
 
-vector< string > PostProcessing::getRegisteredPostProcessors() {
-  vector< string > registeredPostProcessors;
+Vector< std::string > PostProcessing::getRegisteredPostProcessors() {
+  Vector< std::string > registeredPostProcessors;
 
   StringPostProcessingMap::iterator iter = getMap()->begin();
   while( iter != getMap()->end() ){
