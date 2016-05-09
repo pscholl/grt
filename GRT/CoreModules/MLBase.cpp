@@ -159,7 +159,7 @@ bool MLBase::saveModelToFile(std::string filename) const{
     return true;
 }
 
-bool MLBase::saveModelToFile(std::fstream &file) const { return false; }
+bool MLBase::saveModelToFile(std::ostream &file) const { return false; }
 
 bool MLBase::load(const std::string filename){
     return loadModelFromFile(filename);
@@ -385,7 +385,7 @@ bool MLBase::saveBaseSettingsToFile( std::ostream &file ) const{
     return true;
 }
 
-bool MLBase::loadBaseSettingsFromFile( std::ostream &file ){
+bool MLBase::loadBaseSettingsFromFile( std::istream &file ){
     
     //Clear any previous setup
     clear();

@@ -252,7 +252,7 @@ bool LogisticRegression::saveModelToFile( std::ostream &file ) const{
     return true;
 }
     
-bool LogisticRegression::loadModelFromFile( std::istream &file ){
+bool LogisticRegression::loadModelFromFile( std::ifstream &file ){
     
     trained = false;
     numInputDimensions = 0;
@@ -314,7 +314,7 @@ Float LogisticRegression::sigmoid(const Float x) const{
     return 1.0 / (1 + exp(-x));
 }
     
-bool LogisticRegression::loadLegacyModelFromFile( std::istream &file ){
+bool LogisticRegression::loadLegacyModelFromFile( std::ifstream &file ){
     
     std::string word;
     

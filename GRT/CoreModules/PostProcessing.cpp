@@ -216,7 +216,4 @@ Vector< std::string > PostProcessing::getRegisteredPostProcessors() {
 }
 
 GRT_END_NAMESPACE
-<<<<<<< HEAD
-=======
 
->>>>>>> 58eef0e... remove whitespace and dos CRLF

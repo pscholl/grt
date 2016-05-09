@@ -242,7 +242,7 @@ bool RegressionTree::saveModelToFile( std::ostream &file ) const{
     return true;
 }
     
-bool RegressionTree::loadModelFromFile( std::fstream &file ){
+bool RegressionTree::loadModelFromFile( std::ifstream &file ){
     
     clear();
     

@@ -238,7 +238,7 @@ bool ClassLabelFilter::saveModelToFile( std::ostream &file ) const{
 
 bool ClassLabelFilter::loadModelFromFile( std::string filename ){
     
-    std::fstream file; 
+    std::ifstream file;
     file.open(filename.c_str(), std::ios::in);
     
     if( !loadModelFromFile( file ) ){
@@ -252,7 +252,7 @@ bool ClassLabelFilter::loadModelFromFile( std::string filename ){
     return true;
 }
 
-bool ClassLabelFilter::loadModelFromFile( std::istream &file ){
+bool ClassLabelFilter::loadModelFromFile( std::ifstream &file ){
     
     if( !file.is_open() ){
         errorLog << "loadModelFromFile(istream &file) - The file is not open!" << std::endl;

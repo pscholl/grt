@@ -203,7 +203,7 @@ UINT Classifier::getClassLabelIndexValue(UINT classLabel) const{
     return i;
 }
 
-bool Classifier::setClassNameForLabel(UINT label, string name) {
+bool Classifier::setClassNameForLabel(UINT label, std::string name) {
     UINT idx = getClassLabelIndexValue(label);
 
     while (classNames.size() <= idx)
@@ -213,7 +213,7 @@ bool Classifier::setClassNameForLabel(UINT label, string name) {
     return true;
 }
 
-string Classifier::getClassNameForLabel(UINT label) {
+std::string Classifier::getClassNameForLabel(UINT label) {
     UINT idx = getClassLabelIndexValue(label);
 
     if (classNames.size() <= idx)
@@ -310,7 +310,7 @@ bool Classifier::saveBaseSettingsToFile( std::ostream &file ) const{
 
         file << "ClassNames: ";
         for(UINT i=0; i<classLabels.size(); i++){
-          string name = "NULL";
+          std::string name = "NULL";
           if (classLabels[i]!=0)
             name = classNames[classLabels[i] - !hasNULL];
 
@@ -407,7 +407,7 @@ bool Classifier::loadBaseSettingsFromFile( std::istream &file ){
         //Load the class names
         file >> word;
         if ( word != "ClassNames:") {
-          errorLog << "loadBaseSettingsFromFile(istream &file) - Failed to read ClassNames header!" << endl;
+          errorLog << "loadBaseSettingsFromFile(istream &file) - Failed to read ClassNames header!" << std::endl;
           clear();
           return false;
         }

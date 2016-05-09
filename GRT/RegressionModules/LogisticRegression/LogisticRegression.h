@@ -103,7 +103,7 @@ public:
      @param file: a reference to the file the Logistic Regression model will be loaded from
      @return returns true if the model was loaded successfully, false otherwise
      */
-    virtual bool loadModelFromFile( std::istream &file );
+    virtual bool loadModelFromFile( std::ifstream &file );
     
     /**
      Gets the current maxNumIterations value, this is the maximum number of iterations that can be run during the training phase.
@@ -127,7 +127,7 @@ public:
 
 protected:
     inline Float sigmoid(const Float x) const;
-    bool loadLegacyModelFromFile( std::fstream &file );
+    bool loadLegacyModelFromFile( std::ifstream &file );
     
     Float w0; ///<The bias
     VectorFloat w; ///<The weights vector

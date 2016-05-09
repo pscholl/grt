@@ -111,7 +111,7 @@ int main (int argc, const char * argv[])
     
     //If you want to run K-Fold cross validation using the dataset then you should first spilt the dataset into K-Folds
     //A value of 10 splits the dataset into 10 folds and the true parameter signals that stratified sampling should be used
-    if( !trainingData.spiltDataIntoKFolds( 10, true ) ){
+    if( !trainingData.splitDataIntoKFolds( 10, true ) ){
 		cout << "ERROR: Failed to spiltDataIntoKFolds!\n";
 		return EXIT_FAILURE;
 	}

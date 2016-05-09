@@ -131,7 +131,7 @@ public:
      @param file: a reference to the file the RegressionTree model will be loaded from
      @return returns true if the model was loaded successfully, false otherwise
      */
-    virtual bool loadModelFromFile( std::istream &file );
+    virtual bool loadModelFromFile( std::ifstream &file );
 
     /**
      Deep copies the regression tree, returning a pointer to the new regression tree.

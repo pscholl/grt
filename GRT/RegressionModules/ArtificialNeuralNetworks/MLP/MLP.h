@@ -129,7 +129,7 @@ public:
      @param file: a reference to the file the MLP model will be loaded from
      @return returns true if the model was loaded successfully, false otherwise
      */
-    virtual bool loadModelFromFile( std::istream &file );
+    virtual bool loadModelFromFile( std::ifstream &file );
     
     /**
      Returns the number of classes in the MLP model if the MLP is in classification mode.
@@ -497,7 +497,7 @@ protected:
     
     bool trainOnlineGradientDescentRegression(const RegressionData &trainingData,const RegressionData &validationData);
     
-    bool loadLegacyModelFromFile( std::istream &file );
+    bool loadLegacyModelFromFile( std::ifstream &file );
     
     /**
      Performs one round of back propagation, using the training example and target Vector
