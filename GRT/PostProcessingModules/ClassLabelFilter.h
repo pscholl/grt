@@ -138,7 +138,7 @@ public:
      @param filename: the name of the file to load the settings from
      @return returns true if the settings were loaded successfully, false otherwise
      */
-    virtual bool loadModelFromFile( std::istream &file );
+    virtual bool loadModelFromFile( std::ifstream &file );
     
     /**
      This function initializes the ClassLabelFilter.

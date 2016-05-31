@@ -108,7 +108,7 @@ int main (int argc, const char * argv[])
     
     //If you want to use one dataset for cross validation then first call the spilt function
     //This will set the dataset up for 10 fold cross validation
-    trainingData.spiltDataIntoKFolds( 10 );
+    trainingData.splitDataIntoKFolds( 10 );
     
     //After you have called the spilt function you can then get the training and test sets for each fold
     for(UINT foldIndex=0; foldIndex<10; foldIndex++){

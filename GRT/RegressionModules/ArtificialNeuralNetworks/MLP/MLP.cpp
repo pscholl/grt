@@ -1138,7 +1138,7 @@ bool MLP::saveModelToFile( std::ostream &file ) const{
     return true;
 }
     
-bool MLP::loadModelFromFile( std::istream &file ){
+bool MLP::loadModelFromFile( std::ifstream &file ){
 
     std::string activationFunction;
 
@@ -1721,7 +1721,7 @@ bool MLP::setNullRejectionCoeff(const Float nullRejectionCoeff){
     return false;
 }
     
-bool MLP::loadLegacyModelFromFile( std::istream &file ){
+bool MLP::loadLegacyModelFromFile( std::ifstream &file ){
     
     std::string word;
     

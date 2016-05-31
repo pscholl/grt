@@ -139,7 +139,7 @@ bool SavitzkyGolayFilter::saveModelToFile( std::string filename ) const{
         return false;
     }
     
-    std::stream file; 
+    std::fstream file;
     file.open(filename.c_str(), std::ios::out);
     
     if( !saveModelToFile( file ) ){
